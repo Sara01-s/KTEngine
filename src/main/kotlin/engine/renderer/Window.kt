@@ -1,0 +1,77 @@
+package engine.renderer
+
+import engine.utils.GLDebug.glCall
+import engine.utils.logError
+import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.opengl.GL
+import org.lwjgl.opengl.GL11.glViewport
+
+class Window(
+    width: Int,
+    height: Int,
+    title: String
+) : AutoCloseable{
+    companion object {
+        var width = 0
+        var height = 0
+        val aspectRatio get() = width.toFloat() / height.toFloat()
+    }
+
+    val handle: Long
+
+    init {
+        if (!glfwInit()) {
+            logError("Failed to initialize GLFW")
+        }
+
+        Window.width = width
+        Window.height = height
+
+        glfwDefaultWindowHints()
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
+
+        handle = glfwCreateWindow(
+            width,
+            height,
+            title,
+            0,
+            0
+        )
+
+        if (handle == 0L) {
+            logError("Failed to create GLFW window")
+        }
+
+        glfwMakeContextCurrent(handle)
+        GL.createCapabilities()
+        glCall { glViewport(0, 0, width, height) }
+        glfwSetFramebufferSizeCallback(handle) { _, w, h ->
+            Window.width = w
+            Window.height = h
+            glCall { glViewport(0, 0, width, height) }
+        }
+        setVSync(enabled = true)
+        glfwShowWindow(handle)
+    }
+
+    fun isOpen(): Boolean {
+        return !glfwWindowShouldClose(handle)
+    }
+
+    fun setVSync(enabled: Boolean) {
+        glfwSwapInterval(if (enabled) 1 else 0)
+    }
+
+    fun swapBuffers() {
+        glfwSwapBuffers(handle)
+    }
+
+    fun pollEvents() {
+        glfwPollEvents()
+    }
+
+    override fun close() {
+        glfwDestroyWindow(handle)
+        glfwTerminate()
+    }
+}
