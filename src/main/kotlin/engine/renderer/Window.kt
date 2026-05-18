@@ -1,15 +1,16 @@
 package engine.renderer
 
 import engine.utils.GLDebug.glCall
-import engine.utils.logError
+import engine.utils.LogLevel
+import engine.utils.log
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11.glViewport
 
 class Window(
-    width: Int,
-    height: Int,
-    title: String
+    width: Int = 1280,
+    height: Int = 720,
+    title: String = "Default Window",
 ) : AutoCloseable{
     companion object {
         var width = 0
@@ -21,7 +22,7 @@ class Window(
 
     init {
         if (!glfwInit()) {
-            logError("Failed to initialize GLFW")
+            log("Failed to initialize GLFW", LogLevel.Error)
         }
 
         Window.width = width
@@ -39,7 +40,7 @@ class Window(
         )
 
         if (handle == 0L) {
-            logError("Failed to create GLFW window")
+            log("Failed to create GLFW window", LogLevel.Error)
         }
 
         glfwMakeContextCurrent(handle)

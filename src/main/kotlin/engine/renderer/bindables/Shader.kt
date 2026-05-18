@@ -7,50 +7,30 @@ import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
 import org.lwjgl.opengl.GL11.GL_FALSE
-import org.lwjgl.opengl.GL20.GL_COMPILE_STATUS
-import org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER
-import org.lwjgl.opengl.GL20.GL_LINK_STATUS
-import org.lwjgl.opengl.GL20.GL_VERTEX_SHADER
-import org.lwjgl.opengl.GL20.glAttachShader
-import org.lwjgl.opengl.GL20.glCompileShader
-import org.lwjgl.opengl.GL20.glCreateProgram
-import org.lwjgl.opengl.GL20.glCreateShader
-import org.lwjgl.opengl.GL20.glDeleteProgram
-import org.lwjgl.opengl.GL20.glGetProgramInfoLog
-import org.lwjgl.opengl.GL20.glGetProgrami
-import org.lwjgl.opengl.GL20.glGetShaderInfoLog
-import org.lwjgl.opengl.GL20.glGetShaderi
-import org.lwjgl.opengl.GL20.glGetUniformLocation
-import org.lwjgl.opengl.GL20.glLinkProgram
-import org.lwjgl.opengl.GL20.glShaderSource
-import org.lwjgl.opengl.GL20.glUniform1f
-import org.lwjgl.opengl.GL20.glUniform1i
-import org.lwjgl.opengl.GL20.glUniform2f
-import org.lwjgl.opengl.GL20.glUniform3f
-import org.lwjgl.opengl.GL20.glUniform4f
-import org.lwjgl.opengl.GL20.glUniformMatrix3fv
-import org.lwjgl.opengl.GL20.glUniformMatrix4fv
-import org.lwjgl.opengl.GL20.glUseProgram
+import org.lwjgl.opengl.GL20.*
 
-class Shader(vertexShaderFilePath: String, fragmentShaderFilePath: String) : Bindable() {
+class Shader(
+    vertexSource: String,
+    fragmentSource: String
+) : Bindable() {
 
     private val uniformLocations = mutableMapOf<String, Int>()
 
     init {
-        val vertexShaderSource =
-            object {}.javaClass.getResource(vertexShaderFilePath)?.readText()
-                ?: error("Vertex shader not found: $vertexShaderFilePath")
-
-        val fragmentShaderSource =
-            object {}.javaClass.getResource(fragmentShaderFilePath)?.readText()
-                ?: error("Fragment shader not found: $fragmentShaderFilePath")
-
-        val compiledVertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderSource)
-        val compiledFragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource)
+        val compiledVertexShader = compileShader(GL_VERTEX_SHADER, vertexSource)
+        val compiledFragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource)
 
         gpuID = linkShaders(compiledVertexShader, compiledFragmentShader)
 
-        bind()
+        glCall {
+            glDeleteShader(compiledVertexShader)
+            glDeleteShader(compiledFragmentShader)
+        }
+    }
+
+    fun setTexture(name: String, texture: Texture, slot: Int = 0) {
+        texture.bind(slot)
+        setUniform(name, slot)
     }
 
     fun setUniform(name: String, value: Int) {
@@ -90,8 +70,8 @@ class Shader(vertexShaderFilePath: String, fragmentShaderFilePath: String) : Bin
     private fun compileShader(type: Int, source: String): Int {
         val shaderID = glCreateShader(type)
 
-        if (shaderID == 0) {
-            error("Failed to create shader (glCreateShader returned 0)")
+        if (shaderID == DEFAULT_GPU_ID) {
+            error("Failed to create shader.")
         }
 
         glShaderSource(shaderID, source)
@@ -99,30 +79,36 @@ class Shader(vertexShaderFilePath: String, fragmentShaderFilePath: String) : Bin
 
         if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
             val log = glGetShaderInfoLog(shaderID)
+
+            glDeleteShader(shaderID)
+
             error("Shader compile failed:\n$log")
         }
 
         return shaderID
     }
 
-    private fun linkShaders(vertexShader: Int, fragmentShader: Int): Int {
-        var shaderProgramID: Int = DEFAULT_GPU_ID
+    private fun linkShaders(
+        vertexShader: Int,
+        fragmentShader: Int
+    ): Int {
+        val shaderProgramID = glCreateProgram()
 
-        glCall {
-            shaderProgramID = glCreateProgram()
+        if (shaderProgramID == 0) {
+            error("Failed to create shader program.")
+        }
 
-            glAttachShader(shaderProgramID, vertexShader)
-            glAttachShader(shaderProgramID, fragmentShader)
+        glAttachShader(shaderProgramID, vertexShader)
+        glAttachShader(shaderProgramID, fragmentShader)
 
-            glLinkProgram(shaderProgramID)
+        glLinkProgram(shaderProgramID)
 
-            if (glGetProgrami(shaderProgramID, GL_LINK_STATUS) == GL_FALSE) {
-                val log = glGetProgramInfoLog(shaderProgramID)
+        if (glGetProgrami(shaderProgramID, GL_LINK_STATUS) == GL_FALSE) {
+            val log = glGetProgramInfoLog(shaderProgramID)
 
-                glDeleteProgram(shaderProgramID)
+            glDeleteProgram(shaderProgramID)
 
-                error("Shader link failed:\n$log")
-            }
+            error("Shader link failed:\n$log")
         }
 
         return shaderProgramID

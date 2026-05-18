@@ -2,21 +2,21 @@ package engine.utils
 
 import engine.EngineSettings
 
-fun logInfo(msg: String) {
-    if (EngineSettings.ALLOW_LOGS) {
-        println("[INFO] $msg")
-    }
+enum class LogLevel {
+    Info,
+    Warning,
+    Error,
 }
 
-fun logWarning(msg: String) {
-    if (EngineSettings.ALLOW_LOGS) {
-        println("[Warning] $msg")
+fun log(message: Any?, level: LogLevel = LogLevel.Info) {
+    if (!EngineSettings.ALLOW_LOGS) {
+        return;
     }
-}
 
-fun logError(msg: String) {
-    if (EngineSettings.ALLOW_LOGS) {
-        println("[Error] $msg")
+    when (level) {
+        LogLevel.Info -> { println("[INFO] $message") }
+        LogLevel.Warning -> { println("[WARNING] $message") }
+        LogLevel.Error -> { println("[ERROR] $message") }
     }
 }
 

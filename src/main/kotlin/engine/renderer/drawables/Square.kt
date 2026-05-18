@@ -1,12 +1,13 @@
 package engine.renderer.drawables
 
+import engine.game.Assets
 import engine.renderer.Color
 import engine.renderer.bindables.*
 import glm_.vec2.Vec2
 import org.lwjgl.opengl.GL11.*
 
 class Square(
-    shader: Shader,
+    shader: Shader = Assets.loadDefaultShader(),
     vertexColor: Color = Color.white
 ) : Drawable(shader) {
 
