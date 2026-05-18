@@ -10,7 +10,7 @@ enum class LogLevel {
 
 fun log(message: Any?, level: LogLevel = LogLevel.Info) {
     if (!EngineSettings.ALLOW_LOGS) {
-        return;
+        return
     }
 
     when (level) {

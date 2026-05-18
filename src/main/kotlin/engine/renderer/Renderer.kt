@@ -1,12 +1,12 @@
 package engine.renderer
 
-import engine.math.Transform
+import engine.components.Transform
 import engine.math.ortho
 import engine.math.scale
 import engine.math.translate
+import engine.renderer.drawables.Drawable
 import engine.utils.GLDebug.glCall
 import glm_.mat4x4.Mat4
-import glm_.vec2.Vec2
 import org.lwjgl.opengl.GL11.GL_BLEND
 import org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT
 import org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA
@@ -32,30 +32,20 @@ data class Color(val r: Float, val g: Float, val b: Float, val a: Float = 1.0f) 
     }
 }
 
-class Renderer {
-    companion object {
-        fun getMvpMatrix(transform: Transform): Mat4 {
-            val aspect = Window.aspectRatio
+object Renderer {
+    private val drawables = mutableListOf<Drawable>()
 
-            val projection = Mat4().identity().ortho(
-                -aspect * 10f, aspect * 10f,
-                -10f, 10f,
-                -10f, 10f
-            )
+    fun register(drawable: Drawable) {
+        drawables.add(drawable)
+    }
 
-            val view = Mat4().identity()
+    fun unregister(drawable: Drawable) {
+        drawables.remove(drawable)
+    }
 
-            val offset = Vec2(
-                transform.scale.x * transform.pivot.x,
-                transform.scale.y * transform.pivot.y
-            )
-
-            val model = Mat4()
-                .identity()
-                .translate(transform.position.x - offset.x, transform.position.y - offset.y)
-                .scale(transform.scale.x, transform.scale.y)
-
-            return projection * view * model
+    fun drawAllDrawables() {
+        for (drawable in drawables) {
+            drawable.draw()
         }
     }
 
@@ -65,6 +55,27 @@ class Renderer {
             glEnable(GL_BLEND)
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         }
+
+        setClearColor(Color.coolPurple)
+    }
+
+    fun calculateMvpMatrix(transform: Transform): Mat4 {
+        val aspect = Window.aspectRatio
+
+        val projection = Mat4().identity().ortho(
+            -aspect * 10f, aspect * 10f,
+            -10f, 10f,
+            -10f, 10f
+        )
+
+        val view = Mat4().identity()
+
+        val model = Mat4()
+            .identity()
+            .translate(transform.position.x, transform.position.y)
+            .scale(transform.scale.x, transform.scale.y)
+
+        return projection * view * model
     }
 
     fun setClearColor(color: Color) {

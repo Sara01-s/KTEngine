@@ -16,10 +16,9 @@ import java.nio.ByteBuffer
 data class Vertex(
     val position: Vec2,
     val texCoord: Vec2,
-    val color: Color
 ) {
     companion object {
-        const val SIZE_BYTES = (2 + 2 + 4) * Float.SIZE_BYTES
+        const val SIZE_BYTES = (2 + 2) * Float.SIZE_BYTES
     }
 
     fun putIn(buffer: ByteBuffer) {
@@ -28,11 +27,6 @@ data class Vertex(
 
         buffer.putFloat(texCoord.x)
         buffer.putFloat(texCoord.y)
-
-        buffer.putFloat(color.r)
-        buffer.putFloat(color.g)
-        buffer.putFloat(color.b)
-        buffer.putFloat(color.a)
     }
 }
 

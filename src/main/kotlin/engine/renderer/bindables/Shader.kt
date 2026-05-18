@@ -9,16 +9,19 @@ import glm_.vec4.Vec4
 import org.lwjgl.opengl.GL11.GL_FALSE
 import org.lwjgl.opengl.GL20.*
 
-class Shader(
-    vertexSource: String,
-    fragmentSource: String
-) : Bindable() {
+class Shader(source: String) : Bindable() {
+    companion object {
+        private const val VERTEX_SOURCE = "vertex"
+        private const val FRAGMENT_SOURCE = "fragment"
+    }
 
     private val uniformLocations = mutableMapOf<String, Int>()
 
     init {
-        val compiledVertexShader = compileShader(GL_VERTEX_SHADER, vertexSource)
-        val compiledFragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource)
+        val shaderSources = parseShader(source)
+
+        val compiledVertexShader = compileShader(GL_VERTEX_SHADER, shaderSources[VERTEX_SOURCE] ?: error("Missing vertex shader."))
+        val compiledFragmentShader = compileShader(GL_FRAGMENT_SHADER, shaderSources[FRAGMENT_SOURCE] ?: error("Missing fragment shader."))
 
         gpuID = linkShaders(compiledVertexShader, compiledFragmentShader)
 
@@ -67,6 +70,32 @@ class Shader(
         }
     }
 
+    private fun parseShader(source: String): Map<String, String> {
+        val shaders = mutableMapOf<String, String>()
+
+        var currentType: String? = null
+        val builder = StringBuilder()
+
+        for (line in source.lines()) {
+            if (line.startsWith("#type")) {
+                if (currentType != null) {
+                    shaders[currentType] = builder.toString()
+                    builder.clear()
+                }
+
+                currentType = line.substringAfter("#type").trim()
+            } else {
+                builder.appendLine(line)
+            }
+        }
+
+        if (currentType != null) {
+            shaders[currentType] = builder.toString()
+        }
+
+        return shaders
+    }
+
     private fun compileShader(type: Int, source: String): Int {
         val shaderID = glCreateShader(type)
 
@@ -88,10 +117,7 @@ class Shader(
         return shaderID
     }
 
-    private fun linkShaders(
-        vertexShader: Int,
-        fragmentShader: Int
-    ): Int {
+    private fun linkShaders(vertexShader: Int, fragmentShader: Int): Int {
         val shaderProgramID = glCreateProgram()
 
         if (shaderProgramID == 0) {

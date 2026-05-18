@@ -13,12 +13,8 @@ fun main() {
     log("Creating Window.")
     val window = Window()
 
-    log("Creating Renderer.")
-    val renderer = Renderer()
-    renderer.setClearColor(Color.coolPurple)
-
     log("Creating Game.")
-    val game = Game(window, renderer)
+    val game = Game(window)
 
     SceneManager.load(PongScene())
 

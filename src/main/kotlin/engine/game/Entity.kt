@@ -1,33 +1,47 @@
 package engine.game
 
-import engine.math.AABB
-import engine.math.Transform
-import engine.renderer.drawables.Drawable
-import glm_.vec2.Vec2
+import engine.components.Component
+import engine.components.Transform
+import kotlin.reflect.KClass
 
-class Entity(
-    val transform: Transform = Transform(),
-    val drawable: Drawable,
-    val collider: AABB = AABB()
-) : AutoCloseable{
+class Entity : AutoCloseable {
+    val transform = Transform()
 
-    init {
-        transform.onChanged = { sync() }
-        sync()
+    private val components = mutableMapOf<KClass<out Component>, Component>().apply {
+        this[Transform::class] = Transform()
     }
 
-    fun sync() {
-        collider.center = transform.position
-        collider.extent = Vec2(
-            transform.scale.x * 0.5f,
-            transform.scale.y * 0.5f
-        )
+    internal inline fun <reified T : Component> addComponent() : T {
+        val component = T::class.java.getDeclaredConstructor().newInstance()
+        component.entity = this
+        component.onAdded()
 
-        drawable.transform.position = transform.position
-        drawable.transform.scale = transform.scale
+        components[T::class] = component
+
+        return component
+    }
+
+    internal inline fun <reified T : Component> removeComponent() {
+        getComponent<T>().close()
+        components.remove(T::class)
+    }
+
+    internal inline fun <reified T : Component> getComponent() : T {
+        val component = components[T::class]
+        if (component != null) {
+            return component as T
+        }
+        else {
+            error("Component not found")
+        }
+    }
+
+    internal inline fun <reified T : Component> hasComponents(): Boolean {
+        return components.isNotEmpty() && components.containsKey(T::class)
     }
 
     override fun close() {
-        drawable.close()
+        components.values.forEach { it.close() }
+        components.clear()
     }
 }

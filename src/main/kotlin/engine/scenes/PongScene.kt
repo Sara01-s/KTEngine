@@ -1,5 +1,7 @@
 package engine.scenes
 
+import engine.components.Collider2D
+import engine.components.SpriteRenderer
 import engine.game.Assets
 import engine.game.Entity
 import engine.game.Input
@@ -7,10 +9,7 @@ import engine.game.Player
 import engine.game.Scene
 import engine.game.Time
 import engine.math.normalized
-import engine.renderer.Color
 import engine.renderer.Window
-import engine.renderer.bindables.Texture
-import engine.renderer.drawables.Square
 import engine.utils.log
 import glm_.vec2.Vec2
 import kotlin.math.cos
@@ -27,45 +26,29 @@ const val BALL_MAX_SPEED = 80f
 
 class PongScene : Scene() {
 
-    private val circleShader =
-        Assets.loadShader(
-            "/shaders/circle_vsh.glsl",
-            "/shaders/circle_fsh.glsl"
-        )
+    private val p1 = createEntity().apply {
+        addComponent<SpriteRenderer>()
+        addComponent<Collider2D>()
+    }
 
-    private val rectShader =
-        Assets.loadShader(
-            "/shaders/rect_vsh.glsl",
-            "/shaders/rect_fsh.glsl"
-        )
+    private val p2 = createEntity().apply {
+        addComponent<SpriteRenderer>()
+        addComponent<Collider2D>()
+    }
 
-    private val textureShader =
-        Assets.loadShader(
-            "/shaders/texture_vsh.glsl",
-            "/shaders/texture_fsh.glsl"
-        )
+    private val ball = createEntity().apply {
+        addComponent<SpriteRenderer>().also { it.texture = Assets.loadTexture("/textures/tex_circle.png") }
+        addComponent<Collider2D>()
+    }
 
-    private val p1 = createEntity(
-        drawable = Square(textureShader, vertexColor = Color.magenta)
-    )
+    val miEntidad = createEntity()
 
-    private val p2 = createEntity(
-        drawable = Square(textureShader, vertexColor = Color.magenta)
-    )
-
-    private val ball = createEntity(
-        drawable = Square(circleShader, vertexColor = Color.yellow)
-    )
-
+    private var ballVelocity = Vec2()
     private var scoreP1 = 0
     private var scoreP2 = 0
 
-    private var ballVelocity = Vec2()
-
     init {
         ball.transform.scale = Vec2(0.75f)
-        p1.drawable.shader.setTexture("u_Texture", Assets.loadTexture("/textures/tex_test.png"))
-        p2.drawable.shader.setTexture("u_Texture", Assets.loadTexture("/textures/tex_test.png"))
 
         p1.transform.position = Vec2(-12f, 0f)
         p1.transform.scale = Vec2(PAD_EXTENT_X * 2, PAD_EXTENT_Y * 2)
@@ -73,17 +56,16 @@ class PongScene : Scene() {
         p2.transform.position = Vec2(12f, 0f)
         p2.transform.scale = Vec2(PAD_EXTENT_X * 2, PAD_EXTENT_Y * 2)
 
-        p1.collider.onEnter = { reflectOnPad(p1, 1f) }
-        p2.collider.onEnter = { reflectOnPad(p2, -1f) }
+        p1.getComponent<Collider2D>().onEnter = { reflectOnPad(p1, 1f) }
+        p2.getComponent<Collider2D>().onEnter = { reflectOnPad(p2, -1f) }
 
         resetBall()
+
+        miEntidad.addComponent<SpriteRenderer>()
     }
 
     override fun fixedUpdate() {
-        val bounds = worldBounds()
-
-        p1.collider.update(listOf(ball.collider))
-        p2.collider.update(listOf(ball.collider))
+        val bounds = calculateWorldBounds()
 
         ball.transform.position = ball.transform.position.plus(ballVelocity * Time.FIXED_DELTA_TIME)
 
@@ -111,7 +93,9 @@ class PongScene : Scene() {
     }
 
     override fun update() {
-        val bounds = worldBounds()
+        val bounds = calculateWorldBounds()
+
+        miEntidad.transform.position = Vec2(Time.time, 0)
 
         val axisP1 = Input.getAxis(Player.P1).normalized()
         val axisP2 = Input.getAxis(Player.P2).normalized()
@@ -133,17 +117,10 @@ class PongScene : Scene() {
                 )
     }
 
-    override fun draw() {
-        p1.drawable.draw()
-        p2.drawable.draw()
-        ball.drawable.draw()
-    }
-
     private fun resetBall(dir: Float = 1f) {
         ball.transform.position = Vec2(0f)
 
-        val angle =
-            (Math.random() * 0.5 - 0.25).toFloat()
+        val angle = (Math.random() * 0.5 - 0.25).toFloat()
 
         ballVelocity = Vec2(
             dir * BALL_SPEED,
@@ -168,7 +145,7 @@ class PongScene : Scene() {
         )
     }
 
-    private fun worldBounds(): Vec2 {
+    private fun calculateWorldBounds(): Vec2 {
         return Vec2(Window.aspectRatio * 10f, 10f)
     }
 }

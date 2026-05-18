@@ -6,7 +6,6 @@ import org.lwjgl.glfw.GLFW.glfwGetTime
 
 class Game(
     val window: Window,
-    val renderer: Renderer
 ) {
     inline fun loop(
         crossinline fixedUpdate: () -> Unit = {},
@@ -18,13 +17,15 @@ class Game(
             Input.update(window, Time.deltaTime)
 
             while (Time.shouldRunFixedUpdate()) {
+                CollisionSystem.update()
                 fixedUpdate()
                 Time.consumeFixedUpdate()
             }
 
             update()
 
-            renderer.clearScreen()
+            Renderer.clearScreen()
+            Renderer.drawAllDrawables()
             draw()
 
             window.swapBuffers()

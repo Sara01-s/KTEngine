@@ -1,5 +1,7 @@
 package engine.game
 
+import engine.renderer.Color
+import engine.renderer.bindables.Material
 import engine.renderer.bindables.Shader
 import engine.renderer.bindables.Texture
 
@@ -18,25 +20,30 @@ object Assets : AutoCloseable {
             ?: error("Resource not found: $path")
     }
 
-    fun loadShader(vertexShaderPath: String, fragmentShaderPath: String): Shader {
-        return shaders.getOrPut(vertexShaderPath + fragmentShaderPath) {
-            Shader(
-                loadText(vertexShaderPath),
-                loadText(fragmentShaderPath)
-            )
+    fun loadDefaultShader(): Shader {
+        return loadShader("/shaders/shd_textured.glsl")
+    }
+
+    fun loadShader(source: String): Shader {
+        return shaders.getOrPut(source) {
+            Shader(loadText(source))
         }
     }
 
-    fun loadDefaultShader(): Shader {
-        return loadShader(
-            "/shaders/rect_vsh.glsl",
-            "/shaders/rect_fsh.glsl"
-        )
+    fun loadDefaultTexture(): Texture {
+        return loadTexture("/textures/tex_square.png")
     }
 
     fun loadTexture(path: String): Texture {
         return textures.getOrPut(path) {
             Texture(path)
+        }
+    }
+
+    fun loadDefaultMaterial(): Material {
+        return Material(loadDefaultShader()).apply {
+            setTexture("_MainTex", loadDefaultTexture())
+            setColor("_ColorTint", Color.white)
         }
     }
 

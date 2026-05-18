@@ -1,12 +1,11 @@
 package engine.renderer.drawables
 
-import engine.math.Transform
+import engine.components.Transform
 import engine.renderer.Renderer
 import engine.renderer.bindables.Bindable
-import engine.renderer.bindables.Shader
+import engine.renderer.bindables.Material
 import engine.utils.GLDebug.glCall
 import org.lwjgl.opengl.GL11.glDrawElements
-import java.lang.AutoCloseable
 
 data class DrawCommand(
     val mode: Int,
@@ -15,8 +14,7 @@ data class DrawCommand(
     val offset: Long
 )
 
-open class Drawable(val shader: Shader) : AutoCloseable {
-    var transform: Transform = Transform()
+open class Drawable(val material: Material, val transform: Transform) : AutoCloseable {
     var bindables = mutableListOf<Bindable>()
     var drawCommand: DrawCommand? = null
 
@@ -29,8 +27,8 @@ open class Drawable(val shader: Shader) : AutoCloseable {
             bindable.bind()
         }
 
-        shader.bind()
-        shader.setUniform("u_MVP", Renderer.getMvpMatrix(transform))
+        material.bind()
+        material.setMat4("_MVP", Renderer.calculateMvpMatrix(transform))
 
         val cmd = drawCommand ?: error("drawCommand is null")
 
