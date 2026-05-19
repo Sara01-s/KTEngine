@@ -1,6 +1,6 @@
 package engine.game
 
-import engine.renderer.Window
+import engine.rendering.Window
 import glm_.vec2.Vec2
 import org.lwjgl.glfw.GLFW.*
 import kotlin.math.abs

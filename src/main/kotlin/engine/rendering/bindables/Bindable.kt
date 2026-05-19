@@ -1,4 +1,4 @@
-package engine.renderer.bindables
+package engine.rendering.bindables
 
 abstract class Bindable : AutoCloseable {
     companion object {

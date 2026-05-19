@@ -1,7 +1,7 @@
 package engine.components
 
-import engine.game.CollisionSystem
 import engine.game.Entity
+import engine.systems.CollisionSystem
 import glm_.vec2.Vec2
 import kotlin.math.abs
 

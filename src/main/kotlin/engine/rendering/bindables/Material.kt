@@ -1,6 +1,6 @@
-package engine.renderer.bindables
+package engine.rendering.bindables
 
-import engine.renderer.Color
+import engine.utils.Color
 import glm_.mat4x4.Mat4
 import glm_.vec4.Vec4
 

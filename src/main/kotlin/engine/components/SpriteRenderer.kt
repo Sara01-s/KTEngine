@@ -1,16 +1,15 @@
 package engine.components
 
-import engine.game.Assets
 import engine.game.Entity
-import engine.renderer.Color
-import engine.renderer.Renderer
-import engine.renderer.drawables.Quad
+import engine.rendering.bindables.Mesh
+import engine.systems.Assets
+import engine.systems.RenderSystem
+import engine.utils.Color
 
-class SpriteRenderer : Component {
+class SpriteRenderer : Renderer {
     override lateinit var entity: Entity
-    lateinit var drawable: Quad
-        private set
 
+    val mesh = Mesh.generateQuad()
     val material = Assets.loadDefaultMaterial()
 
     var color = Color.white
@@ -31,11 +30,21 @@ class SpriteRenderer : Component {
         }
 
     override fun onAdded() {
-        drawable = Quad(entity.transform, material)
-        Renderer.register(drawable)
+        RenderSystem.register(this)
     }
 
     override fun onRemoved() {
-        Renderer.unregister(drawable)
+        RenderSystem.unregister(this)
+    }
+
+    override fun draw() {
+        material.bind()
+        material.setMat4("_MVP", RenderSystem.calculateMvpMatrix(entity.transform))
+        mesh.draw()
+    }
+
+    override fun close() {
+        material.close()
+        mesh.close()
     }
 }

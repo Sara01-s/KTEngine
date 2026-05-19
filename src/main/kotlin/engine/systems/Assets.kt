@@ -1,9 +1,9 @@
-package engine.game
+package engine.systems
 
-import engine.renderer.Color
-import engine.renderer.bindables.Material
-import engine.renderer.bindables.Shader
-import engine.renderer.bindables.Texture
+import engine.rendering.bindables.Material
+import engine.rendering.bindables.Shader
+import engine.rendering.bindables.Texture
+import engine.utils.Color
 
 object Assets : AutoCloseable {
 

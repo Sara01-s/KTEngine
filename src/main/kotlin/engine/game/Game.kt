@@ -1,7 +1,8 @@
 package engine.game
 
-import engine.renderer.Renderer
-import engine.renderer.Window
+import engine.rendering.Window
+import engine.systems.CollisionSystem
+import engine.systems.RenderSystem
 import org.lwjgl.glfw.GLFW.glfwGetTime
 
 class Game(
@@ -24,8 +25,8 @@ class Game(
 
             update()
 
-            Renderer.clearScreen()
-            Renderer.drawAllDrawables()
+            RenderSystem.clearScreen()
+            RenderSystem.render()
             draw()
 
             window.swapBuffers()

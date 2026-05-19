@@ -1,9 +1,10 @@
-package engine.game
+package engine.systems
 
+import engine.scenes.Scene
 import engine.utils.LogLevel
 import engine.utils.log
 
-object SceneManager : AutoCloseable {
+object SceneSystem : AutoCloseable {
 
     var currentScene: Scene? = null
         private set

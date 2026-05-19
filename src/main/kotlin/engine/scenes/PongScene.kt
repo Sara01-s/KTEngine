@@ -2,14 +2,13 @@ package engine.scenes
 
 import engine.components.Collider2D
 import engine.components.SpriteRenderer
-import engine.game.Assets
 import engine.game.Entity
 import engine.game.Input
 import engine.game.Player
-import engine.game.Scene
 import engine.game.Time
 import engine.math.normalized
-import engine.renderer.Window
+import engine.rendering.Window
+import engine.systems.Assets
 import engine.utils.log
 import glm_.vec2.Vec2
 import kotlin.math.cos
@@ -41,8 +40,6 @@ class PongScene : Scene() {
         addComponent<Collider2D>()
     }
 
-    val miEntidad = createEntity()
-
     private var ballVelocity = Vec2()
     private var scoreP1 = 0
     private var scoreP2 = 0
@@ -60,8 +57,6 @@ class PongScene : Scene() {
         p2.getComponent<Collider2D>().onEnter = { reflectOnPad(p2, -1f) }
 
         resetBall()
-
-        miEntidad.addComponent<SpriteRenderer>()
     }
 
     override fun fixedUpdate() {
@@ -94,8 +89,6 @@ class PongScene : Scene() {
 
     override fun update() {
         val bounds = calculateWorldBounds()
-
-        miEntidad.transform.position = Vec2(Time.time, 0)
 
         val axisP1 = Input.getAxis(Player.P1).normalized()
         val axisP2 = Input.getAxis(Player.P2).normalized()

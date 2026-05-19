@@ -1,4 +1,6 @@
-package engine.game
+package engine.scenes
+
+import engine.game.Entity
 
 abstract class Scene : AutoCloseable {
 

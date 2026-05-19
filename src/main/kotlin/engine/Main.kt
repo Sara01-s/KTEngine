@@ -1,12 +1,9 @@
 package engine
 
 import engine.game.Game
-import engine.renderer.Color
-import engine.renderer.Renderer
-import engine.renderer.Window
-import engine.game.SceneManager
-import engine.scenes.MainMenuScene
+import engine.rendering.Window
 import engine.scenes.PongScene
+import engine.systems.SceneSystem
 import engine.utils.log
 
 fun main() {
@@ -16,21 +13,21 @@ fun main() {
     log("Creating Game.")
     val game = Game(window)
 
-    SceneManager.load(PongScene())
+    SceneSystem.load(PongScene())
 
     game.loop(
         fixedUpdate = {
-            SceneManager.currentScene?.fixedUpdate()
+            SceneSystem.currentScene?.fixedUpdate()
         },
         update = {
-            SceneManager.currentScene?.update()
+            SceneSystem.currentScene?.update()
         },
         draw = {
-            SceneManager.currentScene?.draw()
+            SceneSystem.currentScene?.draw()
         }
     )
 
-    SceneManager.close()
+    SceneSystem.close()
     window.close()
 
     log("Bye Bye.")

@@ -1,4 +1,4 @@
-package engine.game
+package engine.systems
 
 import engine.components.Collider2D
 

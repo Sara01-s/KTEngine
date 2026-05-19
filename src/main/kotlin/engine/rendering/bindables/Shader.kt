@@ -1,4 +1,4 @@
-package engine.renderer.bindables
+package engine.rendering.bindables
 
 import engine.utils.GLDebug.glCall
 import glm_.mat3x3.Mat3

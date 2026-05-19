@@ -1,4 +1,4 @@
-package engine.renderer
+package engine.rendering
 
 import engine.utils.GLDebug.glCall
 import engine.utils.LogLevel

@@ -1,6 +1,6 @@
-package engine.renderer.bindables
+package engine.rendering.bindables
 
-import engine.game.Assets
+import engine.systems.Assets
 import engine.utils.GLDebug.glCall
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11.*
