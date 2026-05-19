@@ -3,8 +3,11 @@ package engine
 import engine.game.Game
 import engine.rendering.Window
 import engine.scenes.MainMenuScene
-import engine.scenes.PongScene
+import engine.systems.Assets
+import engine.systems.AudioSystem
+import engine.systems.RenderSystem
 import engine.systems.SceneSystem
+import engine.utils.PrimitiveMeshes
 import engine.utils.log
 
 fun main() {
@@ -14,7 +17,10 @@ fun main() {
     log("Creating Game.")
     val game = Game(window)
 
-    SceneSystem.load(PongScene())
+    log("Initializing Audio System.")
+    AudioSystem.init()
+
+    SceneSystem.loadScene(MainMenuScene())
 
     game.loop(
         fixedUpdate = {
@@ -29,6 +35,8 @@ fun main() {
     )
 
     SceneSystem.close()
+    Assets.close()
+    PrimitiveMeshes.close()
     window.close()
 
     log("Bye Bye.")

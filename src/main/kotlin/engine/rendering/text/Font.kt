@@ -19,7 +19,7 @@ data class Glyph(
 class Font(
     val texture: Texture,
     val glyphs: Map<Char, Glyph>,
-    val lineHeight: Float,
+    var lineHeight: Float,
 ) {
     companion object {
         internal fun loadFont(texture: Texture, structure: String): Font {

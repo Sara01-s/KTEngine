@@ -4,12 +4,14 @@ import engine.rendering.bindables.Material
 import engine.rendering.bindables.Shader
 import engine.rendering.bindables.Texture
 import engine.rendering.text.Font
+import engine.utils.AudioClip
 import engine.utils.Color
 
 object Assets : AutoCloseable {
 
     private val shaders = mutableMapOf<String, Shader>()
     private val textures = mutableMapOf<String, Texture>()
+    private val audioClips = mutableMapOf<String, AudioClip>()
 
     fun loadText(path: String): String {
         return javaClass.getResource(path)?.readText()
@@ -41,6 +43,12 @@ object Assets : AutoCloseable {
         }
     }
 
+    fun loadAudioClip(path: String): AudioClip {
+        return audioClips.getOrPut(path) {
+            AudioClip(path)
+        }
+    }
+
     fun loadDefaultMaterial(): Material {
         return Material(loadDefaultShader()).apply {
             setTexture("_MainTex", loadDefaultTexture())
@@ -48,25 +56,33 @@ object Assets : AutoCloseable {
         }
     }
 
-    fun loadDefaultTextMaterial() : Material {
+    fun loadDefaultTextMaterial(): Material {
         return Material(loadShader("/shaders/shd_font.glsl")).apply {
             setColor("_ColorTint", Color.white)
         }
     }
 
     fun loadDefaultFont(): Font {
-        return loadFont("/fonts/font_tex_pixelated.png", "/fonts/font_structure_pixelated.json")
+        return loadFont(
+            "/fonts/font_tex_pixelated.png",
+            "/fonts/font_structure_pixelated.json"
+        )
     }
 
     fun loadFont(texturePath: String, structurePath: String): Font {
-        return Font.loadFont(loadTexture(texturePath), loadText(structurePath))
+        return Font.loadFont(
+            loadTexture(texturePath),
+            loadText(structurePath)
+        )
     }
 
     override fun close() {
         shaders.values.forEach(Shader::close)
         textures.values.forEach(Texture::close)
+        audioClips.values.forEach(AudioClip::close)
 
         shaders.clear()
         textures.clear()
+        audioClips.clear()
     }
 }

@@ -56,6 +56,11 @@ class Mesh(
     }
 
     fun setData(vertices: FloatArray, indices: IntArray) {
+        if (vertices.isEmpty() || indices.isEmpty()) {
+            indexCount = 0
+            return
+        }
+
         glCall {
             glBindVertexArray(vao)
 
@@ -72,6 +77,10 @@ class Mesh(
     }
 
     fun draw() {
+        if (indexCount <= 0) {
+            return
+        }
+
         bind()
         glCall { glDrawElements(topology, indexCount, GL_UNSIGNED_INT, 0L) }
     }

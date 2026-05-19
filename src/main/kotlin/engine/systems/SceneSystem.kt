@@ -8,18 +8,19 @@ object SceneSystem : AutoCloseable {
 
     var currentScene: Scene? = null
         private set
-        get() {
-            if (field == null) {
-                log("No Scene currently loaded", LogLevel.Error)
-                return null
-            }
 
-            return field
-        }
+    private var nextScene: Scene? = null
 
-    fun load(scene: Scene) {
+    fun loadScene(scene: Scene) {
+        nextScene = scene
+    }
+
+    fun applyPendingScene() {
+        val pending = nextScene ?: return
+
         currentScene?.close()
-        currentScene = scene
+        currentScene = pending
+        nextScene = null
     }
 
     override fun close() {

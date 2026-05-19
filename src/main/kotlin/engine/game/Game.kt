@@ -3,6 +3,7 @@ package engine.game
 import engine.rendering.Window
 import engine.systems.CollisionSystem
 import engine.systems.RenderSystem
+import engine.systems.SceneSystem
 import org.lwjgl.glfw.GLFW.glfwGetTime
 
 class Game(
@@ -28,6 +29,8 @@ class Game(
             RenderSystem.clearScreen()
             RenderSystem.render()
             draw()
+
+            SceneSystem.applyPendingScene()
 
             window.swapBuffers()
             window.pollEvents()

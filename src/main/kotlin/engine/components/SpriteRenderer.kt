@@ -9,8 +9,9 @@ import engine.utils.PrimitiveMeshes
 
 class SpriteRenderer : Renderer {
     override lateinit var entity: Entity
+    override var isVisible = true
 
-    val mesh = PrimitiveMeshes.quad
+    private val mesh = PrimitiveMeshes.quad
     val material = Assets.loadDefaultMaterial()
 
     var color = Color.white
@@ -46,6 +47,6 @@ class SpriteRenderer : Renderer {
 
     override fun close() {
         material.close()
-        mesh.close()
+        onRemoved()
     }
 }

@@ -11,8 +11,9 @@ import org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW
 class TextRenderer : Renderer {
 
     override lateinit var entity: Entity
+    override var isVisible = true
 
-    var text = "Hola Mundo!"
+    var text = "New Text"
         set(value) {
             field = value
             dirty = true
@@ -58,7 +59,7 @@ class TextRenderer : Renderer {
         for (char in text) {
             if (char == '\n') {
                 cursorX = 0f
-                cursorY -= font.lineHeight
+                cursorY -= 1f
                 continue
             }
 
@@ -117,5 +118,6 @@ class TextRenderer : Renderer {
 
     override fun close() {
         mesh.close()
+        onRemoved()
     }
 }

@@ -24,6 +24,10 @@ object RenderSystem {
 
     fun render() {
         for (renderer in renderers) {
+            if (!renderer.isVisible) {
+                continue
+            }
+
             renderer.draw()
         }
     }

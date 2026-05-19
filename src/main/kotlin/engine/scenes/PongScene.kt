@@ -1,5 +1,6 @@
 package engine.scenes
 
+import engine.components.AudioSource
 import engine.components.Collider2D
 import engine.components.SpriteRenderer
 import engine.game.Entity
@@ -10,8 +11,10 @@ import engine.math.normalized
 import engine.rendering.Window
 import engine.rendering.text.TextRenderer
 import engine.systems.Assets
+import engine.systems.SceneSystem
 import engine.utils.log
 import glm_.vec2.Vec2
+import org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -51,6 +54,20 @@ class PongScene : Scene() {
         transform.position = Vec2(7f, 7f)
     }
 
+    private val musicSource = createEntity().apply {
+        addComponent<AudioSource>().also {
+            it.clip = Assets.loadAudioClip("/audio/music_periwinkle.wav")
+            it.loop = true
+            it.volume = 0.4f
+        }.play()
+    }
+
+    private val sfxSource = createEntity().apply {
+        addComponent<AudioSource>().also {
+            it.volume = 0.5f
+        }
+    }
+
     private var ballVelocity = Vec2()
     private var scoreP1 = 0
     private var scoreP2 = 0
@@ -67,6 +84,7 @@ class PongScene : Scene() {
         p1.getComponent<Collider2D>().onEnter = { reflectOnPad(p1, 1f) }
         p2.getComponent<Collider2D>().onEnter = { reflectOnPad(p2, -1f) }
 
+        playSfx("/audio/sfx_spawn.wav")
         resetBall()
     }
 
@@ -77,11 +95,15 @@ class PongScene : Scene() {
 
         // Top/Bottom bounce.
         if (ball.transform.position.y > bounds.y) {
+            playSfx("/audio/sfx_hit.wav")
+
             ball.transform.position.y = bounds.y
             ballVelocity.y *= -1f
         }
 
         if (ball.transform.position.y < -bounds.y) {
+            playSfx("/audio/sfx_hit.wav")
+
             ball.transform.position.y = -bounds.y
             ballVelocity.y *= -1f
         }
@@ -90,17 +112,25 @@ class PongScene : Scene() {
         if (ball.transform.position.x > bounds.x) {
             scoreP2++
             p1ScoreText.getComponent<TextRenderer>().text = "$scoreP2"
+            playSfx("/audio/sfx_score.wav")
+
             resetBall(-1f)
         }
 
         if (ball.transform.position.x < -bounds.x) {
             scoreP1++
             p2ScoreText.getComponent<TextRenderer>().text = "$scoreP1"
+            playSfx("/audio/sfx_score.wav")
+
             resetBall(1f)
         }
     }
 
     override fun update() {
+        if (Input.isKeyJustPressed(GLFW_KEY_ESCAPE)) {
+            SceneSystem.loadScene(MainMenuScene())
+        }
+
         val bounds = calculateWorldBounds()
 
         val axisP1 = Input.getAxis(Player.P1).normalized()
@@ -123,6 +153,14 @@ class PongScene : Scene() {
                 )
     }
 
+    private fun playSfx(path: String) {
+        val source = sfxSource.getComponent<AudioSource>()
+
+        source.stop()
+        source.clip = Assets.loadAudioClip(path)
+        source.play()
+    }
+
     private fun resetBall(dir: Float = 1f) {
         ball.transform.position = Vec2(0f)
 
@@ -137,6 +175,8 @@ class PongScene : Scene() {
     }
 
     private fun reflectOnPad(pad: Entity, sideDir: Float) {
+        playSfx("/audio/sfx_hit.wav")
+
         val rel = (ball.transform.position.y - pad.transform.position.y) / PAD_EXTENT_Y
         val angle = rel * (Math.PI / 3.5)
 
