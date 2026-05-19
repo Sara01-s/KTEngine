@@ -14,7 +14,7 @@ fun main() {
     log("Creating Game.")
     val game = Game(window)
 
-    SceneSystem.load(MainMenuScene())
+    SceneSystem.load(PongScene())
 
     game.loop(
         fixedUpdate = {

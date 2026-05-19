@@ -28,6 +28,7 @@ class Entity : AutoCloseable {
 
     internal inline fun <reified T : Component> getComponent() : T {
         val component = components[T::class]
+
         if (component != null) {
             return component as T
         }

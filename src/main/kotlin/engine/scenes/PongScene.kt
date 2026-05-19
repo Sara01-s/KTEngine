@@ -8,6 +8,7 @@ import engine.game.Player
 import engine.game.Time
 import engine.math.normalized
 import engine.rendering.Window
+import engine.rendering.text.TextRenderer
 import engine.systems.Assets
 import engine.utils.log
 import glm_.vec2.Vec2
@@ -38,6 +39,16 @@ class PongScene : Scene() {
     private val ball = createEntity().apply {
         addComponent<SpriteRenderer>().also { it.texture = Assets.loadTexture("/textures/tex_circle.png") }
         addComponent<Collider2D>()
+    }
+
+    private val p1ScoreText = createEntity().apply {
+        addComponent<TextRenderer>().text = "0"
+        transform.position = Vec2(-7f, 7f)
+    }
+
+    private val p2ScoreText = createEntity().apply {
+        addComponent<TextRenderer>().text = "0"
+        transform.position = Vec2(7f, 7f)
     }
 
     private var ballVelocity = Vec2()
@@ -78,11 +89,13 @@ class PongScene : Scene() {
         // Score.
         if (ball.transform.position.x > bounds.x) {
             scoreP2++
+            p1ScoreText.getComponent<TextRenderer>().text = "$scoreP2"
             resetBall(-1f)
         }
 
         if (ball.transform.position.x < -bounds.x) {
             scoreP1++
+            p2ScoreText.getComponent<TextRenderer>().text = "$scoreP1"
             resetBall(1f)
         }
     }
