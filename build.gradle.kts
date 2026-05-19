@@ -32,6 +32,8 @@ dependencies {
     runtimeOnly("org.lwjgl:lwjgl-stb::$lwjglNatives")
 
     implementation("io.github.kotlin-graphics:glm:0.9.9.1-12")
+
+    implementation("com.google.code.gson:gson:2.13.1")
 }
 
 kotlin {

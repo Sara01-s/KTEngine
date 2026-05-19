@@ -3,6 +3,7 @@ package engine.systems
 import engine.rendering.bindables.Material
 import engine.rendering.bindables.Shader
 import engine.rendering.bindables.Texture
+import engine.rendering.text.Font
 import engine.utils.Color
 
 object Assets : AutoCloseable {
@@ -45,6 +46,20 @@ object Assets : AutoCloseable {
             setTexture("_MainTex", loadDefaultTexture())
             setColor("_ColorTint", Color.white)
         }
+    }
+
+    fun loadDefaultTextMaterial() : Material {
+        return Material(loadShader("/shaders/shd_font.glsl")).apply {
+            setColor("_ColorTint", Color.white)
+        }
+    }
+
+    fun loadDefaultFont(): Font {
+        return loadFont("/fonts/font_tex_pixelated.png", "/fonts/font_structure_pixelated.json")
+    }
+
+    fun loadFont(texturePath: String, structurePath: String): Font {
+        return Font.loadFont(loadTexture(texturePath), loadText(structurePath))
     }
 
     override fun close() {

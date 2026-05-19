@@ -9,12 +9,12 @@ object SceneSystem : AutoCloseable {
     var currentScene: Scene? = null
         private set
         get() {
-            if (field != null) {
-                return field
+            if (field == null) {
+                log("No Scene currently loaded", LogLevel.Error)
+                return null
             }
 
-            log("No Scene currently loaded", LogLevel.Error)
-            return null
+            return field
         }
 
     fun load(scene: Scene) {

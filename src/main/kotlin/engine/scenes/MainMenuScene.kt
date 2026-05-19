@@ -1,5 +1,10 @@
 package engine.scenes
 
-class MainMenuScene : Scene() {
+import engine.rendering.text.TextRenderer
 
+class MainMenuScene : Scene() {
+    private val texto = createEntity().apply {
+        addComponent<TextRenderer>()
+    }
 }
+

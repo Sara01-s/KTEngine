@@ -2,6 +2,7 @@ package engine
 
 import engine.game.Game
 import engine.rendering.Window
+import engine.scenes.MainMenuScene
 import engine.scenes.PongScene
 import engine.systems.SceneSystem
 import engine.utils.log
@@ -13,7 +14,7 @@ fun main() {
     log("Creating Game.")
     val game = Game(window)
 
-    SceneSystem.load(PongScene())
+    SceneSystem.load(MainMenuScene())
 
     game.loop(
         fixedUpdate = {

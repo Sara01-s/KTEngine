@@ -5,11 +5,12 @@ import engine.rendering.bindables.Mesh
 import engine.systems.Assets
 import engine.systems.RenderSystem
 import engine.utils.Color
+import engine.utils.PrimitiveMeshes
 
 class SpriteRenderer : Renderer {
     override lateinit var entity: Entity
 
-    val mesh = Mesh.generateQuad()
+    val mesh = PrimitiveMeshes.quad
     val material = Assets.loadDefaultMaterial()
 
     var color = Color.white

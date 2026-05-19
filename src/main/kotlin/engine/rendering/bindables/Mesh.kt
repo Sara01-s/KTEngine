@@ -13,62 +13,62 @@ class Mesh(
     val topology: Int = GL_TRIANGLES,
     val usage: Int = GL_STATIC_DRAW
 ) : Bindable() {
-    companion object {
-        fun generateQuad() : Mesh {
-            return Mesh(
-                vertices = floatArrayOf(
-                    /*pos*/ -0.5f, -0.5f, /*uv*/ 0f, 0f,
-                    /*pos*/  0.5f, -0.5f, /*uv*/ 1f, 0f,
-                    /*pos*/  0.5f,  0.5f, /*uv*/ 1f, 1f,
-                    /*pos*/ -0.5f,  0.5f, /*uv*/ 0f, 1f
-                ),
-                indices = intArrayOf(0, 1, 2, 2, 3, 0)
-            )
-        }
-    }
 
     private val vao: Int = glGenVertexArrays()
     private val vbo: Int = glGenBuffers()
     private val ibo: Int = glGenBuffers()
 
-    val indexCount = indices.size
+    var indexCount = indices.size
+        private set
 
     init {
         glCall {
             glBindVertexArray(vao)
 
-            // Vertex buffer.
             glBindBuffer(GL_ARRAY_BUFFER, vbo)
-            glBufferData(GL_ARRAY_BUFFER, vertices, usage)
-
-            // Index buffer.
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo)
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, usage)
 
-            // Position.
+            // Attributes.
             glEnableVertexAttribArray(0)
             glVertexAttribPointer(
-                0,
-                2,
-                GL_FLOAT,
-                false,
-                4 * Float.SIZE_BYTES,
-                0L
+                /* index = */ 0,
+                /* size = */ 2,
+                /* type = */ GL_FLOAT,
+                /* normalized = */ false,
+                /* stride = */ 4 * Float.SIZE_BYTES,
+                /* pointer = */ 0L
             )
 
-            // TexCoords.
             glEnableVertexAttribArray(1)
             glVertexAttribPointer(
-                1,
-                2,
-                GL_FLOAT,
-                false,
-                4 * Float.SIZE_BYTES,
-                (2 * Float.SIZE_BYTES).toLong()
+                /* index = */ 1,
+                /* size = */ 2,
+                /* type = */ GL_FLOAT,
+                /* normalized = */ false,
+                /* stride = */ 4 * Float.SIZE_BYTES,
+                /* pointer = */ (2 * Float.SIZE_BYTES).toLong()
             )
 
             glBindVertexArray(0)
         }
+
+        setData(vertices, indices)
+    }
+
+    fun setData(vertices: FloatArray, indices: IntArray) {
+        glCall {
+            glBindVertexArray(vao)
+
+            glBindBuffer(GL_ARRAY_BUFFER, vbo)
+            glBufferData(GL_ARRAY_BUFFER, vertices, usage)
+
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo)
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, usage)
+
+            glBindVertexArray(0)
+        }
+
+        indexCount = indices.size
     }
 
     fun draw() {
@@ -81,7 +81,7 @@ class Mesh(
     }
 
     override fun unbind() {
-        glCall { glBindVertexArray(DEFAULT_GPU_ID) }
+        glCall { glBindVertexArray(0) }
     }
 
     override fun close() {
