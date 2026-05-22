@@ -2,13 +2,16 @@ package engine.systems
 
 import engine.components.Renderer
 import engine.components.Transform
-import engine.math.ortho
-import engine.math.scale
-import engine.math.translate
+import engine.game.Camera
+import engine.utils.scale
+import engine.utils.translate
 import engine.rendering.Window
 import engine.utils.Color
 import engine.utils.GLDebug.glCall
+import engine.utils.makeFrustum
+import engine.utils.ortho
 import glm_.mat4x4.Mat4
+import glm_.vec3.Vec3
 import org.lwjgl.opengl.GL11.*
 
 object RenderSystem {
@@ -46,17 +49,27 @@ object RenderSystem {
         val aspect = Window.aspectRatio
 
         val projection = Mat4().identity().ortho(
-            -aspect * 10f, aspect * 10f,
-            -10f, 10f,
-            -10f, 10f
+            left = -aspect * 10f,
+            right = aspect * 10f,
+            bottom = -10f,
+            top = 10f,
+            near = -10f,
+            far = 10f
         )
+
+        //val projection = Mat4().identity().makeFrustum(
+        //    fovYDegrees = 45.0f,
+        //    aspectRatio = aspect,
+        //    near = 0.01f,
+        //    far = 1000.0f
+        //)
 
         val view = Mat4().identity()
 
         val model = Mat4()
             .identity()
-            .translate(transform.position.x, transform.position.y)
-            .scale(transform.scale.x, transform.scale.y)
+            .translate(transform.position.x, transform.position.y, transform.position.z)
+            .scale(transform.scale.x, transform.scale.y, transform.scale.z)
 
         return projection * view * model
     }

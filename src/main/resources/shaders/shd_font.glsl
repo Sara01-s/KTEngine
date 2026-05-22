@@ -1,7 +1,7 @@
 #type vertex
 #version 450 core
 
-layout(location = 0) in vec2 a_position;
+layout(location = 0) in vec3 a_position;
 layout(location = 1) in vec2 a_uv;
 
 uniform mat4 _MVP;
@@ -10,7 +10,7 @@ out vec2 uv;
 
 void main() {
     uv = a_uv;
-    gl_Position = _MVP * vec4(a_position, 0.0, 1.0);
+    gl_Position = _MVP * vec4(a_position, 1.0);
 }
 
 #type fragment

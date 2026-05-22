@@ -2,18 +2,18 @@ package engine.scenes
 
 import engine.components.AudioSource
 import engine.components.Collider2D
-import engine.components.SpriteRenderer
+import engine.components.MeshRenderer
 import engine.game.Entity
 import engine.game.Input
 import engine.game.Player
 import engine.game.Time
-import engine.math.normalized
+import engine.utils.normalized
 import engine.rendering.Window
 import engine.rendering.text.TextRenderer
 import engine.systems.Assets
 import engine.systems.SceneSystem
 import engine.utils.log
-import glm_.vec2.Vec2
+import glm_.vec3.Vec3
 import org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE
 import kotlin.math.cos
 import kotlin.math.sin
@@ -27,31 +27,33 @@ const val BALL_SPEED = 9f
 const val BALL_ACCEL = 1.05f
 const val BALL_MAX_SPEED = 80f
 
+// TODO: See why Vec3(x, y) needs third parameter to be 0f.
+
 class PongScene : Scene() {
 
     private val p1 = createEntity().apply {
-        addComponent<SpriteRenderer>()
+        addComponent<MeshRenderer>()
         addComponent<Collider2D>()
     }
 
     private val p2 = createEntity().apply {
-        addComponent<SpriteRenderer>()
+        addComponent<MeshRenderer>()
         addComponent<Collider2D>()
     }
 
     private val ball = createEntity().apply {
-        addComponent<SpriteRenderer>().also { it.texture = Assets.loadTexture("/textures/tex_circle.png") }
+        addComponent<MeshRenderer>().also { it.texture = Assets.loadTexture("/textures/tex_circle.png") }
         addComponent<Collider2D>()
     }
 
     private val p1ScoreText = createEntity().apply {
         addComponent<TextRenderer>().text = "0"
-        transform.position = Vec2(-7f, 7f)
+        transform.position = Vec3(-7f, 7f)
     }
 
     private val p2ScoreText = createEntity().apply {
         addComponent<TextRenderer>().text = "0"
-        transform.position = Vec2(7f, 7f)
+        transform.position = Vec3(7f, 7f)
     }
 
     private val musicSource = createEntity().apply {
@@ -68,18 +70,18 @@ class PongScene : Scene() {
         }
     }
 
-    private var ballVelocity = Vec2()
+    private var ballVelocity = Vec3()
     private var scoreP1 = 0
     private var scoreP2 = 0
 
     init {
-        ball.transform.scale = Vec2(0.75f)
+        ball.transform.scale = Vec3(0.75f)
 
-        p1.transform.position = Vec2(-12f, 0f)
-        p1.transform.scale = Vec2(PAD_EXTENT_X * 2, PAD_EXTENT_Y * 2)
+        p1.transform.position = Vec3(-12f, 0f, 0f)
+        p1.transform.scale = Vec3(PAD_EXTENT_X * 2, PAD_EXTENT_Y * 2)
 
-        p2.transform.position = Vec2(12f, 0f)
-        p2.transform.scale = Vec2(PAD_EXTENT_X * 2, PAD_EXTENT_Y * 2)
+        p2.transform.position = Vec3(12f, 0f, 0f)
+        p2.transform.scale = Vec3(PAD_EXTENT_X * 2, PAD_EXTENT_Y * 2)
 
         p1.getComponent<Collider2D>().onEnter = { reflectOnPad(p1, 1f) }
         p2.getComponent<Collider2D>().onEnter = { reflectOnPad(p2, -1f) }
@@ -162,11 +164,11 @@ class PongScene : Scene() {
     }
 
     private fun resetBall(dir: Float = 1f) {
-        ball.transform.position = Vec2(0f)
+        ball.transform.position = Vec3(0f)
 
         val angle = (Math.random() * 0.5 - 0.25).toFloat()
 
-        ballVelocity = Vec2(
+        ballVelocity = Vec3(
             dir * BALL_SPEED,
             sin(angle.toDouble()).toFloat() * BALL_SPEED
         )
@@ -185,13 +187,13 @@ class PongScene : Scene() {
             BALL_MAX_SPEED
         )
 
-        ballVelocity = Vec2(
+        ballVelocity = Vec3(
             sideDir * cos(angle).toFloat() * speed,
             sin(angle).toFloat() * speed
         )
     }
 
-    private fun calculateWorldBounds(): Vec2 {
-        return Vec2(Window.aspectRatio * 10f, 10f)
+    private fun calculateWorldBounds(): Vec3 {
+        return Vec3(Window.aspectRatio * 10f, 10f)
     }
 }

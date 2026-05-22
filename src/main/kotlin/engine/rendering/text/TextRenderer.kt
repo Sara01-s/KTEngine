@@ -4,9 +4,14 @@ import engine.components.Renderer
 import engine.game.Entity
 import engine.rendering.bindables.Material
 import engine.rendering.bindables.Mesh
+import engine.rendering.bindables.Vertex
+import engine.rendering.bindables.VertexLayout
 import engine.systems.Assets
 import engine.systems.RenderSystem
-import org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW
+import glm_.vec2.Vec2
+import glm_.vec3.Vec3
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 class TextRenderer : Renderer {
 
@@ -15,27 +20,37 @@ class TextRenderer : Renderer {
 
     var text = "New Text"
         set(value) {
-            field = value
-            dirty = true
+            if (field != value) {
+                field = value
+                dirty = true
+            }
         }
 
     var font: Font = Assets.loadDefaultFont()
         set(value) {
-            field = value
-            dirty = true
+            if (field != value) {
+                field = value
+                dirty = true
+            }
         }
 
     var material: Material = Assets.loadDefaultTextMaterial()
 
+    private val layout = VertexLayout()
+        .append(VertexLayout.ElementType.Position3D)
+        .append(VertexLayout.ElementType.Texture2D)
+
     private var mesh = Mesh(
-        floatArrayOf(),
-        intArrayOf(),
-        usage = GL_DYNAMIC_DRAW
+        vertexBuffer = ByteBuffer.allocateDirect(0).order(ByteOrder.nativeOrder()),
+        indices = intArrayOf(),
+        layout = layout
     )
 
     private var dirty = true
 
     override fun draw() {
+        if (!isVisible) return
+
         if (dirty) {
             rebuildMesh()
         }
@@ -48,18 +63,37 @@ class TextRenderer : Renderer {
     }
 
     private fun rebuildMesh() {
-        val vertices = mutableListOf<Float>()
-        val indices = mutableListOf<Int>()
+        if (text.isEmpty()) {
+            mesh.setData(ByteBuffer.allocateDirect(0).order(ByteOrder.nativeOrder()), intArrayOf())
+            dirty = false
+            return
+        }
+
+        val printableCharCount = text.count { char -> char != '\n' && char != ' ' && font.glyphs.containsKey(char) }
+
+        if (printableCharCount == 0) {
+            mesh.setData(ByteBuffer.allocateDirect(0).order(ByteOrder.nativeOrder()), intArrayOf())
+            dirty = false
+            return
+        }
+
+        val vertexCount = printableCharCount * 4
+        val indexCount = printableCharCount * 6
+
+        val totalBytes = vertexCount * layout.stride
+        val vertexBuffer = ByteBuffer.allocateDirect(totalBytes).order(ByteOrder.nativeOrder())
+        val indices = IntArray(indexCount)
 
         var cursorX = 0f
         var cursorY = 0f
 
         var vertexOffset = 0
+        var indexOffset = 0
 
         for (char in text) {
             if (char == '\n') {
                 cursorX = 0f
-                cursorY -= 1f
+                cursorY -= font.lineHeight
                 continue
             }
 
@@ -68,8 +102,7 @@ class TextRenderer : Renderer {
                 continue
             }
 
-            val glyph = font.glyphs[char]
-                ?: continue
+            val glyph = font.glyphs[char] ?: continue
 
             val x = cursorX + glyph.offset.x
             val y = cursorY - glyph.offset.y
@@ -80,31 +113,38 @@ class TextRenderer : Renderer {
             val uvMin = glyph.uvMin
             val uvMax = glyph.uvMax
 
-            vertices.addAll(listOf(
-                // pos        // uv
-                x,     y,     uvMin.x, uvMax.y,
-                x + w, y,     uvMax.x, uvMax.y,
-                x + w, y - h, uvMax.x, uvMin.y,
-                x,     y - h, uvMin.x, uvMin.y
-            ))
+            // Top-Left
+            Vertex(vertexBuffer, (vertexOffset + 0) * layout.stride, layout)
+                .setAttributes(Vec3(x, y, 0.0f), Vec2(uvMin.x, uvMax.y))
 
-            indices.addAll(
-                listOf(
-                    vertexOffset + 0,
-                    vertexOffset + 1,
-                    vertexOffset + 2,
+            // Top-Right
+            Vertex(vertexBuffer, (vertexOffset + 1) * layout.stride, layout)
+                .setAttributes(Vec3(x + w, y, 0.0f), Vec2(uvMax.x, uvMax.y))
 
-                    vertexOffset + 2,
-                    vertexOffset + 3,
-                    vertexOffset + 0
-                )
-            )
+            // Bottom-Right
+            Vertex(vertexBuffer, (vertexOffset + 2) * layout.stride, layout)
+                .setAttributes(Vec3(x + w, y - h, 0.0f), Vec2(uvMax.x, uvMin.y))
+
+            // Bottom-Left
+            Vertex(vertexBuffer, (vertexOffset + 3) * layout.stride, layout)
+                .setAttributes(Vec3(x, y - h, 0.0f), Vec2(uvMin.x, uvMin.y))
+
+            indices[indexOffset + 0] = vertexOffset + 0
+            indices[indexOffset + 1] = vertexOffset + 1
+            indices[indexOffset + 2] = vertexOffset + 2
+
+            indices[indexOffset + 3] = vertexOffset + 2
+            indices[indexOffset + 4] = vertexOffset + 3
+            indices[indexOffset + 5] = vertexOffset + 0
 
             vertexOffset += 4
+            indexOffset += 6
             cursorX += glyph.advance
         }
 
-        mesh.setData(vertices.toFloatArray(), indices.toIntArray())
+        vertexBuffer.rewind()
+
+        mesh.setData(vertexBuffer, indices)
         dirty = false
     }
 

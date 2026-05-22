@@ -22,6 +22,7 @@ dependencies {
     implementation("org.lwjgl:lwjgl-opengl")
     implementation("org.lwjgl:lwjgl-stb")
     implementation("org.lwjgl:lwjgl-openal")
+    implementation("org.lwjgl:lwjgl-assimp")
 
     implementation("io.github.kotlin-graphics:glm:0.9.9.1-12")
     implementation("com.google.code.gson:gson:2.13.1")
@@ -31,6 +32,7 @@ dependencies {
     runtimeOnly("org.lwjgl:lwjgl-opengl::$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-stb::$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-openal::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-assimp::$lwjglNatives")
 }
 
 kotlin {

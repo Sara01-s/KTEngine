@@ -6,12 +6,14 @@ import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL20.glEnableVertexAttribArray
 import org.lwjgl.opengl.GL20.glVertexAttribPointer
 import org.lwjgl.opengl.GL30.*
+import java.nio.ByteBuffer
 
 class Mesh(
-    vertices: FloatArray,
-    indices: IntArray,
+    vertexBuffer: ByteBuffer,
+    val indices: IntArray,
+    val layout: VertexLayout,
     val topology: Int = GL_TRIANGLES,
-    val usage: Int = GL_STATIC_DRAW
+    val usage: Int = GL_DYNAMIC_DRAW
 ) : Bindable() {
 
     private val vao: Int = glGenVertexArrays()
@@ -28,38 +30,31 @@ class Mesh(
             glBindBuffer(GL_ARRAY_BUFFER, vbo)
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo)
 
-            // Attributes.
-            glEnableVertexAttribArray(0)
-            glVertexAttribPointer(
-                /* index = */ 0,
-                /* size = */ 2,
-                /* type = */ GL_FLOAT,
-                /* normalized = */ false,
-                /* stride = */ 4 * Float.SIZE_BYTES,
-                /* pointer = */ 0L
-            )
-
-            glEnableVertexAttribArray(1)
-            glVertexAttribPointer(
-                /* index = */ 1,
-                /* size = */ 2,
-                /* type = */ GL_FLOAT,
-                /* normalized = */ false,
-                /* stride = */ 4 * Float.SIZE_BYTES,
-                /* pointer = */ (2 * Float.SIZE_BYTES).toLong()
-            )
+            for ((index, element) in layout.elements.withIndex()) {
+                glEnableVertexAttribArray(index)
+                glVertexAttribPointer(
+                    /* index = */ index,
+                    /* size = */ element.type.length,
+                    /* type = */ element.type.glType,
+                    /* normalized = */ false,
+                    /* stride = */ layout.stride,
+                    /* pointer = */ element.offset.toLong()
+                )
+            }
 
             glBindVertexArray(0)
         }
 
-        setData(vertices, indices)
+        setData(vertexBuffer, indices)
     }
 
-    fun setData(vertices: FloatArray, indices: IntArray) {
-        if (vertices.isEmpty() || indices.isEmpty()) {
+    fun setData(vertices: ByteBuffer, indices: IntArray) {
+        if (vertices.remaining() == 0 || indices.isEmpty()) {
             indexCount = 0
             return
         }
+
+        vertices.rewind()
 
         glCall {
             glBindVertexArray(vao)
@@ -85,13 +80,8 @@ class Mesh(
         glCall { glDrawElements(topology, indexCount, GL_UNSIGNED_INT, 0L) }
     }
 
-    override fun bind() {
-        glCall { glBindVertexArray(vao) }
-    }
-
-    override fun unbind() {
-        glCall { glBindVertexArray(0) }
-    }
+    override fun bind() { glCall { glBindVertexArray(vao) } }
+    override fun unbind() { glCall { glBindVertexArray(0) } }
 
     override fun close() {
         glCall {
