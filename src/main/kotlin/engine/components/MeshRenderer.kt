@@ -12,23 +12,7 @@ class MeshRenderer : Renderer {
     override var isVisible = true
 
     var mesh = PrimitiveMeshes.quad
-    val material = Assets.loadDefaultMaterial()
-
-    var color = Color.white
-        set(value) {
-            field = value
-            material.setColor("_ColorTint", value)
-        }
-
-    var texture: Texture? = null
-        set(value) {
-            field = value
-            if (value != null) {
-                material.setTexture("_MainTex", value)
-            } else {
-                error("Cannot assign a null texture to MeshRenderer")
-            }
-        }
+    var material = Assets.loadDefaultMaterial()
 
     override fun onAdded() {
         RenderSystem.register(this)
@@ -41,8 +25,8 @@ class MeshRenderer : Renderer {
     override fun draw() {
         if (!isVisible) return
 
-        material.bind()
         material.setMat4("_MVP", RenderSystem.calculateMvpMatrix(entity.transform))
+        material.bind()
         mesh.draw()
     }
 

@@ -42,7 +42,7 @@ class PongScene : Scene() {
     }
 
     private val ball = createEntity().apply {
-        addComponent<MeshRenderer>().also { it.texture = Assets.loadTexture("/textures/tex_circle.png") }
+        addComponent<MeshRenderer>().also { it.material.setTexture(Assets.loadTexture("/textures/tex_circle.png")) }
         addComponent<Collider2D>()
     }
 

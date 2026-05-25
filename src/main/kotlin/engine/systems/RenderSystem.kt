@@ -40,6 +40,8 @@ object RenderSystem {
             glViewport(0, 0, Window.width, Window.height)
             glEnable(GL_BLEND)
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+            glEnable(GL_DEPTH_TEST)
         }
 
         setClearColor(Color.coolPurple)
@@ -85,7 +87,7 @@ object RenderSystem {
     fun clearScreen() {
         glCall {
             glViewport(0, 0, Window.width, Window.height)
-            glClear(GL_COLOR_BUFFER_BIT)
+            glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         }
     }
 }

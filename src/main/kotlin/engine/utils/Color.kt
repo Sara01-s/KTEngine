@@ -11,6 +11,7 @@ data class Color(val r: Float, val g: Float, val b: Float, val a: Float = 1.0f) 
         val magenta = Color(1f, 0f, 1f)
         val yellow = Color(1f, 1f, 0f)
         val transparent = Color(0f, 0f, 0f, 0f)
+        val halfTransparent = Color(0f, 0f, 0f, 0.5f)
         val coolPurple = Color(0.0667f, 0.0f, 0.0902f)
     }
 }

@@ -1,5 +1,6 @@
 package engine.rendering.bindables
 
+import engine.systems.Assets
 import engine.utils.Color
 import glm_.mat4x4.Mat4
 import glm_.vec4.Vec4
@@ -12,14 +13,18 @@ class Material(val shader: Shader) : Bindable() {
     private val mat4s    = mutableMapOf<String, Mat4>()
     private val textures = mutableMapOf<String, Texture>()
 
+    init {
+        setColor("_ColorTint", Color.white)
+        setTexture("_MainTex", Assets.loadDefaultTexture())
+    }
+
     fun setInt(name: String, value: Int)         { ints[name]     = value }
     fun setFloat(name: String, value: Float)     { floats[name]   = value }
     fun setVec4(name: String, value: Vec4)       { vec4s[name]    = value }
     fun setMat4(name: String, value: Mat4)       { mat4s[name]    = value }
+    fun setTexture(texture: Texture)             { setTexture("_MainTex", texture) }
     fun setTexture(name: String, value: Texture) { textures[name] = value }
-    fun setColor(name: String, value: Color) {
-        setVec4(name, Vec4(value.r, value.g, value.b, value.a))
-    }
+    fun setColor(name: String, value: Color)     { setVec4(name, Vec4(value.r, value.g, value.b, value.a)) }
 
     fun getInt(name: String): Int?         = ints[name]
     fun getFloat(name: String): Float?     = floats[name]
@@ -27,6 +32,7 @@ class Material(val shader: Shader) : Bindable() {
     fun getMat4(name: String): Mat4?       = mat4s[name]
     fun getTexture(name: String): Texture? = textures[name]
     fun getColor(name: String): Color? = vec4s[name]?.let { Color(it.x, it.y, it.z, it.w) }
+
 
     override fun bind() {
         shader.bind()

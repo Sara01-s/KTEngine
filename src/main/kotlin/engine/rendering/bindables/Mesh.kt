@@ -7,14 +7,42 @@ import org.lwjgl.opengl.GL20.glEnableVertexAttribArray
 import org.lwjgl.opengl.GL20.glVertexAttribPointer
 import org.lwjgl.opengl.GL30.*
 import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 class Mesh(
+    val layout: VertexLayout,
     vertexBuffer: ByteBuffer,
     val indices: IntArray,
-    val layout: VertexLayout,
     val topology: Int = GL_TRIANGLES,
     val usage: Int = GL_DYNAMIC_DRAW
 ) : Bindable() {
+
+    companion object {
+        private fun buildByteBuffer(layout: VertexLayout, vertices: List<Any>): ByteBuffer {
+            val n = layout.elements.size
+            val vertexCount = vertices.size / n
+            val buffer = ByteBuffer
+                .allocateDirect(vertexCount * layout.stride)
+                .order(ByteOrder.nativeOrder())
+
+            for (i in 0 until vertexCount) {
+                for (j in 0 until n) {
+                    val element = layout.elements[j]
+                    element.type.write(buffer, i * layout.stride + element.offset, vertices[i * n + j])
+                }
+            }
+
+            return buffer
+        }
+    }
+
+    constructor(
+        layout: VertexLayout,
+        vertices: List<Any>,
+        indices: IntArray,
+        topology: Int = GL_TRIANGLES,
+        usage: Int = GL_DYNAMIC_DRAW
+    ) : this(layout, buildByteBuffer(layout, vertices), indices, topology, usage)
 
     private val vao: Int = glGenVertexArrays()
     private val vbo: Int = glGenBuffers()
@@ -48,23 +76,22 @@ class Mesh(
         setData(vertexBuffer, indices)
     }
 
+    fun setData(vertices: List<Any>, indices: IntArray) {
+        setData(buildByteBuffer(layout, vertices), indices)
+    }
+
     fun setData(vertices: ByteBuffer, indices: IntArray) {
-        if (vertices.remaining() == 0 || indices.isEmpty()) {
+        if (indices.isEmpty()) {
             indexCount = 0
             return
         }
 
-        vertices.rewind()
-
         glCall {
             glBindVertexArray(vao)
-
             glBindBuffer(GL_ARRAY_BUFFER, vbo)
-            glBufferData(GL_ARRAY_BUFFER, vertices, usage)
-
+            glBufferData(GL_ARRAY_BUFFER, vertices.rewind(), usage)
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo)
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, usage)
-
             glBindVertexArray(0)
         }
 

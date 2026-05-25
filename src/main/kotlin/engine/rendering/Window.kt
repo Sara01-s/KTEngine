@@ -5,7 +5,9 @@ import engine.utils.LogLevel
 import engine.utils.log
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL
+import org.lwjgl.opengl.GL11.glEnable
 import org.lwjgl.opengl.GL11.glViewport
+import org.lwjgl.opengl.GL13.GL_MULTISAMPLE
 
 class Window(
     width: Int = 1280,
@@ -30,6 +32,7 @@ class Window(
 
         glfwDefaultWindowHints()
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
+        glfwWindowHint(GLFW_SAMPLES, 4) // MSAA 4x.
 
         handle = glfwCreateWindow(
             width,
@@ -45,11 +48,14 @@ class Window(
 
         glfwMakeContextCurrent(handle)
         GL.createCapabilities()
-        glCall { glViewport(0, 0, width, height) }
+        glCall {
+            glViewport(0, 0, width, height)
+            glEnable(GL_MULTISAMPLE)
+        }
         glfwSetFramebufferSizeCallback(handle) { _, w, h ->
             Window.width = w
             Window.height = h
-            glCall { glViewport(0, 0, width, height) }
+            glCall { glViewport(0, 0, w, h) }
         }
         setVSync(enabled = true)
         glfwShowWindow(handle)

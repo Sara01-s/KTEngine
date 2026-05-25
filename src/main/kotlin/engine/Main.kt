@@ -23,7 +23,7 @@ fun main() {
     log("Initializing Audio System.")
     AudioSystem.init()
 
-    SceneSystem.loadScene(MainMenuScene())
+    SceneSystem.loadScene(Scene3D())
 
     game.loop(
         fixedUpdate = {
@@ -38,9 +38,10 @@ fun main() {
     )
 
     SceneSystem.close()
-    Assets.close()
     PrimitiveMeshes.close()
+    Assets.close()
     window.close()
+    AudioSystem.close()
 
     log("Bye Bye.")
 }

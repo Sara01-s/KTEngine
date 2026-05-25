@@ -26,7 +26,7 @@ class MainMenuScene : Scene() {
     }
 
     private val eli = createEntity().apply {
-        addComponent<MeshRenderer>().texture = Assets.loadTexture("/textures/tex_eli.png")
+        addComponent<MeshRenderer>().material.setTexture(Assets.loadTexture("/textures/tex_eli.png"))
         transform.position = Vec2(-12f, -4f).toVec3()
         transform.scale = Vec3(10f, 10f)
     }
