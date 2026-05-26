@@ -4,7 +4,7 @@ import engine.game.Entity
 
 abstract class Scene : AutoCloseable {
 
-    private val closables = mutableListOf<AutoCloseable>()
+    private val entities = mutableListOf<Entity>()
 
     open fun fixedUpdate() {}
     open fun update() {}
@@ -12,12 +12,12 @@ abstract class Scene : AutoCloseable {
 
     protected fun createEntity() : Entity {
         val entity = Entity()
-        closables.add(entity)
+        entities.add(entity)
 
         return entity
     }
 
     final override fun close() {
-        closables.reversed().forEach { it.close() }
+        entities.reversed().forEach { it.close() }
     }
 }

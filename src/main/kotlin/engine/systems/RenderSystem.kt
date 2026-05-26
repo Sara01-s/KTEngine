@@ -2,20 +2,22 @@ package engine.systems
 
 import engine.components.Renderer
 import engine.components.Transform
-import engine.game.Camera
-import engine.utils.scale
-import engine.utils.translate
 import engine.rendering.Window
 import engine.utils.Color
 import engine.utils.GLDebug.glCall
-import engine.utils.makeFrustum
-import engine.utils.ortho
+import glm_.glm
 import glm_.mat4x4.Mat4
-import glm_.vec3.Vec3
 import org.lwjgl.opengl.GL11.*
 
 object RenderSystem {
     private val renderers = mutableListOf<Renderer>()
+
+    private val lhToRh = Mat4(
+        1f,  0f,  0f,  0f,
+        0f,  1f,  0f,  0f,
+        0f,  0f, -1f,  0f,
+        0f,  0f,  0f,  1f
+    )
 
     fun register(renderer: Renderer) {
         renderers.add(renderer)
@@ -40,38 +42,33 @@ object RenderSystem {
             glViewport(0, 0, Window.width, Window.height)
             glEnable(GL_BLEND)
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-
             glEnable(GL_DEPTH_TEST)
         }
 
-        setClearColor(Color.coolPurple)
+        setClearColor(Color.gray30)
+    }
+
+    fun calculateModelMatrix(transform: Transform): Mat4 {
+        return lhToRh * transform.worldMatrix
+    }
+
+    fun calculateViewMatrix(cameraTransform: Transform): Mat4 {
+        return lhToRh * cameraTransform.worldMatrix.inverse()
     }
 
     fun calculateMvpMatrix(transform: Transform): Mat4 {
-        val aspect = Window.aspectRatio
+        val camera = CameraSystem.main
 
-        val projection = Mat4().identity().ortho(
-            left = -aspect * 10f,
-            right = aspect * 10f,
-            bottom = -10f,
-            top = 10f,
-            near = -10f,
-            far = 10f
+        val model = lhToRh * transform.worldMatrix
+
+        val view  = calculateViewMatrix(camera!!.entity.transform)
+
+        val projection = glm.perspective(
+            fovY = 45f,
+            aspect = Window.aspectRatio,
+            near = 0.01f,
+            far = 1000f,
         )
-
-        //val projection = Mat4().identity().makeFrustum(
-        //    fovYDegrees = 45.0f,
-        //    aspectRatio = aspect,
-        //    near = 0.01f,
-        //    far = 1000.0f
-        //)
-
-        val view = Mat4().identity()
-
-        val model = Mat4()
-            .identity()
-            .translate(transform.position.x, transform.position.y, transform.position.z)
-            .scale(transform.scale.x, transform.scale.y, transform.scale.z)
 
         return projection * view * model
     }

@@ -4,13 +4,14 @@ import engine.components.AudioSource
 import engine.components.Collider2D
 import engine.components.MeshRenderer
 import engine.game.Entity
-import engine.game.Input
-import engine.game.Player
+import engine.systems.Input
+import engine.systems.Player
 import engine.game.Time
 import engine.utils.normalized
 import engine.rendering.Window
 import engine.rendering.text.TextRenderer
 import engine.systems.Assets
+import engine.systems.Key
 import engine.systems.SceneSystem
 import engine.utils.log
 import glm_.vec3.Vec3
@@ -48,12 +49,12 @@ class PongScene : Scene() {
 
     private val p1ScoreText = createEntity().apply {
         addComponent<TextRenderer>().text = "0"
-        transform.position = Vec3(-7f, 7f)
+        transform.localPosition = Vec3(-7f, 7f)
     }
 
     private val p2ScoreText = createEntity().apply {
         addComponent<TextRenderer>().text = "0"
-        transform.position = Vec3(7f, 7f)
+        transform.localPosition = Vec3(7f, 7f)
     }
 
     private val musicSource = createEntity().apply {
@@ -75,13 +76,13 @@ class PongScene : Scene() {
     private var scoreP2 = 0
 
     init {
-        ball.transform.scale = Vec3(0.75f)
+        ball.transform.localScale = Vec3(0.75f)
 
-        p1.transform.position = Vec3(-12f, 0f, 0f)
-        p1.transform.scale = Vec3(PAD_EXTENT_X * 2, PAD_EXTENT_Y * 2)
+        p1.transform.localPosition = Vec3(-12f, 0f, 0f)
+        p1.transform.localScale = Vec3(PAD_EXTENT_X * 2, PAD_EXTENT_Y * 2)
 
-        p2.transform.position = Vec3(12f, 0f, 0f)
-        p2.transform.scale = Vec3(PAD_EXTENT_X * 2, PAD_EXTENT_Y * 2)
+        p2.transform.localPosition = Vec3(12f, 0f, 0f)
+        p2.transform.localScale = Vec3(PAD_EXTENT_X * 2, PAD_EXTENT_Y * 2)
 
         p1.getComponent<Collider2D>().onEnter = { reflectOnPad(p1, 1f) }
         p2.getComponent<Collider2D>().onEnter = { reflectOnPad(p2, -1f) }
@@ -93,25 +94,25 @@ class PongScene : Scene() {
     override fun fixedUpdate() {
         val bounds = calculateWorldBounds()
 
-        ball.transform.position = ball.transform.position.plus(ballVelocity * Time.FIXED_DELTA_TIME)
+        ball.transform.localPosition = ball.transform.localPosition.plus(ballVelocity * Time.FIXED_DELTA_TIME)
 
         // Top/Bottom bounce.
-        if (ball.transform.position.y > bounds.y) {
+        if (ball.transform.localPosition.y > bounds.y) {
             playSfx("/audio/sfx_hit.wav")
 
-            ball.transform.position.y = bounds.y
+            ball.transform.localPosition.y = bounds.y
             ballVelocity.y *= -1f
         }
 
-        if (ball.transform.position.y < -bounds.y) {
+        if (ball.transform.localPosition.y < -bounds.y) {
             playSfx("/audio/sfx_hit.wav")
 
-            ball.transform.position.y = -bounds.y
+            ball.transform.localPosition.y = -bounds.y
             ballVelocity.y *= -1f
         }
 
         // Score.
-        if (ball.transform.position.x > bounds.x) {
+        if (ball.transform.localPosition.x > bounds.x) {
             scoreP2++
             p1ScoreText.getComponent<TextRenderer>().text = "$scoreP2"
             playSfx("/audio/sfx_score.wav")
@@ -119,7 +120,7 @@ class PongScene : Scene() {
             resetBall(-1f)
         }
 
-        if (ball.transform.position.x < -bounds.x) {
+        if (ball.transform.localPosition.x < -bounds.x) {
             scoreP1++
             p2ScoreText.getComponent<TextRenderer>().text = "$scoreP1"
             playSfx("/audio/sfx_score.wav")
@@ -129,7 +130,7 @@ class PongScene : Scene() {
     }
 
     override fun update() {
-        if (Input.isKeyJustPressed(GLFW_KEY_ESCAPE)) {
+        if (Input.Keyboard.isJustPressed(Key.Space)) {
             SceneSystem.loadScene(MainMenuScene())
         }
 
@@ -138,16 +139,16 @@ class PongScene : Scene() {
         val axisP1 = Input.getAxis(Player.P1).normalized()
         val axisP2 = Input.getAxis(Player.P2).normalized()
 
-        p1.transform.position.y =
-            (p1.transform.position.y +
+        p1.transform.localPosition.y =
+            (p1.transform.localPosition.y +
                     axisP1.y * PAD_SPEED * Time.deltaTime)
                 .coerceIn(
                     -bounds.y + PAD_EXTENT_Y,
                     bounds.y - PAD_EXTENT_Y
                 )
 
-        p2.transform.position.y =
-            (p2.transform.position.y +
+        p2.transform.localPosition.y =
+            (p2.transform.localPosition.y +
                     axisP2.y * PAD_SPEED * Time.deltaTime)
                 .coerceIn(
                     -bounds.y + PAD_EXTENT_Y,
@@ -164,7 +165,7 @@ class PongScene : Scene() {
     }
 
     private fun resetBall(dir: Float = 1f) {
-        ball.transform.position = Vec3(0f)
+        ball.transform.localPosition = Vec3(0f)
 
         val angle = (Math.random() * 0.5 - 0.25).toFloat()
 
@@ -179,7 +180,7 @@ class PongScene : Scene() {
     private fun reflectOnPad(pad: Entity, sideDir: Float) {
         playSfx("/audio/sfx_hit.wav")
 
-        val rel = (ball.transform.position.y - pad.transform.position.y) / PAD_EXTENT_Y
+        val rel = (ball.transform.localPosition.y - pad.transform.localPosition.y) / PAD_EXTENT_Y
         val angle = rel * (Math.PI / 3.5)
 
         val speed = minOf(

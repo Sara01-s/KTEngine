@@ -29,12 +29,12 @@ data class Collider2D(
 
     fun intersects(other: Collider2D): Boolean {
         val transform = entity.transform
-        val center = transform.position
-        val extent = Vec2(transform.scale.x * 0.5f, transform.scale.y * 0.5f)
+        val center = transform.worldPosition
+        val extent = Vec2(transform.localScale.x * 0.5f, transform.localScale.y * 0.5f)
 
         val otherTransform = other.entity.transform
-        val otherCenter = otherTransform.position
-        val otherExtent = Vec2(otherTransform.scale.x * 0.5f, otherTransform.scale.y * 0.5f)
+        val otherCenter = otherTransform.worldPosition
+        val otherExtent = Vec2(otherTransform.localScale.x * 0.5f, otherTransform.localScale.y * 0.5f)
 
         return abs(center.x - otherCenter.x) < (extent.x + otherExtent.x) &&
                 abs(center.y - otherCenter.y) < (extent.y + otherExtent.y)

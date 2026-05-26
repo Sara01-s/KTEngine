@@ -2,6 +2,7 @@ package engine.utils
 
 import glm_.glm.dot
 import glm_.mat4x4.Mat4
+import glm_.quat.Quat
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import kotlin.math.PI
@@ -171,7 +172,44 @@ fun clamp(value: Float, min: Float, max: Float): Float {
     }
 }
 
-fun Vec2.toVec3(z: Float = 0.0f): Vec3 = Vec3(this.x, this.y, z)
-fun Vec3(x: Float, y: Float): Vec3 {
-    return Vec3(x, y, 0.0f)
+val vecUp      = Vec3(0f, 1f, 0f)
+val vecRight   = Vec3(1f, 0f, 0f)
+val vecForward = Vec3(0f, 0f, 1f)
+
+val Vec3.Companion.up: Vec3 get() = vecUp
+val Vec3.Companion.down: Vec3 get() = -vecUp
+
+val Vec3.Companion.right: Vec3 get() = vecRight
+val Vec3.Companion.left: Vec3 get() = -vecRight
+
+val Vec3.Companion.forward: Vec3 get() = vecForward
+val Vec3.Companion.back: Vec3 get() = -vecForward
+
+val Vec3.Companion.zero: Vec3 get() = Vec3(0f, 0f, 0f)
+val Vec3.Companion.one: Vec3 get() = Vec3(1f, 1f, 1f)
+
+fun Quat.Companion.fromEulerAngles(xDegrees: Float, yDegrees: Float, zDegrees: Float): Quat {
+    val factor = 0.017453292f * 0.5f
+
+    val pitchRad = xDegrees * factor
+    val yawRad   = yDegrees * factor
+    val rollRad  = zDegrees * factor
+
+    val cx = cos(pitchRad)
+    val sx = sin(pitchRad)
+    val cy = cos(yawRad)
+    val sy = sin(yawRad)
+    val cz = cos(rollRad)
+    val sz = sin(rollRad)
+
+    val qw = cx * cy * cz + sx * sy * sz
+    val qx = sx * cy * cz + cx * sy * sz
+    val qy = cx * sy * cz - sx * cy * sz
+    val qz = cx * cy * sz - sx * sy * cz
+
+    return Quat(qw, qx, qy, qz)
+}
+
+fun Quat.Companion.fromEulerAngles(euler: Vec3): Quat {
+    return fromEulerAngles(euler.x, euler.y, euler.z)
 }
