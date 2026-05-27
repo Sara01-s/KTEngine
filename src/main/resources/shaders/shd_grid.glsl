@@ -11,9 +11,7 @@ out vec2 worldXZ;
 
 void main() {
     vec4 worldPos = _ModelMatrix * vec4(a_position, 1.0);
-
     worldXZ = worldPos.xz;
-
     gl_Position = _MVP * vec4(a_position, 1.0);
 }
 
@@ -35,8 +33,7 @@ const vec3  GRID_COLOR    = vec3(0.6, 0.6, 0.6);
 const vec3  X_AXIS_COLOR  = vec3(0.8, 0.15, 0.15);
 const vec3  Z_AXIS_COLOR  = vec3(0.15, 0.45, 0.8);
 
-// Fog
-const float FOG_START = 30.0;
+const float FOG_START = 25.0;
 const float FOG_END   = 60.0;
 
 float gridLine(float value, float period, float halfWidth) {
