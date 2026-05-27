@@ -8,10 +8,8 @@ class Camera : Component {
     override lateinit var entity: Entity
 
     var pitch = 0f
-        private set
-
     var yaw = 0f
-        private set
+    var roll = 0f
 
     override fun onAdded() {
         CameraSystem.register(this)

@@ -2,6 +2,7 @@ package engine.scenes
 
 import engine.components.Camera
 import engine.components.MeshRenderer
+import engine.components.Transform
 import engine.game.Time
 import engine.rendering.bindables.Material
 import engine.systems.Assets
@@ -16,17 +17,10 @@ import glm_.quat.Quat
 import glm_.vec3.Vec3
 
 class Scene3D : Scene() {
-    private val moveSpeed = 12f
-    private val lookSensitivity = 0.15f
-    private val rotationSpeed = 1f
+    private val cameraEntity by entityRef("MainCamera")
+    private val cubeEntity by entityRef("OrbitingCube")
 
-    private var cameraPitch = 0f
-    private var cameraYaw = 0f
-
-    private val camera by entityRef("MainCamera")
-    private val orbitingCube by entityRef("OrbitingCube")
-
-    private val rotatingTransforms = mutableListOf<engine.components.Transform>()
+    private val rotatingTransforms = mutableListOf<Transform>()
 
     init {
         Input.Mouse.captured = true
@@ -97,28 +91,31 @@ class Scene3D : Scene() {
         if (Input.Keyboard.isJustPressed(Key.Escape)) Input.Mouse.captured = false
         if (Input.Keyboard.isJustPressed(Key.Enter))  Input.Mouse.captured = true
 
+        val rotationSpeed = 1f
         val angleDelta = rotationSpeed * dt
         rotatingTransforms.forEach { transform ->
             transform.rotate(pitch = angleDelta * 0.5f, yaw = angleDelta, roll = 0f)
         }
 
-        orbitingCube.transform.rotate(pitch = 0f, yaw = -rotationSpeed * 2f * dt, roll = 0f)
+        cubeEntity.transform.rotate(pitch = 0f, yaw = -rotationSpeed * 2f * dt, roll = 0f)
 
+        val lookSensitivity = 0.15f
+        val camera = cameraEntity.getComponent<Camera>()
         if (Input.Mouse.captured) {
             val mouseDelta = Input.Mouse.delta
-            cameraYaw += mouseDelta.x * lookSensitivity
-            cameraPitch += mouseDelta.y * lookSensitivity
-            cameraPitch = clamp(cameraPitch, -89f, 89f)
+            camera.yaw += mouseDelta.x * lookSensitivity
+            camera.pitch += mouseDelta.y * lookSensitivity
+            camera.pitch = clamp(camera.pitch, -89f, 89f)
 
-            camera.transform.localRotation = Quat.fromEulerAngles(cameraPitch, cameraYaw, 0f)
+            cameraEntity.transform.localRotation = Quat.fromEulerAngles(camera.pitch, camera.yaw, 0f)
         }
 
         val moveDirection = Vec3(0f, 0f, 0f)
         val horizontalAxis = Input.getAxis(Player.P1, Axis.Horizontal)
         val verticalAxis = Input.getAxis(Player.P1, Axis.Vertical)
 
-        if (horizontalAxis != 0f) moveDirection.plusAssign(camera.transform.right * horizontalAxis)
-        if (verticalAxis != 0f)   moveDirection.plusAssign(camera.transform.forward * verticalAxis)
+        if (horizontalAxis != 0f) moveDirection.plusAssign(cameraEntity.transform.right * horizontalAxis)
+        if (verticalAxis != 0f)   moveDirection.plusAssign(cameraEntity.transform.forward * verticalAxis)
 
         if (Input.Keyboard.isPressed(Key.Space))     moveDirection.plusAssign(Vec3(0f, 1f, 0f))
         if (Input.Keyboard.isPressed(Key.LeftShift)) moveDirection.minusAssign(Vec3(0f, 1f, 0f))
@@ -127,6 +124,7 @@ class Scene3D : Scene() {
             moveDirection.normalizeAssign()
         }
 
-        camera.transform.localPosition = camera.transform.localPosition + (moveDirection * moveSpeed * dt)
+        val moveSpeed = 12f
+        cameraEntity.transform.localPosition = cameraEntity.transform.localPosition + (moveDirection * moveSpeed * dt)
     }
 }
