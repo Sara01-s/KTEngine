@@ -4,7 +4,11 @@ import engine.components.Component
 import engine.components.Transform
 import kotlin.reflect.KClass
 
-class Entity : AutoCloseable {
+class Entity(val id: Int, val name: String = DEFAULT_NAME) : AutoCloseable {
+    companion object {
+        const val DEFAULT_NAME = "New Entity"
+    }
+
     val transform = Transform()
 
     private val components = mutableMapOf<KClass<out Component>, Component>().apply {
