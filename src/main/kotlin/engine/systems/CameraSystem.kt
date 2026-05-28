@@ -31,4 +31,9 @@ object CameraSystem {
     fun getAllCameras(): List<Camera> {
         return cameras.toList()
     }
+
+    fun clear() {
+        cameras.clear()
+        main = null
+    }
 }

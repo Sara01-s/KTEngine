@@ -19,8 +19,15 @@ object SceneSystem : AutoCloseable {
         val pending = nextScene ?: return
 
         currentScene?.close()
+        RenderSystem.clear()
+        CameraSystem.clear()
+        CollisionSystem.clear()
+        Input.clear()
+
         currentScene = pending
         nextScene = null
+
+        currentScene?.start()
     }
 
     override fun close() {

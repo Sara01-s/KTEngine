@@ -2,7 +2,7 @@ package engine
 
 import engine.game.Game
 import engine.rendering.Window
-import engine.scenes.Scene3D
+import engine.scenes.Scene1
 import engine.systems.Assets
 import engine.systems.AudioSystem
 import engine.systems.SceneSystem
@@ -19,7 +19,7 @@ fun main() {
     log("Initializing Audio System.")
     AudioSystem.init()
 
-    SceneSystem.loadScene(Scene3D())
+    SceneSystem.loadScene(Scene1())
 
     game.loop(
         fixedUpdate = {

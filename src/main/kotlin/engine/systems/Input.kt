@@ -1,6 +1,7 @@
 package engine.systems
 
 import engine.rendering.Window
+import engine.systems.Input.Mouse.captured
 import glm_.vec2.Vec2
 import org.lwjgl.glfw.GLFW.*
 import kotlin.math.abs
@@ -200,6 +201,15 @@ object Input {
             _scroll.x += xOffset
             _scroll.y += yOffset
         }
+
+        internal fun reset() {
+            captured = false
+            _delta.x = 0f
+            _delta.y = 0f
+            _scroll.x = 0f
+            _scroll.y = 0f
+            isFirstFrame = true
+        }
     }
 
     // ── Internals ─────────────────────────────────────────────────────────────
@@ -216,5 +226,18 @@ object Input {
     private fun moveToward(current: Float, target: Float, step: Float): Float {
         val d = target - current
         return if (abs(d) <= step) target else current + sign(d) * step
+    }
+
+
+    fun clear() {
+        currentKeys.fill(false)
+        previousKeys.fill(false)
+
+        for (axis in axes) {
+            axis.x = 0f
+            axis.y = 0f
+        }
+
+        Mouse.reset()
     }
 }

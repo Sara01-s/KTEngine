@@ -22,6 +22,8 @@ class Game(
         while (window.isOpen()) {
             window.pollEvents()
 
+            SceneSystem.applyPendingScene()
+
             Time.update(glfwGetTime())
             Input.update(Time.deltaTime)
 
@@ -35,8 +37,6 @@ class Game(
 
             RenderSystem.render()
             draw()
-
-            SceneSystem.applyPendingScene()
 
             window.swapBuffers()
         }

@@ -19,4 +19,9 @@ object CollisionSystem {
             collider.updateCollisions(colliders)
         }
     }
+
+    fun clear() {
+        colliders.forEach { unregister(it) }
+        colliders.clear()
+    }
 }

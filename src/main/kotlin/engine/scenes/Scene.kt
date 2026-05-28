@@ -29,6 +29,7 @@ abstract class Scene : AutoCloseable {
         entityMap[rootEntity.id] = rootEntity
     }
 
+    open fun start() {}
     open fun fixedUpdate() {}
     open fun update() {}
     open fun draw() {}
@@ -81,7 +82,7 @@ abstract class Scene : AutoCloseable {
 
     final override fun close() {
         entityMap.clear()
-        namedRefsMap.clear() // Limpieza del registro de nombres
+        namedRefsMap.clear()
         rootEntity.close()
         resetSequence()
     }

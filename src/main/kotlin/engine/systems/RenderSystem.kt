@@ -104,4 +104,14 @@ object RenderSystem {
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         }
     }
+
+    fun clear() {
+        val safeList = renderers.toList()
+
+        for (renderer in safeList) {
+            renderer.close()
+        }
+
+        renderers.clear()
+    }
 }
