@@ -73,6 +73,50 @@ fun Mat4.scale(x: Float, y: Float, z: Float = 1f): Mat4 {
     return this
 }
 
+fun decomposeMatrix(m: Mat4, outTranslation: Vec3, outRotation: Quat, outScale: Vec3) {
+    outTranslation.x = m[3].x
+    outTranslation.y = m[3].y
+    outTranslation.z = m[3].z
+
+    val sx = Vec3(m[0].x, m[0].y, m[0].z).length()
+    val sy = Vec3(m[1].x, m[1].y, m[1].z).length()
+    val sz = Vec3(m[2].x, m[2].y, m[2].z).length()
+    outScale.x = sx
+    outScale.y = sy
+    outScale.z = sz
+
+    val r11 = m[0].x / sx; val r12 = m[0].y / sx; val r13 = m[0].z / sx
+    val r21 = m[1].x / sy; val r22 = m[1].y / sy; val r23 = m[1].z / sy
+    val r31 = m[2].x / sz; val r32 = m[2].y / sz; val r33 = m[2].z / sz
+
+    val trace = r11 + r22 + r33
+    if (trace > 0.0f) {
+        val s = 0.5f / sqrt(trace + 1.0f)
+        outRotation.w = 0.25f / s
+        outRotation.x = (r23 - r32) * s
+        outRotation.y = (r31 - r13) * s
+        outRotation.z = (r12 - r21) * s
+    } else if (r11 > r22 && r11 > r33) {
+        val s = 2.0f * sqrt(1.0f + r11 - r22 - r33)
+        outRotation.w = (r23 - r32) / s
+        outRotation.x = 0.25f * s
+        outRotation.y = (r12 + r21) / s
+        outRotation.z = (r31 + r13) / s
+    } else if (r22 > r33) {
+        val s = 2.0f * sqrt(1.0f + r22 - r11 - r33)
+        outRotation.w = (r31 - r13) / s
+        outRotation.x = (r12 + r21) / s
+        outRotation.y = 0.25f * s
+        outRotation.z = (r23 + r32) / s
+    } else {
+        val s = 2.0f * sqrt(1.0f + r33 - r11 - r22)
+        outRotation.w = (r12 - r21) / s
+        outRotation.x = (r31 + r13) / s
+        outRotation.y = (r23 + r32) / s
+        outRotation.z = 0.25f * s
+    }
+}
+
 fun rotationRollPitchYaw(pitch: Float, yaw: Float, roll: Float): Mat4 {
     val mat4 = Mat4().identity()
 

@@ -11,7 +11,6 @@ import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 
 class TextRenderer : Renderer {
-
     private val layout = VertexLayout()
         .append(VertexLayout.ElementType.Position3D)
         .append(VertexLayout.ElementType.Texture2D)
@@ -37,7 +36,7 @@ class TextRenderer : Renderer {
 
     var material: Material = Assets.loadDefaultTextMaterial()
 
-    private var mesh = Mesh(layout = layout, vertices = emptyList(), indices = intArrayOf())
+    private var mesh: Mesh = Mesh(layout, emptyList(), intArrayOf(), material)
     private var dirty = true
 
     override fun draw() {
@@ -57,13 +56,6 @@ class TextRenderer : Renderer {
     }
 
     private fun rebuildMesh() {
-        val printableChars = text.count { it != '\n' && it != ' ' && font.glyphs.containsKey(it) }
-
-        if (text.isEmpty() || printableChars == 0) {
-            mesh.setData(emptyList(), intArrayOf())
-            dirty = false
-            return
-        }
 
         val vertices = mutableListOf<Any>()
         val indices = mutableListOf<Int>()
@@ -93,23 +85,23 @@ class TextRenderer : Renderer {
             val uvMin = glyph.uvMin
             val uvMax = glyph.uvMax
 
-            vertices.addAll(listOf(
-                Vec3(x,     y,     0f), Vec2(uvMin.x, uvMax.y),
-                Vec3(x + w, y,     0f), Vec2(uvMax.x, uvMax.y),
-                Vec3(x + w, y - h, 0f), Vec2(uvMax.x, uvMin.y),
-                Vec3(x,     y - h, 0f), Vec2(uvMin.x, uvMin.y),
-            ))
+            vertices += Vec3(x, y, 0f);      vertices += Vec2(uvMin.x, uvMax.y)
+            vertices += Vec3(x + w, y, 0f);  vertices += Vec2(uvMax.x, uvMax.y)
+            vertices += Vec3(x + w, y - h, 0f); vertices += Vec2(uvMax.x, uvMin.y)
+            vertices += Vec3(x, y - h, 0f);  vertices += Vec2(uvMin.x, uvMin.y)
 
-            indices.addAll(listOf(
-                vertexOffset + 0, vertexOffset + 1, vertexOffset + 2,
-                vertexOffset + 2, vertexOffset + 3, vertexOffset + 0,
-            ))
+            indices += vertexOffset + 0
+            indices += vertexOffset + 1
+            indices += vertexOffset + 2
+            indices += vertexOffset + 2
+            indices += vertexOffset + 3
+            indices += vertexOffset + 0
 
             vertexOffset += 4
             cursorX += glyph.advance
         }
 
-        mesh.setData(vertices, indices.toIntArray())
+        mesh = Mesh(layout, vertices, indices.toIntArray(), material)
         dirty = false
     }
 

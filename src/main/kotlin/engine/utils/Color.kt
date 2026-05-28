@@ -5,8 +5,8 @@ data class Color(val r: Float, val g: Float, val b: Float, val a: Float = 1.0f) 
     companion object {
 
         // Basic
-        val white = Color(1f, 1f, 1f)
-        val black = Color(0f, 0f, 0f)
+        val white = Color(1f, 1f, 1f, 1f)
+        val black = Color(0f, 0f, 0f, 1f)
         val red = Color(1f, 0f, 0f)
         val green = Color(0f, 1f, 0f)
         val blue = Color(0f, 0f, 1f)

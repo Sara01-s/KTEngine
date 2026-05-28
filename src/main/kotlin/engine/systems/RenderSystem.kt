@@ -40,9 +40,14 @@ object RenderSystem {
     init {
         glCall {
             glViewport(0, 0, Window.width, Window.height)
+
             glEnable(GL_BLEND)
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
             glEnable(GL_DEPTH_TEST)
+
+            glEnable(GL_CULL_FACE)
+            glCullFace(GL_BACK)
         }
 
         setClearColor(Color.gray30)
@@ -56,21 +61,30 @@ object RenderSystem {
         return lhToRh * cameraTransform.worldMatrix.inverse()
     }
 
-    fun calculateMvpMatrix(transform: Transform): Mat4 {
-        val camera = CameraSystem.main
-
-        val model = lhToRh * transform.worldMatrix
-
-        val view  = calculateViewMatrix(camera!!.entity.transform)
-
-        val projection = glm.perspective(
+    fun calculateProjectionMatrix(): Mat4 {
+        return glm.perspective(
             fovY = 45f,
             aspect = Window.aspectRatio,
             near = 0.01f,
-            far = 1000f,
+            far = 1000f
         )
+    }
 
-        return projection * view * model
+    fun calculateMvpMatrix(transform: Transform): Mat4 {
+        val model = calculateModelMatrix(transform)
+
+        return calculateMvpMatrix(model)
+    }
+
+    fun calculateMvpMatrix(modelMatrix: Mat4): Mat4 {
+        val camera = CameraSystem.main ?: error("No main camera found.")
+
+        val view = calculateViewMatrix(camera.entity.transform)
+        val projection = calculateProjectionMatrix()
+
+        val mvp = projection * view * modelMatrix
+
+        return mvp
     }
 
     fun setClearColor(color: Color) {

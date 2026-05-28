@@ -35,7 +35,9 @@ abstract class Scene : AutoCloseable {
 
     protected fun createEntity(name: String = Entity.DEFAULT_NAME): Entity {
         val nextId = generateNextId()
-        val entity = Entity(nextId, name)
+        val entity = Entity(nextId, name).apply {
+            scene = this@Scene
+        }
 
         rootEntity.transform.addChild(entity.transform)
         entityMap[nextId] = entity
@@ -55,22 +57,6 @@ abstract class Scene : AutoCloseable {
 
     fun getEntity(id: Int): Entity {
         return entityMap[id] ?: error("Entity with id $id not found")
-    }
-
-    protected inline fun Transform.childEntity(name: String = Entity.DEFAULT_NAME, block: Entity.() -> Unit): Entity {
-        val nextId = generateNextId()
-        val child = Entity(nextId, name)
-
-        entityMap[nextId] = child
-
-        if (name != Entity.DEFAULT_NAME) {
-            namedRefsMap[name] = child
-        }
-
-        this.addChild(child.transform)
-        child.block()
-
-        return child
     }
 
     protected fun entityRef(name: String): EntityNameDelegate {

@@ -10,15 +10,15 @@ import kotlin.reflect.KClass
 
 class VertexLayout {
 
-    enum class ElementType(val length: Int, val glType: Int, val typeClass: KClass<*>) {
-        Position2D(2, GL_FLOAT, Vec2::class),
-        Position3D(3, GL_FLOAT, Vec3::class),
-        Texture2D(2, GL_FLOAT, Vec2::class),
-        Normal3D(3, GL_FLOAT, Vec3::class),
-        Tangent3D(3, GL_FLOAT, Vec3::class),
-        Bitangent3D(3, GL_FLOAT, Vec3::class),
-        ColorFloat3(3, GL_FLOAT, Vec3::class),
-        ColorFloat4(4, GL_FLOAT, Vec4::class);
+    enum class ElementType(val location: Int, val length: Int, val glType: Int, val typeClass: KClass<*>) {
+        Position3D(0, 3, GL_FLOAT, Vec3::class),
+        Normal3D(1, 3, GL_FLOAT, Vec3::class),
+        Texture2D(2, 2, GL_FLOAT, Vec2::class),
+        Tangent3D(3, 3, GL_FLOAT, Vec3::class),
+        Bitangent3D(4, 3, GL_FLOAT, Vec3::class),
+        Position2D(0, 2, GL_FLOAT, Vec2::class),
+        ColorFloat3(5, 3, GL_FLOAT, Vec3::class),
+        ColorFloat4(5, 4, GL_FLOAT, Vec4::class);
 
         val sizeInBytes: Int get() = when (glType) {
             GL_FLOAT -> length * Float.SIZE_BYTES
@@ -37,14 +37,6 @@ class VertexLayout {
                 is Int  -> buffer.putInt(offset, value)
             }
         }
-
-        fun read(buffer: ByteBuffer, offset: Int): Any = when (typeClass) {
-            Vec2::class -> Vec2(buffer.getFloat(offset), buffer.getFloat(offset + 4))
-            Vec3::class -> Vec3(buffer.getFloat(offset), buffer.getFloat(offset + 4), buffer.getFloat(offset + 8))
-            Vec4::class -> Vec4(buffer.getFloat(offset), buffer.getFloat(offset + 4), buffer.getFloat(offset + 8), buffer.getFloat(offset + 12))
-            Int::class  -> buffer.getInt(offset)
-            else -> error("Unsupported type: ${typeClass.simpleName}")
-        }
     }
 
     data class Element(val type: ElementType, val offset: Int)
@@ -57,11 +49,6 @@ class VertexLayout {
     fun append(type: ElementType): VertexLayout {
         val currentOffset = stride
         elements.add(Element(type, currentOffset))
-
         return this
-    }
-
-    fun resolveByIndex(index: Int): Element {
-        return elements[index]
     }
 }

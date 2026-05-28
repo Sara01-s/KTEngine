@@ -12,7 +12,8 @@ import java.nio.ByteOrder
 class Mesh(
     val layout: VertexLayout,
     vertexBuffer: ByteBuffer,
-    val indices: IntArray,
+    indices: IntArray,
+    var material: Material,
     val topology: Int = GL_TRIANGLES,
     val usage: Int = GL_DYNAMIC_DRAW
 ) : Bindable() {
@@ -40,9 +41,10 @@ class Mesh(
         layout: VertexLayout,
         vertices: List<Any>,
         indices: IntArray,
+        material: Material,
         topology: Int = GL_TRIANGLES,
         usage: Int = GL_DYNAMIC_DRAW
-    ) : this(layout, buildByteBuffer(layout, vertices), indices, topology, usage)
+    ) : this(layout, buildByteBuffer(layout, vertices), indices, material, topology, usage)
 
     private val vao: Int = glGenVertexArrays()
     private val vbo: Int = glGenBuffers()
@@ -58,10 +60,12 @@ class Mesh(
             glBindBuffer(GL_ARRAY_BUFFER, vbo)
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo)
 
-            for ((index, element) in layout.elements.withIndex()) {
-                glEnableVertexAttribArray(index)
+            for (element in layout.elements) {
+                val location = element.type.location
+
+                glEnableVertexAttribArray(location)
                 glVertexAttribPointer(
-                    /* index = */ index,
+                    /* index = */ location,
                     /* size = */ element.type.length,
                     /* type = */ element.type.glType,
                     /* normalized = */ false,
@@ -75,7 +79,6 @@ class Mesh(
 
         setData(vertexBuffer, indices)
     }
-
     fun setData(vertices: List<Any>, indices: IntArray) {
         setData(buildByteBuffer(layout, vertices), indices)
     }

@@ -19,9 +19,9 @@ void main() {
 in vec2 uv;
 
 uniform sampler2D _MainTex;
-uniform vec4 _ColorTint;
+uniform vec4 _Color;
 
-out vec4 fragColor;
+layout(location = 0) out vec4 fragColor;
 
 float median(float r, float g, float b) {
     return max(min(r, g), min(max(r, g), b));
@@ -33,5 +33,9 @@ void main() {
     float screenPxDistance = (sd - 0.5) / fwidth(sd);
     float alpha = clamp(screenPxDistance + 0.5, 0.0, 1.0);
 
-    fragColor = vec4(_ColorTint.rgb, _ColorTint.a * alpha);
+    if (_Color.a * alpha < 0.01) {
+        discard;
+    }
+
+    fragColor = vec4(_Color.rgb, _Color.a * alpha);
 }

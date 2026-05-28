@@ -5,15 +5,18 @@ import engine.utils.LogLevel
 import engine.utils.log
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GL11.glEnable
-import org.lwjgl.opengl.GL11.glViewport
-import org.lwjgl.opengl.GL13.GL_MULTISAMPLE
+import org.lwjgl.opengl.GL11.*
+import org.lwjgl.opengl.GL43
+import org.lwjgl.opengl.GL43.*
+import org.lwjgl.opengl.GLDebugMessageCallback
+import org.lwjgl.system.MemoryUtil.NULL
 
 class Window(
     width: Int = 1280,
     height: Int = 720,
     title: String = "Default Window",
-) : AutoCloseable{
+) : AutoCloseable {
+
     companion object {
         var width = 0
         var height = 0
@@ -21,6 +24,12 @@ class Window(
     }
 
     val handle: Long
+
+    private var isFullscreen = false
+    private var windowedX = 100
+    private var windowedY = 100
+    private var windowedWidth = 1280
+    private var windowedHeight = 720
 
     init {
         if (!glfwInit()) {
@@ -31,34 +40,159 @@ class Window(
         Window.height = height
 
         glfwDefaultWindowHints()
+
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5)
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
+
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
-        glfwWindowHint(GLFW_SAMPLES, 4) // MSAA 4x.
+        glfwWindowHint(GLFW_SAMPLES, 4)
 
-        handle = glfwCreateWindow(
-            width,
-            height,
-            title,
-            0,
-            0
-        )
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE)
 
-        if (handle == 0L) {
+        handle = glfwCreateWindow(width, height, title, NULL, NULL)
+
+        if (handle == NULL) {
             log("Failed to create GLFW window", LogLevel.Error)
         }
 
         glfwMakeContextCurrent(handle)
         GL.createCapabilities()
-        glCall {
-            glViewport(0, 0, width, height)
-            glEnable(GL_MULTISAMPLE)
-        }
+
+        setupGLState()
+        setupDebugCallback()
+
         glfwSetFramebufferSizeCallback(handle) { _, w, h ->
             Window.width = w
             Window.height = h
             glCall { glViewport(0, 0, w, h) }
         }
-        setVSync(enabled = true)
+
+        glfwSetKeyCallback(handle) { _, key, _, action, _ ->
+            if (key == GLFW_KEY_F11 && action == GLFW_PRESS) {
+                toggleFullscreen()
+            }
+        }
+
+        setVSync(true)
         glfwShowWindow(handle)
+    }
+
+    fun toggleFullscreen() {
+        isFullscreen = !isFullscreen
+
+        if (isFullscreen) {
+            val x = IntArray(1)
+            val y = IntArray(1)
+            glfwGetWindowPos(handle, x, y)
+            windowedX = x[0]
+            windowedY = y[0]
+            windowedWidth = width
+            windowedHeight = height
+
+            val monitor = glfwGetPrimaryMonitor()
+            val videoMode = glfwGetVideoMode(monitor)
+
+            if (videoMode != null) {
+                glfwSetWindowMonitor(
+                    handle,
+                    monitor,
+                    0,
+                    0,
+                    videoMode.width(),
+                    videoMode.height(),
+                    videoMode.refreshRate()
+                )
+            }
+        } else {
+            glfwSetWindowMonitor(
+                handle,
+                NULL,
+                windowedX,
+                windowedY,
+                windowedWidth,
+                windowedHeight,
+                0
+            )
+        }
+
+        setVSync(true)
+    }
+
+    private fun setupGLState() {
+        glCall {
+            glViewport(0, 0, width, height)
+            glEnable(GL_MULTISAMPLE)
+            glEnable(GL_DEPTH_TEST)
+            glEnable(GL_BLEND)
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        }
+    }
+
+    private fun setupDebugCallback() {
+        val flags = glGetInteger(GL_CONTEXT_FLAGS)
+        val hasDebug = (flags and GL_CONTEXT_FLAG_DEBUG_BIT) != 0
+        log("OpenGL Debug Context: $hasDebug", LogLevel.Info)
+
+        if (!hasDebug) return
+
+        glEnable(GL_DEBUG_OUTPUT)
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS)
+
+        glDebugMessageControl(
+            GL_DONT_CARE,
+            GL_DONT_CARE,
+            GL_DEBUG_SEVERITY_NOTIFICATION,
+            null as IntArray?,
+            false
+        )
+
+        glDebugMessageCallback({ source, type, id, severity, length, message, _ ->
+
+            val msg = GLDebugMessageCallback.getMessage(length, message)
+
+            val sourceStr = when (source) {
+                GL_DEBUG_SOURCE_API -> "API"
+                GL_DEBUG_SOURCE_WINDOW_SYSTEM -> "WINDOW"
+                GL_DEBUG_SOURCE_SHADER_COMPILER -> "SHADER"
+                GL_DEBUG_SOURCE_THIRD_PARTY -> "THIRD"
+                GL_DEBUG_SOURCE_APPLICATION -> "APP"
+                GL_DEBUG_SOURCE_OTHER -> "OTHER"
+                else -> "UNKNOWN"
+            }
+
+            val typeStr = when (type) {
+                GL_DEBUG_TYPE_ERROR -> "ERROR"
+                GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR -> "DEPRECATED"
+                GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR -> "UNDEFINED"
+                GL_DEBUG_TYPE_PERFORMANCE -> "PERF"
+                GL_DEBUG_TYPE_MARKER -> "MARKER"
+                GL_DEBUG_TYPE_OTHER -> "OTHER"
+                else -> "UNKNOWN"
+            }
+
+            val severityStr = when (severity) {
+                GL_DEBUG_SEVERITY_HIGH -> "HIGH"
+                GL_DEBUG_SEVERITY_MEDIUM -> "MED"
+                GL_DEBUG_SEVERITY_LOW -> "LOW"
+                GL_DEBUG_SEVERITY_NOTIFICATION -> "INFO"
+                else -> "UNKNOWN"
+            }
+
+            if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return@glDebugMessageCallback
+
+            val formatted = "[OpenGL][$severityStr][$typeStr][$sourceStr][$id] $msg"
+
+            when (severity) {
+                GL_DEBUG_SEVERITY_HIGH -> {
+                    System.err.println(formatted)
+                    Thread.dumpStack()
+                }
+                GL_DEBUG_SEVERITY_MEDIUM -> System.err.println(formatted)
+                else -> println(formatted)
+            }
+
+        }, NULL)
     }
 
     fun isOpen(): Boolean {

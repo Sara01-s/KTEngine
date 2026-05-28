@@ -18,7 +18,7 @@ void main() {
 #type fragment
 #version 450 core
 
-out vec4 fragColor;
+layout(location = 0) out vec4 fragColor;
 
 in vec2 worldXZ;
 
@@ -37,7 +37,6 @@ const float FOG_START = 25.0;
 const float FOG_END   = 60.0;
 
 float gridLine(float value, float period, float halfWidth) {
-
     float v = mod(value, period);
 
     if (v > period * 0.5) {
@@ -48,34 +47,21 @@ float gridLine(float value, float period, float halfWidth) {
 }
 
 void main() {
-
     float x = worldXZ.x;
     float z = worldXZ.y;
 
-    // Thin grid
     float thin = max(
         gridLine(x, GRID_SIZE, LINE_WIDTH),
         gridLine(z, GRID_SIZE, LINE_WIDTH)
     );
 
-    // Major grid (every 10 tiles)
     float major = max(
         gridLine(x, GRID_SIZE * 10.0, LINE_WIDTH * 1.5),
         gridLine(z, GRID_SIZE * 10.0, LINE_WIDTH * 1.5)
     );
 
-    // Axes
-    float axisX = 1.0 - smoothstep(
-        AXIS_WIDTH * 0.8,
-        AXIS_WIDTH,
-        abs(z)
-    );
-
-    float axisZ = 1.0 - smoothstep(
-        AXIS_WIDTH * 0.8,
-        AXIS_WIDTH,
-        abs(x)
-    );
+    float axisX = 1.0 - smoothstep(AXIS_WIDTH * 0.8, AXIS_WIDTH, abs(z));
+    float axisZ = 1.0 - smoothstep(AXIS_WIDTH * 0.8, AXIS_WIDTH, abs(x));
 
     vec4 color = vec4(0.0);
 
@@ -85,12 +71,7 @@ void main() {
     color = mix(color, vec4(Z_AXIS_COLOR, 1.0), axisZ);
 
     float dist = length(worldXZ);
-
-    float fog = 1.0 - smoothstep(
-        FOG_START,
-        FOG_END,
-        dist
-    );
+    float fog = 1.0 - smoothstep(FOG_START, FOG_END, dist);
 
     color.a *= fog;
 

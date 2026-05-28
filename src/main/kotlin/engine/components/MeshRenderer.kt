@@ -24,11 +24,10 @@ class MeshRenderer : Renderer {
     }
 
     override fun draw() {
-        if (!isVisible) return
-
         material.setMat4("_MVP", RenderSystem.calculateMvpMatrix(entity.transform))
         material.setMat4("_ModelMatrix", RenderSystem.calculateModelMatrix(entity.transform))
         material.setVec3("_CameraPosition", CameraSystem.main!!.entity.transform.worldPosition)
+
         material.bind()
         mesh.draw()
     }
