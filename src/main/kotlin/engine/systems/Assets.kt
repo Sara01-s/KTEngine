@@ -7,18 +7,27 @@ import engine.rendering.bindables.Texture
 import engine.rendering.text.Font
 import engine.utils.AudioClip
 import engine.utils.Color
+import engine.rendering.bindables.CubeMap
+import org.lwjgl.opengl.EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
+import org.lwjgl.stb.STBImage.stbi_failure_reason
+import org.lwjgl.stb.STBImage.stbi_load_from_memory
+import org.lwjgl.system.MemoryStack
+import org.lwjgl.opengl.GL43.*
+import org.lwjgl.stb.STBImage.stbi_image_free
+import org.lwjgl.stb.STBImage.stbi_load
 import java.io.File
+import java.nio.ByteBuffer
 import kotlin.io.path.createTempDirectory
-import kotlin.io.path.createTempFile
+import org.lwjgl.system.MemoryUtil
 
 object Assets : AutoCloseable {
 
     private val shaders = mutableMapOf<String, Shader>()
     private val textures = mutableMapOf<String, Texture>()
     private val audioClips = mutableMapOf<String, AudioClip>()
-
     private val modelsPaths = mutableMapOf<String, String>()
     private val models = mutableMapOf<String, Model>()
+    private val cubeMaps = mutableMapOf<String, CubeMap>()
 
     fun loadText(path: String): String {
         return javaClass.getResource(path)?.readText()
@@ -28,6 +37,21 @@ object Assets : AutoCloseable {
     fun loadBytes(path: String): ByteArray {
         return javaClass.getResourceAsStream(path)?.readBytes()
             ?: error("Resource not found: $path")
+    }
+
+    fun resolveTexturePath(path: String): String {
+        val fileName = path.substringAfterLast('/')
+        val prefix = fileName.substringBeforeLast('.')
+        val extension = "." + fileName.substringAfterLast('.')
+
+        val tempFile = File.createTempFile(prefix, extension)
+        tempFile.deleteOnExit()
+
+        javaClass.getResourceAsStream(path)?.use { input ->
+            tempFile.outputStream().use(input::copyTo)
+        } ?: error("Resource not found: $path")
+
+        return tempFile.absolutePath
     }
 
     fun resolveModelResourcePath(path: String): String {
@@ -210,16 +234,30 @@ object Assets : AutoCloseable {
         )
     }
 
+    fun loadCubeMap(paths: Array<String>): CubeMap {
+        val resolvedPaths = paths.map { path ->
+            if (File(path).isAbsolute) path else resolveTexturePath(path)
+        }.toTypedArray()
+
+        val key = resolvedPaths.joinToString("|")
+        return cubeMaps.getOrPut(key) {
+            CubeMap(resolvedPaths)
+        }
+    }
+
     override fun close() {
         shaders.values.forEach(Shader::close)
         textures.values.forEach(Texture::close)
         audioClips.values.forEach(AudioClip::close)
         models.values.forEach(Model::close)
+        cubeMaps.values.forEach(CubeMap::close)
 
         shaders.clear()
         textures.clear()
         audioClips.clear()
         models.clear()
         modelsPaths.clear()
+        cubeMaps.clear()
+
     }
 }

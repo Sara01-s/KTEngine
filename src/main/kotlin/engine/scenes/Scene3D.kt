@@ -1,11 +1,13 @@
 package engine.scenes
 
 import engine.components.Camera
+import engine.components.Camera.BackgroundMode
 import engine.components.MeshRenderer
 import engine.components.Transform
 import engine.components.FirstPersonController
 import engine.game.Time
 import engine.game.Model
+import engine.rendering.Skybox
 import engine.rendering.bindables.Material
 import engine.systems.Assets
 import engine.systems.Input
@@ -34,7 +36,10 @@ class Scene3D : Scene() {
         }
 
         entity("MainCamera") {
-            addComponent<Camera>()
+            addComponent<Camera>().apply {
+                backgroundMode = BackgroundMode.SkyBox
+                setSkyBox(Skybox())
+            }
             addComponent<FirstPersonController>()
             transform.localPosition = Vec3(0f, 6f, -18f)
         }

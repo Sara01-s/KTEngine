@@ -2,6 +2,7 @@ package engine.systems
 
 import engine.components.Renderer
 import engine.components.Transform
+import engine.rendering.Skybox
 import engine.rendering.Window
 import engine.utils.Color
 import engine.utils.GLDebug.glCall
@@ -17,7 +18,9 @@ object RenderSystem {
         0f,  1f,  0f,  0f,
         0f,  0f, -1f,  0f,
         0f,  0f,  0f,  1f
-    )
+   )
+
+    var skybox: Skybox? = null
 
     fun register(renderer: Renderer) {
         renderers.add(renderer)
@@ -28,6 +31,9 @@ object RenderSystem {
     }
 
     fun render() {
+        clearScreen()
+        skybox?.draw(calculateViewMatrix(CameraSystem.main!!.entity.transform), calculateProjectionMatrix())
+
         for (renderer in renderers) {
             if (!renderer.isVisible) {
                 continue
@@ -35,6 +41,7 @@ object RenderSystem {
 
             renderer.draw()
         }
+
     }
 
     init {
@@ -45,9 +52,6 @@ object RenderSystem {
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
             glEnable(GL_DEPTH_TEST)
-
-            glEnable(GL_CULL_FACE)
-            glCullFace(GL_BACK)
         }
 
         setClearColor(Color.gray30)
@@ -72,7 +76,6 @@ object RenderSystem {
 
     fun calculateMvpMatrix(transform: Transform): Mat4 {
         val model = calculateModelMatrix(transform)
-
         return calculateMvpMatrix(model)
     }
 

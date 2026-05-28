@@ -33,7 +33,6 @@ class Game(
 
             update()
 
-            RenderSystem.clearScreen()
             RenderSystem.render()
             draw()
 

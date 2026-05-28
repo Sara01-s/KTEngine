@@ -66,6 +66,11 @@ class Shader(source: String) : Bindable() {
         if (location != -1) glCall { glUniform2f(location, value.x, value.y) }
     }
 
+    fun setUniform(name: String, cubeMap: CubeMap, slot: Int = 0) {
+        cubeMap.bind(slot)
+        setUniform(name, slot)
+    }
+
     fun setUniform(name: String, value: Vec3) {
         val location = getUniformLocation(name)
         if (location != -1) glCall { glUniform3f(location, value.x, value.y, value.z) }
