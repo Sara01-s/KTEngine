@@ -22,7 +22,7 @@ class Font(
     var lineHeight: Float,
 ) {
     companion object {
-        internal fun loadFont(texture: Texture, structure: String): Font {
+        fun loadFont(texture: Texture, structure: String): Font {
             val json = JsonParser.parseString(structure).asJsonObject
 
             val common = json.getAsJsonObject("common")

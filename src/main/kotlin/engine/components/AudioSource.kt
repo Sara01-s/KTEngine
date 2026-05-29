@@ -9,6 +9,10 @@ class AudioSource(
 
     private val sourceId = alGenSources()
 
+    init {
+        clip?.let { alSourcei(sourceId, AL_BUFFER, it.bufferId) }
+    }
+
     var clip: AudioClip? = clip
         set(value) {
             field = value

@@ -6,9 +6,14 @@ import org.lwjgl.opengl.ARBVertexArrayObject.glBindVertexArray
 import org.lwjgl.opengl.ARBVertexArrayObject.glGenVertexArrays
 import org.lwjgl.opengl.GL43.*
 
-class Skybox {
-    private val vao = createCubeVAO()
+class Skybox : AutoCloseable{
     private val skyboxShader = Assets.loadShader("/shaders/shd_skybox.glsl")
+    private val vao = -1
+    private val vbo = -1
+
+    init {
+        val (vao, vbo) = createCubeVAO()
+    }
 
     private val cubeMapTextures = arrayOf(
         "/textures/posx.jpg",
@@ -38,7 +43,7 @@ class Skybox {
         glDepthFunc(GL_LESS)
     }
 
-    fun createCubeVAO(): Int {
+    private fun createCubeVAO(): Pair<Int, Int> {
         val vertices = floatArrayOf(
             -1f,  1f, -1f, -1f, -1f, -1f,  1f, -1f, -1f,  1f, -1f, -1f,  1f,  1f, -1f, -1f,  1f, -1f,
             -1f, -1f,  1f, -1f, -1f, -1f, -1f,  1f, -1f, -1f,  1f, -1f, -1f,  1f,  1f, -1f, -1f,  1f,
@@ -59,6 +64,12 @@ class Skybox {
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.SIZE_BYTES, 0)
 
         glBindVertexArray(0)
-        return vao
+
+        return Pair(vao, vbo)
+    }
+
+    override fun close() {
+        glDeleteBuffers(vbo)
+        glDeleteVertexArrays(vao)
     }
 }

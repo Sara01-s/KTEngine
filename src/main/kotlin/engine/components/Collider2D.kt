@@ -4,7 +4,7 @@ import engine.systems.CollisionSystem
 import glm_.vec2.Vec2
 import kotlin.math.abs
 
-data class Collider2D(
+class Collider2D(
     var center: Vec2 = Vec2(0f),
     var extent: Vec2 = Vec2(0.5f)
 ) : Component() {
@@ -25,16 +25,12 @@ data class Collider2D(
     }
 
     fun intersects(other: Collider2D): Boolean {
-        val transform = entity.transform
-        val center = transform.worldPosition
-        val extent = Vec2(transform.localScale.x * 0.5f, transform.localScale.y * 0.5f)
+        val worldCenter = Vec2(entity.transform.worldPosition.x, entity.transform.worldPosition.y) + center
+        val worldOtherCenter = Vec2(other.entity.transform.worldPosition.x, other.entity.transform.worldPosition.y) + other.center
 
-        val otherTransform = other.entity.transform
-        val otherCenter = otherTransform.worldPosition
-        val otherExtent = Vec2(otherTransform.localScale.x * 0.5f, otherTransform.localScale.y * 0.5f)
-
-        return abs(center.x - otherCenter.x) < (extent.x + otherExtent.x) &&
-                abs(center.y - otherCenter.y) < (extent.y + otherExtent.y)
+        val totalExtent = extent + other.extent
+        return abs(worldCenter.x - worldOtherCenter.x) < totalExtent.x &&
+                abs(worldCenter.y - worldOtherCenter.y) < totalExtent.y
     }
 
     fun updateCollisions(others: List<Collider2D>) {

@@ -11,7 +11,11 @@ class Camera : Component() {
         SkyBox,
     }
 
-    var backgroundMode: BackgroundMode = BackgroundMode.SolidColor
+    var backgroundColor: Color = Color.gray30
+    var skybox: Skybox? = null
+
+    val backgroundMode: BackgroundMode
+        get() = if (skybox != null) BackgroundMode.SkyBox else BackgroundMode.SolidColor
 
     var fov: Float = 45f
     var near: Float = 0.01f

@@ -240,7 +240,6 @@ class Model(path: String) : AutoCloseable {
     }
 
     private fun createShaderFromFeatures(features: MaterialFeatures): Shader {
-
         val shaderPath =
             if (features.hasNormals || features.hasDiffuse)
                 "/shaders/shd_lit.glsl"

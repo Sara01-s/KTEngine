@@ -97,7 +97,7 @@ class TextRenderer : Renderer() {
             cursorX += glyph.advance
         }
 
-        mesh = Mesh(layout, vertices, indices.toIntArray(), material)
+        mesh.setData(vertices, indices.toIntArray())
         dirty = false
     }
 

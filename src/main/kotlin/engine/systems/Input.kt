@@ -1,7 +1,6 @@
 package engine.systems
 
 import engine.rendering.Window
-import engine.systems.Input.Mouse.captured
 import glm_.vec2.Vec2
 import org.lwjgl.glfw.GLFW.*
 import kotlin.math.abs
@@ -79,6 +78,10 @@ private val playerKeys = mapOf(
 )
 
 object Input {
+
+    init {
+        setupCallbacks()
+    }
 
     private const val ACCELERATION = 5.0f
     private const val FRICTION     = 100.0f
