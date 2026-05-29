@@ -1,23 +1,17 @@
 package engine.components
 
-import engine.game.Entity
 import engine.rendering.Skybox
 import engine.systems.CameraSystem
 import engine.systems.RenderSystem
 import engine.utils.Color
 
-class Camera : Component {
+class Camera : Component() {
     enum class BackgroundMode {
         SolidColor,
         SkyBox,
     }
 
-    override lateinit var entity: Entity
-
     var backgroundMode: BackgroundMode = BackgroundMode.SolidColor
-    var pitch = 0f
-    var yaw = 0f
-    var roll = 0f
 
     fun setBackgroundColor(color: Color) {
         if (backgroundMode == BackgroundMode.SolidColor) {

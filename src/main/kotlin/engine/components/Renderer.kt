@@ -1,6 +1,6 @@
 package engine.components
 
-interface Renderer : Component {
-    var isVisible: Boolean
-    fun draw()
+abstract class Renderer : Component() {
+    open var isVisible: Boolean = true
+    abstract fun draw()
 }

@@ -1,17 +1,11 @@
 package engine.components
 
-import engine.game.Entity
-import engine.rendering.bindables.Texture
 import engine.systems.Assets
 import engine.systems.CameraSystem
 import engine.systems.RenderSystem
-import engine.utils.Color
 import engine.utils.PrimitiveMeshes
 
-class MeshRenderer : Renderer {
-    override lateinit var entity: Entity
-    override var isVisible = true
-
+class MeshRenderer : Renderer() {
     var mesh = PrimitiveMeshes.quad
     var material = Assets.loadDefaultMaterial()
 

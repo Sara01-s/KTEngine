@@ -1,7 +1,6 @@
 package engine.rendering.text
 
 import engine.components.Renderer
-import engine.game.Entity
 import engine.rendering.bindables.Material
 import engine.rendering.bindables.Mesh
 import engine.rendering.bindables.VertexLayout
@@ -10,13 +9,10 @@ import engine.systems.RenderSystem
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 
-class TextRenderer : Renderer {
+class TextRenderer : Renderer() {
     private val layout = VertexLayout()
         .append(VertexLayout.ElementType.Position3D)
         .append(VertexLayout.ElementType.Texture2D)
-
-    override lateinit var entity: Entity
-    override var isVisible = true
 
     var text = "New Text"
         set(value) {

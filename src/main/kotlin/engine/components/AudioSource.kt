@@ -1,14 +1,11 @@
 package engine.components
 
-import engine.game.Entity
 import engine.utils.AudioClip
 import org.lwjgl.openal.AL10.*
 
 class AudioSource(
     clip: AudioClip? = null
-) : Component {
-
-    override lateinit var entity: Entity
+) : Component() {
 
     private val sourceId = alGenSources()
 

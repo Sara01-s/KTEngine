@@ -2,11 +2,11 @@ package engine.components
 
 import engine.game.Entity
 
-interface Component : AutoCloseable {
-    var entity : Entity
+abstract class Component : AutoCloseable {
+    lateinit var entity : Entity
 
-    fun onAdded() {}
-    fun onRemoved() {}
+    open fun onAdded() {}
+    open fun onRemoved() {}
 
     override fun close() {}
 }

@@ -1,6 +1,5 @@
 package engine.components
 
-import engine.game.Entity
 import engine.game.Time
 import engine.systems.Input
 import engine.systems.Key
@@ -14,8 +13,7 @@ import engine.utils.zero
 import glm_.quat.Quat
 import glm_.vec3.Vec3
 
-class FirstPersonController : Component {
-    override lateinit var entity: Entity
+class FirstPersonController : Component() {
 
     var moveSpeed = 12f
     var lookSensitivity = 0.15f

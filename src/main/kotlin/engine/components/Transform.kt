@@ -1,6 +1,5 @@
 package engine.components
 
-import engine.game.Entity
 import engine.utils.one
 import engine.utils.zero
 import glm_.mat4x4.Mat4
@@ -13,9 +12,7 @@ class Transform(
     position: Vec3 = Vec3.zero,
     scale: Vec3 = Vec3.one,
     rotation: Quat = Quat.identity,
-) : Component {
-
-    override lateinit var entity: Entity
+) : Component() {
 
     // ── Local space ──────────────────────────────────────────────────────────
 

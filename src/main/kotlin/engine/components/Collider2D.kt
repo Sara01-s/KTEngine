@@ -1,6 +1,5 @@
 package engine.components
 
-import engine.game.Entity
 import engine.systems.CollisionSystem
 import glm_.vec2.Vec2
 import kotlin.math.abs
@@ -8,9 +7,7 @@ import kotlin.math.abs
 data class Collider2D(
     var center: Vec2 = Vec2(0f),
     var extent: Vec2 = Vec2(0.5f)
-) : Component {
-
-    override lateinit var entity: Entity
+) : Component() {
 
     private val previous = mutableSetOf<Collider2D>()
     private val current  = mutableSetOf<Collider2D>()
