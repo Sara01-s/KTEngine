@@ -31,7 +31,8 @@ object RenderSystem {
 
     fun render() {
         clearScreen()
-        skybox?.draw(calculateViewMatrix(CameraSystem.main!!.entity.transform), calculateProjectionMatrix())
+        val camera = CameraSystem.main!!
+        skybox?.draw(calculateViewMatrix(camera.entity.transform), calculateProjectionMatrix(camera.fov, camera.near, camera.far))
 
         for (renderer in renderers) {
             if (!renderer.isVisible) {
@@ -62,12 +63,12 @@ object RenderSystem {
         return lhToRh * cameraTransform.worldMatrix.inverse()
     }
 
-    fun calculateProjectionMatrix(): Mat4 {
+    fun calculateProjectionMatrix(fovY: Float, near: Float, far: Float): Mat4 {
         return glm.perspective(
-            fovY = 45f,
+            fovY = fovY,
             aspect = Window.aspectRatio,
-            near = 0.01f,
-            far = 1000f
+            near = near,
+            far = far
         )
     }
 
@@ -80,7 +81,7 @@ object RenderSystem {
         val camera = CameraSystem.main ?: error("No main camera found.")
 
         val view = calculateViewMatrix(camera.entity.transform)
-        val projection = calculateProjectionMatrix()
+        val projection = calculateProjectionMatrix(camera.fov, camera.near, camera.far)
 
         val mvp = projection * view * modelMatrix
 

@@ -21,7 +21,6 @@ object CollisionSystem {
     }
 
     fun clear() {
-        colliders.forEach { unregister(it) }
         colliders.clear()
     }
 }

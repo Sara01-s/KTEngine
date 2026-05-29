@@ -13,6 +13,10 @@ class Camera : Component() {
 
     var backgroundMode: BackgroundMode = BackgroundMode.SolidColor
 
+    var fov: Float = 45f
+    var near: Float = 0.01f
+    var far: Float = 1000f
+
     fun setBackgroundColor(color: Color) {
         if (backgroundMode == BackgroundMode.SolidColor) {
             RenderSystem.setClearColor(color)

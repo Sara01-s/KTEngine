@@ -13,8 +13,6 @@ abstract class Scene : AutoCloseable {
 
         @PublishedApi
         internal fun generateNextId(): Int = idSequence.getAndIncrement()
-
-        private fun resetSequence() { idSequence.set(0) }
     }
 
     val rootEntity: Entity = Entity(generateNextId(), "Root")
@@ -84,6 +82,5 @@ abstract class Scene : AutoCloseable {
         entityMap.clear()
         namedRefsMap.clear()
         rootEntity.close()
-        resetSequence()
     }
 }

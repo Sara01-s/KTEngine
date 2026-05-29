@@ -15,7 +15,7 @@ class Entity(val id: Int, val name: String = DEFAULT_NAME) : AutoCloseable {
     val components = mutableMapOf<KClass<out Component>, Component>()
     val transform: Transform = addComponent()
 
-    internal inline fun <reified T : Component> addComponent(): T {
+    inline fun <reified T : Component> addComponent(): T {
         val component = T::class.java.getDeclaredConstructor().newInstance()
         component.entity = this
         component.onAdded()
@@ -24,17 +24,17 @@ class Entity(val id: Int, val name: String = DEFAULT_NAME) : AutoCloseable {
         return component
     }
 
-    internal inline fun <reified T : Component> removeComponent() {
+    inline fun <reified T : Component> removeComponent() {
         getComponent<T>().close()
         components.remove(T::class)
     }
 
-    internal inline fun <reified T : Component> getComponent(): T {
+    inline fun <reified T : Component> getComponent(): T {
         return components[T::class] as? T
             ?: error("Component not found: ${T::class}")
     }
 
-    internal inline fun <reified T : Component> hasComponent(): Boolean {
+    inline fun <reified T : Component> hasComponent(): Boolean {
         return components.containsKey(T::class)
     }
 

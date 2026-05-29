@@ -33,11 +33,9 @@ fun main() {
         }
     )
 
-    SceneSystem.close()
-    PrimitiveMeshes.close()
-    Assets.close()
+    val systems = listOf(SceneSystem, PrimitiveMeshes, Assets, AudioSystem)
+    systems.reversed().forEach { it.close() }
     window.close()
-    AudioSystem.close()
 
     log("Bye Bye.")
 }
