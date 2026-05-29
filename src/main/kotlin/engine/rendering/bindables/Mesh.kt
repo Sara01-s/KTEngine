@@ -1,6 +1,5 @@
 package engine.rendering.bindables
 
-import engine.utils.GLDebug.glCall
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL20.glEnableVertexAttribArray
@@ -54,31 +53,30 @@ class Mesh(
         private set
 
     init {
-        glCall {
-            glBindVertexArray(vao)
+        glBindVertexArray(vao)
 
-            glBindBuffer(GL_ARRAY_BUFFER, vbo)
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo)
+        glBindBuffer(GL_ARRAY_BUFFER, vbo)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo)
 
-            for (element in layout.elements) {
-                val location = element.type.location
+        for (element in layout.elements) {
+            val location = element.type.location
 
-                glEnableVertexAttribArray(location)
-                glVertexAttribPointer(
-                    /* index = */ location,
-                    /* size = */ element.type.length,
-                    /* type = */ element.type.glType,
-                    /* normalized = */ false,
-                    /* stride = */ layout.stride,
-                    /* pointer = */ element.offset.toLong()
-                )
-            }
-
-            glBindVertexArray(0)
+            glEnableVertexAttribArray(location)
+            glVertexAttribPointer(
+                /* index = */ location,
+                /* size = */ element.type.length,
+                /* type = */ element.type.glType,
+                /* normalized = */ false,
+                /* stride = */ layout.stride,
+                /* pointer = */ element.offset.toLong()
+            )
         }
+
+        glBindVertexArray(0)
 
         setData(vertexBuffer, indices)
     }
+
     fun setData(vertices: List<Any>, indices: IntArray) {
         setData(buildByteBuffer(layout, vertices), indices)
     }
@@ -89,14 +87,12 @@ class Mesh(
             return
         }
 
-        glCall {
-            glBindVertexArray(vao)
-            glBindBuffer(GL_ARRAY_BUFFER, vbo)
-            glBufferData(GL_ARRAY_BUFFER, vertices.rewind(), usage)
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo)
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, usage)
-            glBindVertexArray(0)
-        }
+        glBindVertexArray(vao)
+        glBindBuffer(GL_ARRAY_BUFFER, vbo)
+        glBufferData(GL_ARRAY_BUFFER, vertices.rewind(), usage)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo)
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, usage)
+        glBindVertexArray(0)
 
         indexCount = indices.size
     }
@@ -107,17 +103,15 @@ class Mesh(
         }
 
         bind()
-        glCall { glDrawElements(topology, indexCount, GL_UNSIGNED_INT, 0L) }
+        glDrawElements(topology, indexCount, GL_UNSIGNED_INT, 0L)
     }
 
-    override fun bind() { glCall { glBindVertexArray(vao) } }
-    override fun unbind() { glCall { glBindVertexArray(0) } }
+    override fun bind() { glBindVertexArray(vao) }
+    override fun unbind() { glBindVertexArray(0) }
 
     override fun close() {
-        glCall {
-            glDeleteBuffers(vbo)
-            glDeleteBuffers(ibo)
-            glDeleteVertexArrays(vao)
-        }
+        glDeleteBuffers(vbo)
+        glDeleteBuffers(ibo)
+        glDeleteVertexArrays(vao)
     }
 }

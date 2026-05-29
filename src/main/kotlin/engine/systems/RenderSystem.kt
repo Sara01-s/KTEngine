@@ -5,7 +5,6 @@ import engine.components.Transform
 import engine.rendering.Skybox
 import engine.rendering.Window
 import engine.utils.Color
-import engine.utils.GLDebug.glCall
 import glm_.glm
 import glm_.mat4x4.Mat4
 import org.lwjgl.opengl.GL11.*
@@ -18,7 +17,7 @@ object RenderSystem {
         0f,  1f,  0f,  0f,
         0f,  0f, -1f,  0f,
         0f,  0f,  0f,  1f
-   )
+    )
 
     var skybox: Skybox? = null
 
@@ -45,14 +44,12 @@ object RenderSystem {
     }
 
     init {
-        glCall {
-            glViewport(0, 0, Window.width, Window.height)
+        glViewport(0, 0, Window.width, Window.height)
 
-            glEnable(GL_BLEND)
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-            glEnable(GL_DEPTH_TEST)
-        }
+        glEnable(GL_DEPTH_TEST)
 
         setClearColor(Color.gray30)
     }
@@ -95,14 +92,12 @@ object RenderSystem {
     }
 
     fun setClearColor(r: Float, g: Float, b: Float, a: Float = 1f) {
-        glCall { glClearColor(r, g, b, a) }
+        glClearColor(r, g, b, a)
     }
 
     fun clearScreen() {
-        glCall {
-            glViewport(0, 0, Window.width, Window.height)
-            glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
-        }
+        glViewport(0, 0, Window.width, Window.height)
+        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
     }
 
     fun clear() {

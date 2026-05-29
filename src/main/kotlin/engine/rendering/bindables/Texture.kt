@@ -2,7 +2,6 @@ package engine.rendering.bindables
 
 import engine.systems.Assets
 import engine.utils.Color
-import engine.utils.GLDebug.glCall
 import org.lwjgl.BufferUtils
 import org.lwjgl.assimp.AITexel
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic
@@ -11,7 +10,6 @@ import org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE
 import org.lwjgl.opengl.GL13.GL_TEXTURE0
 import org.lwjgl.opengl.GL13.glActiveTexture
 import org.lwjgl.opengl.GL30.glGenerateMipmap
-import org.lwjgl.stb.STBImage
 import org.lwjgl.stb.STBImage.*
 import org.lwjgl.system.MemoryStack
 import java.nio.ByteBuffer
@@ -38,7 +36,7 @@ class Texture private constructor() : Bindable() {
 
         fun createEmpty(): Texture {
             return Texture().apply {
-                glCall { gpuID = glGenTextures() }
+                gpuID = glGenTextures()
             }
         }
 
@@ -205,33 +203,31 @@ class Texture private constructor() : Bindable() {
         height = h[0]
         channels = 4
 
-        glCall {
-            gpuID = glGenTextures()
+        gpuID = glGenTextures()
 
-            glBindTexture(GL_TEXTURE_2D, gpuID)
+        glBindTexture(GL_TEXTURE_2D, gpuID)
 
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
 
-            val maxAnisotropy = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT)
-            glTexParameterf(GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy)
+        val maxAnisotropy = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT)
+        glTexParameterf(GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy)
 
-            glTexImage2D(
-                /* target = */ GL_TEXTURE_2D,
-                /* level = */ 0,
-                /* internalformat = */ GL_RGBA8,
-                /* width = */ width,
-                /* height = */ height,
-                /* border = */ 0,
-                /* format = */ GL_RGBA,
-                /* type = */ GL_UNSIGNED_BYTE,
-                /* pixels = */ image
-            )
+        glTexImage2D(
+            /* target = */ GL_TEXTURE_2D,
+            /* level = */ 0,
+            /* internalformat = */ GL_RGBA8,
+            /* width = */ width,
+            /* height = */ height,
+            /* border = */ 0,
+            /* format = */ GL_RGBA,
+            /* type = */ GL_UNSIGNED_BYTE,
+            /* pixels = */ image
+        )
 
-            glGenerateMipmap(GL_TEXTURE_2D)
-        }
+        glGenerateMipmap(GL_TEXTURE_2D)
 
         stbi_image_free(image)
     }
@@ -245,35 +241,31 @@ class Texture private constructor() : Bindable() {
             flip()
         }
 
-        glCall {
-            gpuID = glGenTextures()
+        gpuID = glGenTextures()
 
-            glBindTexture(GL_TEXTURE_2D, gpuID)
+        glBindTexture(GL_TEXTURE_2D, gpuID)
 
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
 
-            glTexImage2D(
-                /* target = */ GL_TEXTURE_2D,
-                /* level = */ 0,
-                /* internalformat = */ GL_RGBA8,
-                /* width = */ 1,
-                /* height = */ 1,
-                /* border = */ 0,
-                /* format = */ GL_RGBA,
-                /* type = */ GL_UNSIGNED_BYTE,
-                /* pixels = */ pixel
-            )
-        }
+        glTexImage2D(
+            /* target = */ GL_TEXTURE_2D,
+            /* level = */ 0,
+            /* internalformat = */ GL_RGBA8,
+            /* width = */ 1,
+            /* height = */ 1,
+            /* border = */ 0,
+            /* format = */ GL_RGBA,
+            /* type = */ GL_UNSIGNED_BYTE,
+            /* pixels = */ pixel
+        )
     }
 
     fun bind(slot: Int = 0) {
-        glCall {
-            glActiveTexture(GL_TEXTURE0 + slot)
-            glBindTexture(GL_TEXTURE_2D, gpuID)
-        }
+        glActiveTexture(GL_TEXTURE0 + slot)
+        glBindTexture(GL_TEXTURE_2D, gpuID)
     }
 
     override fun bind() {
@@ -281,10 +273,10 @@ class Texture private constructor() : Bindable() {
     }
 
     override fun unbind() {
-        glCall { glBindTexture(GL_TEXTURE_2D, DEFAULT_GPU_ID) }
+        glBindTexture(GL_TEXTURE_2D, DEFAULT_GPU_ID)
     }
 
     override fun close() {
-        glCall { glDeleteTextures(gpuID) }
+        glDeleteTextures(gpuID)
     }
 }

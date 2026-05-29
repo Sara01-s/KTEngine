@@ -1,9 +1,6 @@
 package engine.rendering.bindables
 
 import engine.utils.Color
-import engine.utils.GLDebug.glCall
-import engine.utils.LogLevel
-import engine.utils.log
 import glm_.mat3x3.Mat3
 import glm_.mat4x4.Mat4
 import glm_.vec2.Vec2
@@ -53,17 +50,17 @@ class Shader(source: String) : Bindable() {
 
     fun setUniform(name: String, value: Int) {
         val location = getUniformLocation(name)
-        if (location != -1) glCall { glUniform1i(location, value) }
+        if (location != -1) glUniform1i(location, value)
     }
 
     fun setUniform(name: String, value: Float) {
         val location = getUniformLocation(name)
-        if (location != -1) glCall { glUniform1f(location, value) }
+        if (location != -1) glUniform1f(location, value)
     }
 
     fun setUniform(name: String, value: Vec2) {
         val location = getUniformLocation(name)
-        if (location != -1) glCall { glUniform2f(location, value.x, value.y) }
+        if (location != -1) glUniform2f(location, value.x, value.y)
     }
 
     fun setUniform(name: String, cubeMap: CubeMap, slot: Int = 0) {
@@ -73,27 +70,27 @@ class Shader(source: String) : Bindable() {
 
     fun setUniform(name: String, value: Vec3) {
         val location = getUniformLocation(name)
-        if (location != -1) glCall { glUniform3f(location, value.x, value.y, value.z) }
+        if (location != -1) glUniform3f(location, value.x, value.y, value.z)
     }
 
     fun setUniform(name: String, value: Vec4) {
         val location = getUniformLocation(name)
-        if (location != -1) glCall { glUniform4f(location, value.x, value.y, value.z, value.w) }
+        if (location != -1) glUniform4f(location, value.x, value.y, value.z, value.w)
     }
 
     fun setUniform(name: String, value: Color) {
         val location = getUniformLocation(name)
-        if (location != -1) glCall { glUniform4f(location, value.r, value.g, value.b, value.a) }
+        if (location != -1) glUniform4f(location, value.r, value.g, value.b, value.a)
     }
 
     fun setUniform(name: String, value: Mat3) {
         val location = getUniformLocation(name)
-        if (location != -1) glCall { glUniformMatrix3fv(location, false, value.toFloatArray()) }
+        if (location != -1) glUniformMatrix3fv(location, false, value.toFloatArray())
     }
 
     fun setUniform(name: String, value: Mat4) {
         val location = getUniformLocation(name)
-        if (location != -1) glCall { glUniformMatrix4fv(location, false, value.toFloatArray()) }
+        if (location != -1) glUniformMatrix4fv(location, false, value.toFloatArray())
     }
 
     // -------------------------
@@ -114,15 +111,13 @@ class Shader(source: String) : Bindable() {
 
         val newProgram = linkShaders(vs, fs)
 
-        glCall {
-            glDeleteShader(vs)
-            glDeleteShader(fs)
-        }
+        glDeleteShader(vs)
+        glDeleteShader(fs)
 
         gpuID = newProgram
 
         if (oldProgram != DEFAULT_GPU_ID) {
-            glCall { glDeleteProgram(oldProgram) }
+            glDeleteProgram(oldProgram)
         }
 
         uniformLocations.clear()
@@ -250,14 +245,14 @@ class Shader(source: String) : Bindable() {
     // -------------------------
 
     override fun bind() {
-        glCall { glUseProgram(gpuID) }
+        glUseProgram(gpuID)
     }
 
     override fun unbind() {
-        glCall { glUseProgram(0) }
+        glUseProgram(0)
     }
 
     override fun close() {
-        glCall { glDeleteProgram(gpuID) }
+        glDeleteProgram(gpuID)
     }
 }

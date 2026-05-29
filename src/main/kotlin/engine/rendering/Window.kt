@@ -1,12 +1,9 @@
 package engine.rendering
 
-import engine.utils.GLDebug.glCall
 import engine.utils.LogLevel
 import engine.utils.log
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GL11.*
-import org.lwjgl.opengl.GL43
 import org.lwjgl.opengl.GL43.*
 import org.lwjgl.opengl.GLDebugMessageCallback
 import org.lwjgl.system.MemoryUtil.NULL
@@ -65,7 +62,7 @@ class Window(
         glfwSetFramebufferSizeCallback(handle) { _, w, h ->
             Window.width = w
             Window.height = h
-            glCall { glViewport(0, 0, w, h) }
+            glViewport(0, 0, w, h)
         }
 
         glfwSetKeyCallback(handle) { _, key, _, action, _ ->
@@ -120,13 +117,11 @@ class Window(
     }
 
     private fun setupGLState() {
-        glCall {
-            glViewport(0, 0, width, height)
-            glEnable(GL_MULTISAMPLE)
-            glEnable(GL_DEPTH_TEST)
-            glEnable(GL_BLEND)
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        }
+        glViewport(0, 0, width, height)
+        glEnable(GL_MULTISAMPLE)
+        glEnable(GL_DEPTH_TEST)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     }
 
     private fun setupDebugCallback() {
