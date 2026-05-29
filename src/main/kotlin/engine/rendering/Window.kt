@@ -8,17 +8,11 @@ import org.lwjgl.opengl.GL43.*
 import org.lwjgl.opengl.GLDebugMessageCallback
 import org.lwjgl.system.MemoryUtil.NULL
 
-class Window(
-    width: Int = 1280,
-    height: Int = 720,
-    title: String = "Default Window",
-) : AutoCloseable {
-
-    companion object {
-        var width = 0
-        var height = 0
-        val aspectRatio get() = width.toFloat() / height.toFloat()
-    }
+object Window : AutoCloseable {
+    var width = 1280
+    var height = 720
+    var title = "Default Window"
+    val aspectRatio get() = width.toFloat() / height.toFloat()
 
     val handle: Long
 
@@ -32,9 +26,6 @@ class Window(
         if (!glfwInit()) {
             log("Failed to initialize GLFW", LogLevel.Error)
         }
-
-        Window.width = width
-        Window.height = height
 
         glfwDefaultWindowHints()
 
@@ -60,8 +51,8 @@ class Window(
         setupDebugCallback()
 
         glfwSetFramebufferSizeCallback(handle) { _, w, h ->
-            Window.width = w
-            Window.height = h
+            width = w
+            height = h
             glViewport(0, 0, w, h)
         }
 
@@ -118,10 +109,6 @@ class Window(
 
     private fun setupGLState() {
         glViewport(0, 0, width, height)
-        glEnable(GL_MULTISAMPLE)
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     }
 
     private fun setupDebugCallback() {

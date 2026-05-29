@@ -7,20 +7,14 @@ import engine.systems.RenderSystem
 import engine.systems.SceneSystem
 import org.lwjgl.glfw.GLFW.glfwGetTime
 
-class Game(
-    val window: Window,
-) {
-    init {
-        Input.init(window)
-    }
-
+class Game {
     inline fun loop(
         crossinline fixedUpdate: () -> Unit = {},
         crossinline update: () -> Unit = {},
         crossinline draw: () -> Unit = {}
     ) {
-        while (window.isOpen()) {
-            window.pollEvents()
+        while (Window.isOpen()) {
+            Window.pollEvents()
 
             SceneSystem.applyPendingScene()
 
@@ -38,7 +32,7 @@ class Game(
             RenderSystem.render()
             draw()
 
-            window.swapBuffers()
+            Window.swapBuffers()
         }
     }
 }

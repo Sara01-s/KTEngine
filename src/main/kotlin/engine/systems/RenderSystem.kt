@@ -8,6 +8,7 @@ import engine.utils.Color
 import glm_.glm
 import glm_.mat4x4.Mat4
 import org.lwjgl.opengl.GL11.*
+import org.lwjgl.opengl.GL13.GL_MULTISAMPLE
 
 object RenderSystem {
     private val renderers = mutableListOf<Renderer>()
@@ -21,12 +22,16 @@ object RenderSystem {
 
     var skybox: Skybox? = null
 
-    fun register(renderer: Renderer) {
-        renderers.add(renderer)
-    }
+    init {
+        glViewport(0, 0, Window.width, Window.height)
 
-    fun unregister(renderer: Renderer) {
-        renderers.remove(renderer)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+        glEnable(GL_DEPTH_TEST)
+        glEnable(GL_MULTISAMPLE)
+
+        setClearColor(Color.gray30)
     }
 
     fun render() {
@@ -41,19 +46,17 @@ object RenderSystem {
 
             renderer.draw()
         }
-
     }
 
-    init {
-        glViewport(0, 0, Window.width, Window.height)
-
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-
-        glEnable(GL_DEPTH_TEST)
-
-        setClearColor(Color.gray30)
+    fun register(renderer: Renderer) {
+        renderers.add(renderer)
     }
+
+    fun unregister(renderer: Renderer) {
+        renderers.remove(renderer)
+    }
+
+
 
     fun calculateModelMatrix(transform: Transform): Mat4 {
         return lhToRh * transform.worldMatrix

@@ -88,26 +88,21 @@ object Input {
     private val currentKeys  = BooleanArray(GLFW_KEY_LAST + 1)
     private val previousKeys = BooleanArray(GLFW_KEY_LAST + 1)
 
-    lateinit var window: Window
     private var initializedCallbacks = false
-
-    fun init(window: Window) {
-        this.window = window
-    }
 
     fun update(delta: Float) {
         if (!initializedCallbacks) {
-            setupCallbacks(window)
+            setupCallbacks()
             initializedCallbacks = true
         }
 
         Mouse.clearDeltas()
-        Mouse.update(window)
+        Mouse.update()
 
         currentKeys.copyInto(previousKeys)
 
         for (i in currentKeys.indices) {
-            currentKeys[i] = glfwGetKey(window.handle, i) == GLFW_PRESS
+            currentKeys[i] = glfwGetKey(Window.handle, i) == GLFW_PRESS
         }
 
         for (player in Player.entries) {
@@ -119,8 +114,8 @@ object Input {
         }
     }
 
-    private fun setupCallbacks(window: Window) {
-        glfwSetScrollCallback(window.handle) { _, xOffset, yOffset ->
+    private fun setupCallbacks() {
+        glfwSetScrollCallback(Window.handle) { _, xOffset, yOffset ->
             Mouse.onScroll(xOffset.toFloat(), yOffset.toFloat())
         }
     }
@@ -163,18 +158,18 @@ object Input {
             set(value) {
                 field = value
                 val mode = if (value) GLFW_CURSOR_DISABLED else GLFW_CURSOR_NORMAL
-                glfwSetInputMode(window.handle, GLFW_CURSOR, mode)
+                glfwSetInputMode(Window.handle, GLFW_CURSOR, mode)
 
                 isFirstFrame = true
             }
 
         fun isButtonPressed(button: MouseButton): Boolean = isButtonPressed(button.number)
-        fun isButtonPressed(button: Int): Boolean = glfwGetMouseButton(window.handle, button) == GLFW_PRESS
+        fun isButtonPressed(button: Int): Boolean = glfwGetMouseButton(Window.handle, button) == GLFW_PRESS
 
-        internal fun update(window: Window) {
+        internal fun update() {
             val xArr = DoubleArray(1)
             val yArr = DoubleArray(1)
-            glfwGetCursorPos(window.handle, xArr, yArr)
+            glfwGetCursorPos(Window.handle, xArr, yArr)
 
             _position.x = xArr[0].toFloat()
             _position.y = yArr[0].toFloat()

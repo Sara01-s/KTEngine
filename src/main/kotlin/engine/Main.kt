@@ -10,11 +10,8 @@ import engine.utils.PrimitiveMeshes
 import engine.utils.log
 
 fun main() {
-    log("Creating Window.")
-    val window = Window()
-
     log("Creating Game.")
-    val game = Game(window)
+    val game = Game()
 
     log("Initializing Audio System.")
     AudioSystem.init()
@@ -35,7 +32,7 @@ fun main() {
 
     val systems = listOf(SceneSystem, PrimitiveMeshes, Assets, AudioSystem)
     systems.reversed().forEach { it.close() }
-    window.close()
+    Window.close()
 
     log("Bye Bye.")
 }
