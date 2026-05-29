@@ -18,9 +18,12 @@ class MeshRenderer : Renderer() {
     }
 
     override fun draw() {
+        val cameraTransform = CameraSystem.main!!.entity.transform  // TODO: Check for null camera.
+
         material.setMat4("_MVP", RenderSystem.calculateMvpMatrix(entity.transform))
         material.setMat4("_ModelMatrix", RenderSystem.calculateModelMatrix(entity.transform))
-        material.setVec3("_CameraPosition", CameraSystem.main!!.entity.transform.worldPosition)
+        material.setMat4("_ViewMatrix", RenderSystem.calculateViewMatrix(cameraTransform))
+        material.setVec3("_CameraPosition", cameraTransform.worldPosition)
 
         material.bind()
         mesh.draw()

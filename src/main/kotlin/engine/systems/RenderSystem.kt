@@ -9,6 +9,7 @@ import glm_.glm
 import glm_.mat4x4.Mat4
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL13.GL_MULTISAMPLE
+import org.lwjgl.opengl.GL13.GL_SAMPLE_ALPHA_TO_COVERAGE
 
 object RenderSystem {
     private val renderers = mutableListOf<Renderer>()
@@ -30,6 +31,7 @@ object RenderSystem {
 
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_MULTISAMPLE)
+        glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE)
 
         setClearColor(Color.gray30)
     }
@@ -55,8 +57,6 @@ object RenderSystem {
     fun unregister(renderer: Renderer) {
         renderers.remove(renderer)
     }
-
-
 
     fun calculateModelMatrix(transform: Transform): Mat4 {
         return lhToRh * transform.worldMatrix

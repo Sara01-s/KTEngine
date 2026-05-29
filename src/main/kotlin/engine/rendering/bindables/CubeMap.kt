@@ -4,37 +4,45 @@ import org.lwjgl.opengl.GL43.*
 import org.lwjgl.stb.STBImage.*
 import org.lwjgl.system.MemoryStack
 
-class CubeMap(val id: Int) : Bindable(), AutoCloseable {
+class CubeMap(paths: Array<String>) : Bindable(), AutoCloseable {
 
-    constructor(paths: Array<String>) : this(glGenTextures()) {
+    init {
         if (paths.size != 6) {
             error("A skybox must have 6 faces")
         }
 
-        glBindTexture(GL_TEXTURE_CUBE_MAP, id)
+        gpuID = glGenTextures()
+        glBindTexture(GL_TEXTURE_CUBE_MAP, gpuID)
 
-        stbi_set_flip_vertically_on_load(true)
+        stbi_set_flip_vertically_on_load(false)
 
         for (i in 0 until 6) {
             MemoryStack.stackPush().use { stack ->
-                val w = stack.mallocInt(1)
-                val h = stack.mallocInt(1)
-                val comp = stack.mallocInt(1)
+                val width = stack.mallocInt(1)
+                val height = stack.mallocInt(1)
+                val channel = stack.mallocInt(1)
 
-                val data = stbi_load(paths[i], w, h, comp, 4)
+                val data = stbi_load(paths[i], width, height, channel, 4)
                     ?: error("Error while loading face: ${paths[i]} - ${stbi_failure_reason()}")
 
+                val currentSide = GL_TEXTURE_CUBE_MAP_POSITIVE_X + i
                 glTexImage2D(
-                    GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                    0, GL_RGBA8, w.get(0), h.get(0), 0,
-                    GL_RGBA, GL_UNSIGNED_BYTE, data
+                    /* target = */ currentSide,
+                    /* level = */ 0,
+                    /* internalformat = */ GL_RGBA,
+                    /* width = */ width.get(0),
+                    /* height = */ height.get(0),
+                    /* border = */ 0,
+                    /* format = */ GL_RGBA,
+                    /* type = */ GL_UNSIGNED_BYTE,
+                    /* pixels = */ data
                 )
 
                 stbi_image_free(data)
             }
         }
 
-        stbi_set_flip_vertically_on_load(false)
+        stbi_set_flip_vertically_on_load(true)
 
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
@@ -45,7 +53,7 @@ class CubeMap(val id: Int) : Bindable(), AutoCloseable {
 
     fun bind(slot: Int) {
         glActiveTexture(GL_TEXTURE0 + slot)
-        glBindTexture(GL_TEXTURE_CUBE_MAP, id)
+        glBindTexture(GL_TEXTURE_CUBE_MAP, gpuID)
     }
 
     override fun bind() {
@@ -57,7 +65,7 @@ class CubeMap(val id: Int) : Bindable(), AutoCloseable {
     }
 
     override fun close() {
-        glDeleteTextures(id)
+        glDeleteTextures(gpuID)
         unbind()
     }
 }

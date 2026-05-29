@@ -46,10 +46,10 @@ class Scene5 : Scene() {
         }
 
         entity("Model") {
-            val model = Assets.loadModel("/models/model_forest_house.glb")
+            val model = Assets.loadModel("/models/model_watercolor_bird.glb")
             model.instantiate(this)
-            transform.localRotation = Quat.fromEulerAngles(0f, 90f, 0f)
-            transform.localScale = Vec3(7f)
+            transform.localRotation = Quat.fromEulerAngles(-90f, 90f, 0f)
+            transform.localScale = Vec3(0.1f)
         }
     }
 

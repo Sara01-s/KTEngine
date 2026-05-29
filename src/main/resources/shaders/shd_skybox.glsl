@@ -10,10 +10,11 @@ uniform mat4 _ProjectionMatrix;
 
 void main() {
     v_texCoords = a_position;
-    mat4 staticView = mat4(mat3(_ViewMatrix));
-    vec4 pos = _ProjectionMatrix * staticView * vec4(a_position, 1.0);
 
-    gl_Position = pos.xyww;
+    mat4 staticView = mat4(mat3(_ViewMatrix));
+    vec4 position = _ProjectionMatrix * staticView * vec4(a_position, 1.0);
+
+    gl_Position = position.xyww;
 }
 
 #type fragment
@@ -25,8 +26,5 @@ in vec3 v_texCoords;
 uniform samplerCube _SkyboxTex;
 
 void main() {
-    vec3 texCoords = v_texCoords;
-    texCoords.y *= -1;
-
-    fragColor = texture(_SkyboxTex, texCoords);
+    fragColor = texture(_SkyboxTex, v_texCoords);
 }

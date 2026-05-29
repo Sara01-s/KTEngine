@@ -12,10 +12,16 @@ layout(location = 4) in vec3 a_bitangent;
 
 uniform mat4 _MVP;
 uniform mat4 _ModelMatrix;
+uniform mat4 _ViewMatrix;
 
-out vec3 v_worldPos;
-out vec3 v_normal;
+out vec3 v_worldPosition;
+out vec3 v_viewPosition;
+
+out vec3 v_worldNormal;
+out vec3 v_viewNormal;
+
 out vec2 v_uv;
+
 
 #ifdef HAS_TANGENTS
 out mat3 v_tbn;
@@ -23,18 +29,23 @@ out mat3 v_tbn;
 
 void main() {
     vec4 worldPosCalculated = _ModelMatrix * vec4(a_position, 1.0);
-    v_worldPos = worldPosCalculated.xyz;
+    v_worldPosition = worldPosCalculated.xyz;
     v_uv = a_uv;
 
     mat3 normalMatrix = transpose(inverse(mat3(_ModelMatrix)));
     vec3 N = normalize(normalMatrix * a_normal);
-    v_normal = N;
+    v_worldNormal = N;
 
     #ifdef HAS_TANGENTS
     vec3 T = normalize(normalMatrix * a_tangent);
     vec3 B = normalize(normalMatrix * a_bitangent);
     v_tbn = mat3(T, B, N);
     #endif
+
+    v_viewPosition = (_ViewMatrix * worldPosCalculated).xyz;
+
+    mat3 viewNormalMatrix = transpose(inverse(mat3(_ViewMatrix * _ModelMatrix)));
+    v_viewNormal = normalize(viewNormalMatrix * a_normal);
 
     gl_Position = _MVP * vec4(a_position, 1.0);
 }
@@ -44,8 +55,12 @@ void main() {
 
 layout(location = 0) out vec4 fragColor;
 
-in vec3 v_worldPos;
-in vec3 v_normal;
+in vec3 v_worldPosition;
+in vec3 v_viewPosition;
+
+in vec3 v_worldNormal;
+in vec3 v_viewNormal;
+
 in vec2 v_uv;
 
 #ifdef HAS_TANGENTS
@@ -85,15 +100,19 @@ void main() {
         albedo *= diffuseSample.rgb;
 
         #ifndef HAS_OPACITY
-            alpha *= diffuseSample.a;
+        alpha *= diffuseSample.a;
         #endif
     #endif
 
     #ifdef HAS_OPACITY
-    alpha *= texture(_OpacityTexture, v_uv).r;
+    alpha *= texture(_OpacityTexture, v_uv).a;
     #endif
 
-    vec3 normal = normalize(v_normal);
+    if (alpha < 0.9)
+        discard;
+
+    vec3 normal = normalize(v_worldNormal);
+
     #ifdef HAS_TANGENTS
     vec3 tangentNormal = texture(_NormalTexture, v_uv).xyz * 2.0 - 1.0;
     normal = normalize(v_tbn * tangentNormal);
@@ -102,11 +121,13 @@ void main() {
     vec3 lightDir = normalize(-_LightDirection);
     float NdotL = max(dot(normal, lightDir), 0.0);
 
-    vec3 viewDir = normalize(_CameraPosition - v_worldPos);
+    vec3 viewDir = normalize(_CameraPosition - v_worldPosition);
     vec3 reflectDir = reflect(-lightDir, normal);
+
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
 
     float currentSpecularIntensity = specularIntensity;
+
     #ifdef HAS_SPECULAR
     currentSpecularIntensity *= texture(_SpecularTexture, v_uv).r;
     #endif
