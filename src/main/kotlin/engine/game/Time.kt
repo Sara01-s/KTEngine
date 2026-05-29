@@ -1,50 +1,46 @@
 package engine.game
 
-class Time {
+object Time {
+    const val FIXED_DELTA_TIME = 1f / 60f
 
-    companion object {
+    var timeScale = 1f
 
-        const val FIXED_DELTA_TIME = 1f / 60f
+    private var lastTime = 0.0
 
-        var timeScale = 1f
+    var deltaTime = 0f
+        private set
 
-        private var lastTime = 0.0
+    var time = 0f
+        private set
 
-        var deltaTime = 0f
-            private set
+    private var accumulator = 0f
 
-        var time = 0f
-            private set
-
-        private var accumulator = 0f
-
-        fun update(currentTime: Double) {
-            if (lastTime == 0.0) {
-                lastTime = currentTime
-            }
-
-            val frameTime = (currentTime - lastTime).toFloat() * timeScale
+    fun update(currentTime: Double) {
+        if (lastTime == 0.0) {
             lastTime = currentTime
-
-            deltaTime = frameTime
-            time += frameTime
-
-            accumulator += frameTime
         }
 
-        fun shouldRunFixedUpdate(): Boolean {
-            return accumulator >= FIXED_DELTA_TIME
-        }
+        val frameTime = (currentTime - lastTime).toFloat() * timeScale
+        lastTime = currentTime
 
-        fun consumeFixedUpdate() {
-            accumulator -= FIXED_DELTA_TIME
-        }
+        deltaTime = frameTime
+        time += frameTime
 
-        fun reset() {
-            lastTime = 0.0
-            deltaTime = 0f
-            time = 0f
-            accumulator = 0f
-        }
+        accumulator += frameTime
+    }
+
+    fun shouldRunFixedUpdate(): Boolean {
+        return accumulator >= FIXED_DELTA_TIME
+    }
+
+    fun consumeFixedUpdate() {
+        accumulator -= FIXED_DELTA_TIME
+    }
+
+    fun reset() {
+        lastTime = 0.0
+        deltaTime = 0f
+        time = 0f
+        accumulator = 0f
     }
 }
