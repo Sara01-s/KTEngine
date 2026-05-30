@@ -6,8 +6,8 @@ layout(location = 1) in vec3 a_normal;
 layout(location = 2) in vec2 a_uv;
 
 #ifdef HAS_TANGENTS
-layout(location = 3) in vec3 a_tangent;
-layout(location = 4) in vec3 a_bitangent;
+    layout(location = 3) in vec3 a_tangent;
+    layout(location = 4) in vec3 a_bitangent;
 #endif
 
 uniform mat4 _MVP;
@@ -22,9 +22,8 @@ out vec3 v_viewNormal;
 
 out vec2 v_uv;
 
-
 #ifdef HAS_TANGENTS
-out mat3 v_tbn;
+    out mat3 v_tbn;
 #endif
 
 void main() {
@@ -37,9 +36,9 @@ void main() {
     v_worldNormal = N;
 
     #ifdef HAS_TANGENTS
-    vec3 T = normalize(normalMatrix * a_tangent);
-    vec3 B = normalize(normalMatrix * a_bitangent);
-    v_tbn = mat3(T, B, N);
+        vec3 T = normalize(normalMatrix * a_tangent);
+        vec3 B = normalize(normalMatrix * a_bitangent);
+        v_tbn = mat3(T, B, N);
     #endif
 
     v_viewPosition = (_ViewMatrix * worldPosCalculated).xyz;
@@ -52,89 +51,104 @@ void main() {
 
 #type fragment
 #version 450 core
+#include "include/shd_pbr.glsl"
 
 layout(location = 0) out vec4 fragColor;
 
 in vec3 v_worldPosition;
 in vec3 v_viewPosition;
-
 in vec3 v_worldNormal;
 in vec3 v_viewNormal;
-
 in vec2 v_uv;
 
 #ifdef HAS_TANGENTS
-in mat3 v_tbn;
+    in mat3 v_tbn;
 #endif
 
-uniform vec3 _CameraPosition;
+uniform vec3 _LightDirection;
+uniform float _LightIntensity;
 uniform vec3 _LightColor;
+uniform vec3 _CameraPosition;
 uniform vec4 _Color;
-
-const vec3 _LightDirection = vec3(0.5, -0.8, 0.3); // TODO: make uniform.
-const float _LightIntensity = 1.0; // TODO: make uniform.
+uniform float _MetallicIntensity;
+uniform float _RoughnessIntensity;
 
 #ifdef HAS_DIFFUSE
-uniform sampler2D _DiffuseTexture;
+    uniform sampler2D _DiffuseTexture;
 #endif
 #ifdef HAS_SPECULAR
-uniform sampler2D _SpecularTexture;
+    uniform sampler2D _SpecularTexture;
 #endif
-#ifdef HAS_TANGENTS
-uniform sampler2D _NormalTexture;
+#if defined(HAS_NORMAL) || defined(HAS_TANGENTS)
+    uniform sampler2D _NormalTexture;
 #endif
 #ifdef HAS_OPACITY
-uniform sampler2D _OpacityTexture;
+    uniform sampler2D _OpacityTexture;
 #endif
-
-const float ambientIntensity = 0.45;
-const float shininess = 32.0;
-const float specularIntensity = 0.4;
+#ifdef HAS_EMISSIVE
+    uniform sampler2D _EmissiveTexture;
+#endif
+#ifdef HAS_ROUGHNESS
+    uniform sampler2D _RoughnessTexture;
+#endif
+#ifdef HAS_METALLIC
+    uniform sampler2D _MetallicTexture;
+#endif
 
 void main() {
     vec3 albedo = _Color.rgb;
     float alpha = _Color.a;
 
+    float roughness = _RoughnessIntensity;
+    float metallic = _MetallicIntensity;
+
     #ifdef HAS_DIFFUSE
         vec4 diffuseSample = texture(_DiffuseTexture, v_uv);
         albedo *= diffuseSample.rgb;
 
-        #ifndef HAS_OPACITY
-        alpha *= diffuseSample.a;
+        #if !(defined(HAS_OPACITY))
+            alpha *= diffuseSample.a;
         #endif
     #endif
 
+    #ifdef HAS_ROUGHNESS
+        roughness *= texture(_RoughnessTexture, v_uv).r;
+    #endif
+
+    #ifdef HAS_METALLIC
+        metallic *= texture(_MetallicTexture, v_uv).r;
+    #endif
+
     #ifdef HAS_OPACITY
-    alpha *= texture(_OpacityTexture, v_uv).a;
+        alpha *= texture(_OpacityTexture, v_uv).a;
     #endif
 
-    if (alpha < 0.1)
-        discard;
+    if (alpha < 0.1) discard;
 
-    vec3 normal = normalize(v_worldNormal);
-
+    vec3 N = normalize(v_worldNormal);
     #ifdef HAS_TANGENTS
-    vec3 tangentNormal = texture(_NormalTexture, v_uv).xyz * 2.0 - 1.0;
-    normal = normalize(v_tbn * tangentNormal);
+        vec3 tangentNormal = texture(_NormalTexture, v_uv).xyz * 2.0 - 1.0;
+        N = normalize(v_tbn * tangentNormal);
     #endif
 
-    vec3 lightDir = normalize(-_LightDirection);
-    float NdotL = max(dot(normal, lightDir), 0.0);
+    vec3 emission = vec3(0.0);
+    #ifdef HAS_EMISSIVE
+        emission = texture(_EmissiveTexture, v_uv).rgb;
+    #endif
 
-    vec3 viewDir = normalize(_CameraPosition - v_worldPosition);
-    vec3 reflectDir = reflect(-lightDir, normal);
-
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-
-    float currentSpecularIntensity = specularIntensity;
+    vec3 F0 = mix(vec3(0.04), albedo, metallic);
 
     #ifdef HAS_SPECULAR
-    currentSpecularIntensity *= texture(_SpecularTexture, v_uv).r;
+        vec3 specularSample = texture(_SpecularTexture, v_uv).rgb;
+        F0 = specularSample;
     #endif
 
-    vec3 ambient = albedo * ambientIntensity;
-    vec3 diffuse = albedo * _LightColor * NdotL * _LightIntensity;
-    vec3 specular = _LightColor * spec * currentSpecularIntensity * _LightIntensity;
+    vec3 V = normalize(_CameraPosition - v_worldPosition);
+    vec3 L = normalize(-_LightDirection);
+    vec3 H = normalize(V + L);
 
-    fragColor = vec4(ambient + diffuse + specular, alpha);
+    vec3 lightColor = _LightColor * _LightIntensity;
+    vec3 color = PBR(F0, albedo, N, V, L, H, roughness, metallic, lightColor, emission);
+
+    fragColor = vec4(color, alpha);
 }

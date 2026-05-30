@@ -1,7 +1,6 @@
 package engine.utils
 
 import engine.assets.DefaultAssets
-import engine.assets.EngineAssets
 import engine.rendering.bindables.Mesh
 import engine.rendering.bindables.VertexLayout
 import glm_.vec2.Vec2
@@ -13,6 +12,12 @@ object PrimitiveMeshes : AutoCloseable {
     private val layout = VertexLayout()
         .append(VertexLayout.ElementType.Position3D)
         .append(VertexLayout.ElementType.Texture2D)
+
+    val empty: Mesh by lazy {
+        val vertices = listOf(Vec3.zero)
+        val indices = intArrayOf(0)
+        Mesh(layout, vertices, indices, material)
+    }
 
     val quad: Mesh by lazy {
         val vertices = listOf(

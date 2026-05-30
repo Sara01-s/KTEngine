@@ -29,6 +29,7 @@ class Game {
             SceneSystem.currentScene?.update()
 
             RenderSystem.render()
+            BehaviourSystem.draw()
             SceneSystem.currentScene?.draw()
 
             Window.swapBuffers()

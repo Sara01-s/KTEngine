@@ -4,10 +4,8 @@ import engine.behaviours.SceneChanger
 import engine.components.Camera
 import engine.components.MeshRenderer
 import engine.rendering.bindables.Material
-import engine.assets.Assets
-import engine.assets.DefaultAssets
 import engine.assets.EngineAssets
-import engine.game.Model
+import engine.components.behaviours.DirectionalLight
 import engine.utils.PrimitiveMeshes
 import engine.utils.fromEulerAngles
 import glm_.quat.Quat
@@ -16,6 +14,11 @@ import org.sara01.behaviours.FirstPersonController
 
 class Scene1 : Scene() {
     override fun start() {
+        entity("Sun") {
+            component<DirectionalLight>()
+            transform.localRotation = Quat.fromEulerAngles(-10f, 0f, 0f)
+        }
+
         entity("MainCamera") {
             component<Camera>()
             component<FirstPersonController>()
@@ -32,8 +35,9 @@ class Scene1 : Scene() {
         }
 
         entity("Model") {
-            DefaultAssets.model.instantiate(this)
-            transform.localRotation = Quat.fromEulerAngles(-90f, 0f, 0f)
+            EngineAssets.loadModel("models/model_mech_drone.glb").instantiate(this)
+            transform.localRotation = Quat.fromEulerAngles(-90f, 180f, 0f)
+            transform.localScale = Vec3(0.1f)
             transform.localPosition = Vec3(0f, 1f, 0f)
         }
     }

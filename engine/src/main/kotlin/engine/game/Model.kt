@@ -2,7 +2,6 @@ package engine.game
 
 import engine.components.MeshRenderer
 import engine.rendering.bindables.*
-import engine.assets.Assets
 import engine.assets.EngineAssets
 import engine.utils.Color
 import engine.utils.TextureResolver
@@ -24,6 +23,9 @@ class Model(path: String) : AutoCloseable {
         var hasNormals: Boolean = false,
         var hasSpecular: Boolean = false,
         var hasOpacity: Boolean = false,
+        var hasEmissive: Boolean = false,
+        var hasRoughness: Boolean = false,
+        var hasMetallic: Boolean = false,
 
         var color: Color = Color.white,
 
@@ -41,9 +43,11 @@ class Model(path: String) : AutoCloseable {
             aiProcess_Triangulate or
             aiProcess_JoinIdenticalVertices or
             aiProcess_CalcTangentSpace or
+            aiProcess_GenSmoothNormals or
             aiProcess_ImproveCacheLocality or
             aiProcess_LimitBoneWeights or
-            aiProcess_FindInvalidData
+            aiProcess_FindInvalidData or
+            aiProcess_FlipUVs
 
         val sanitizedPath = path.replace('\\', '/')
 
@@ -119,7 +123,7 @@ class Model(path: String) : AutoCloseable {
         val shader = createShaderFromFeatures(features)
         val material = Material(shader)
 
-        material.setColor("_Color", features.color)
+        material.setColor4("_Color", features.color)
         material.setFloat("_SpecularIntensity", features.specularIntensity)
         material.setFloat("_SpecularPower", features.specularPower)
 
@@ -211,6 +215,9 @@ class Model(path: String) : AutoCloseable {
             features.hasSpecular = hasTexture(material, aiTextureType_SPECULAR, path)
             features.hasNormals =  hasTexture(material, aiTextureType_NORMALS, path) || hasTexture(material, aiTextureType_HEIGHT, path)
             features.hasOpacity =  hasTexture(material, aiTextureType_OPACITY, path) || hasTexture(material, aiTextureType_DISPLACEMENT, path)
+            features.hasEmissive = hasTexture(material, aiTextureType_EMISSIVE, path)
+            features.hasRoughness = hasTexture(material, aiTextureType_DIFFUSE_ROUGHNESS, path)
+            features.hasMetallic = hasTexture(material, aiTextureType_METALNESS, path) || hasTexture(material, aiTextureType_UNKNOWN, path)
 
             val color = AIColor4D.create()
 
@@ -249,17 +256,13 @@ class Model(path: String) : AutoCloseable {
 
         val shader = Shader(EngineAssets.loadText(shaderPath))
 
-        if (features.hasDiffuse)
-            shader.enableDefine("HAS_DIFFUSE")
-
-        if (features.hasNormals)
-            shader.enableDefine("HAS_TANGENTS")
-
-        if (features.hasSpecular)
-            shader.enableDefine("HAS_SPECULAR")
-
-        if (features.hasOpacity)
-            shader.enableDefine("HAS_OPACITY")
+        if (features.hasDiffuse) shader.enableDefine("HAS_DIFFUSE")
+        if (features.hasNormals) shader.enableDefine("HAS_TANGENTS")
+        if (features.hasSpecular) shader.enableDefine("HAS_SPECULAR")
+        if (features.hasOpacity) shader.enableDefine("HAS_OPACITY")
+        if (features.hasEmissive) shader.enableDefine("HAS_EMISSIVE")
+        if (features.hasRoughness) shader.enableDefine("HAS_ROUGHNESS")
+        if (features.hasMetallic) shader.enableDefine("HAS_METALLIC")
 
         return shader
     }
@@ -300,6 +303,18 @@ class Model(path: String) : AutoCloseable {
 
             if (features.hasOpacity) {
                 tryBind("_OpacityTexture", 3, aiTextureType_OPACITY, aiTextureType_DISPLACEMENT)
+            }
+
+            if (features.hasEmissive) {
+                tryBind("_EmissiveTexture", 4, aiTextureType_EMISSIVE)
+            }
+
+            if (features.hasRoughness) {
+                tryBind("_RoughnessTexture", 5, aiTextureType_DIFFUSE_ROUGHNESS)
+            }
+
+            if (features.hasMetallic) {
+                tryBind("_MetallicTexture", 6, aiTextureType_METALNESS, aiTextureType_UNKNOWN)
             }
 
         } finally {

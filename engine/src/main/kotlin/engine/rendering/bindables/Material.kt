@@ -17,7 +17,7 @@ class Material(val shader: Shader) : Bindable() {
     private val textures = mutableMapOf<String, TextureSlot>()
 
     init {
-        setColor("_Color", Color.white)
+        setColor4("_Color", Color.white)
     }
 
     fun setInt(name: String, value: Int)         { ints[name]     = value }
@@ -25,41 +25,50 @@ class Material(val shader: Shader) : Bindable() {
     fun setVec3(name: String, value: Vec3)       { vec3s[name]    = value }
     fun setVec4(name: String, value: Vec4)       { vec4s[name]    = value }
     fun setMat4(name: String, value: Mat4)       { mat4s[name]    = value }
-    fun setColor(name: String, value: Color)     { setVec4(name, Vec4(value.r, value.g, value.b, value.a)) }
-    fun setColor(color: Color)                   { setColor("_Color", color) }
     fun setTexture(name: String, value: Texture) { textures[name] = TextureSlot(value, null) }
-    fun setMainTexture(texture: Texture)         { setTexture("_MainTex", texture, 0) }
     fun setTexture(name: String, value: Texture, slot: Int) { textures[name] = TextureSlot(value, slot) }
+    fun setColor3(name: String, color: Color) { setVec3(name, Vec3(color.r, color.g, color.b)) }
+    fun setColor4(name: String, color: Color) { setVec4(name, Vec4(color.r, color.g, color.b, color.a)) }
 
-    fun getInt(name: String): Int?         = ints[name]
-    fun getFloat(name: String): Float?     = floats[name]
-    fun getVec3(name: String): Vec3?       = vec3s[name]
-    fun getVec4(name: String): Vec4?       = vec4s[name]
-    fun getMat4(name: String): Mat4?       = mat4s[name]
-    fun getTexture(name: String): Texture? = textures[name]?.texture
-    fun getColor(name: String): Color?     = vec4s[name]?.let { Color(it.x, it.y, it.z, it.w) }
+    fun setMainColor4(color: Color)              { setColor4("_Color", color) }
+    fun setMainTexture(texture: Texture)         { setTexture("_MainTex", texture, 0) }
+
+
 
     override fun bind() {
         shader.bind()
 
-        for ((name, value) in ints)   shader.setUniform(name, value)
-        for ((name, value) in floats) shader.setUniform(name, value)
-        for ((name, value) in vec3s)  shader.setUniform(name, value)
-        for ((name, value) in vec4s)  shader.setUniform(name, value)
-        for ((name, value) in mat4s)  shader.setUniform(name, value)
+        for ((name, value) in ints) {
+            if (shader.hasUniform(name)) shader.setUniform(name, value)
+        }
+        for ((name, value) in floats) {
+            if (shader.hasUniform(name)) shader.setUniform(name, value)
+        }
+        for ((name, value) in vec3s) {
+            if (shader.hasUniform(name)) shader.setUniform(name, value)
+        }
+        for ((name, value) in vec4s) {
+            if (shader.hasUniform(name)) shader.setUniform(name, value)
+        }
+        for ((name, value) in mat4s) {
+            if (shader.hasUniform(name)) shader.setUniform(name, value)
+        }
 
         var autoSlot = 0
-
         if (textures.isEmpty()) {
-            shader.setTexture("_MainTex", Assets.loadWhiteTexture(), slot =  0)
+            if (shader.hasUniform("_MainTex")) {
+                shader.setUniform("_MainTex", Assets.loadWhiteTexture(), slot = 0)
+            }
         }
         else {
             for ((name, textureSlot) in textures) {
-                val targetSlot = textureSlot.explicitSlot ?: autoSlot++
-                shader.setTexture(name, textureSlot.texture, targetSlot)
+                if (shader.hasUniform(name)) {
+                    val targetSlot = textureSlot.explicitSlot ?: autoSlot++
+                    shader.setUniform(name, textureSlot.texture, targetSlot)
 
-                if (targetSlot >= autoSlot) {
-                    autoSlot = targetSlot + 1
+                    if (targetSlot >= autoSlot) {
+                        autoSlot = targetSlot + 1
+                    }
                 }
             }
         }

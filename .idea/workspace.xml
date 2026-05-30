@@ -5,106 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="052189d8-bf91-4b4c-b691-740ee74d216a" name="Changes" comment="Assets and EngineAssets">
-      <change afterPath="$PROJECT_DIR$/assets/models/model_drift_race_track.glb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/Application.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/CoreAPI.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/AssetUtils.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/Assets.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/AssetsCache.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/DefaultAssets.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/EngineAssets.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Behaviour.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/BehaviourSystem.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_unlit.glsl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game/src/main/kotlin/behaviours/FirstPersonController.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game/src/main/kotlin/behaviours/SceneChanger.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene1.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene2.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hs_err_pid17804.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/Main.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/components/AudioSource.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/AudioSource.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/components/Camera.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Camera.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/components/Collider2D.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Collider2D.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/components/Component.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Component.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/components/FirstPersonController.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/components/MeshRenderer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/MeshRenderer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/components/Renderer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Renderer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/components/Transform.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Transform.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/game/Entity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Entity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/game/Game.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/game/Model.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Model.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/game/Time.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Time.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/rendering/Skybox.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Skybox.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/rendering/Window.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Window.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/rendering/bindables/Bindable.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Bindable.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/rendering/bindables/CubeMap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/CubeMap.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/rendering/bindables/Material.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Material.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/rendering/bindables/Mesh.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Mesh.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/rendering/bindables/Shader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Shader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/rendering/bindables/Texture.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Texture.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/rendering/bindables/VertexLayout.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/VertexLayout.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/rendering/text/Font.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/text/Font.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/rendering/text/TextRenderer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/text/TextRenderer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/scenes/Scene.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/scenes/Scene.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/scenes/Scene1.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/scenes/Scene2.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/scenes/Scene3.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/scenes/Scene4.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/scenes/Scene5.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/scenes/Scene6.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/systems/Assets.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/systems/AudioSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/AudioSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/systems/CameraSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/CameraSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/systems/CollisionSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/CollisionSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/systems/Input.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/Input.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/systems/RenderSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/RenderSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/systems/SceneSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/SceneSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/utils/AudioClip.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/AudioClip.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/utils/Color.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/Color.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/utils/Logger.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/Logger.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/utils/Math.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/Math.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/utils/PrimitiveMeshes.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/PrimitiveMeshes.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/engine/utils/TextureResolver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/TextureResolver.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/audio/music_june.wav" beforeDir="false" afterPath="$PROJECT_DIR$/assets/audio/music_june.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/audio/music_periwinkle.wav" beforeDir="false" afterPath="$PROJECT_DIR$/assets/audio/music_periwinkle.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/audio/sfx_hit.wav" beforeDir="false" afterPath="$PROJECT_DIR$/assets/audio/sfx_hit.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/audio/sfx_score.wav" beforeDir="false" afterPath="$PROJECT_DIR$/assets/audio/sfx_score.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/audio/sfx_spawn.wav" beforeDir="false" afterPath="$PROJECT_DIR$/assets/audio/sfx_spawn.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fonts/font_structure_pixelated.json" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/fonts/font_structure_pixelated.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fonts/font_tex_pixelated.png" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/fonts/font_tex_pixelated.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/models/model_forest_house.glb" beforeDir="false" afterPath="$PROJECT_DIR$/assets/models/model_forest_house.glb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/models/model_standford_bunny.obj" beforeDir="false" afterPath="$PROJECT_DIR$/assets/models/model_standford_bunny.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/models/model_watercolor_bird.glb" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/models/model_watercolor_bird.glb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/models/primitives/model_capsule.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/models/primitives/model_cube.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/models/primitives/model_cylinder.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/models/primitives/model_plane.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/models/primitives/model_quad.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/models/primitives/model_sphere.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/shaders/shd_font.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_font.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/shaders/shd_grid.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_grid.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/shaders/shd_lit.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_lit.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/shaders/shd_skybox.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_skybox.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/shaders/shd_unlit.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_fallback.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/textures/negx.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_skybox_negx.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/textures/negy.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_skybox_negy.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/textures/negz.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_skybox_negz.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/textures/posx.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_skybox_posx.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/textures/posy.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_skybox_posy.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/textures/posz.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_skybox_posz.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/textures/tex_circle.png" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_circle.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/textures/tex_eli.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/textures/tex_eli.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/textures/tex_square.png" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_square.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/textures/tex_test_uv.png" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_test_uv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/behaviours/DirectionalLight.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/LightingSystem.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/models/model_mech_drone.glb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/include/shd_pbr.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/models/model_forest_house.glb" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/models/model_forest_house.glb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/DefaultAssets.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/DefaultAssets.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Behaviour.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Behaviour.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/MeshRenderer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/MeshRenderer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Model.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Model.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Window.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Window.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Material.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Material.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Shader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Shader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/BehaviourSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/BehaviourSystem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/PrimitiveMeshes.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/PrimitiveMeshes.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_lit.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_lit.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene1.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,6 +61,15 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="GLSL Shader" />
+        <option value="Kotlin Class" />
+        <option value="Kotlin Object" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -163,31 +90,48 @@
   &quot;associatedIndex&quot;: 0
 }</component>
   <component name="ProjectId" id="3EQQVZP2YB0ni02kq7bXGMdhYdL" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.Build KTEngine.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.KTEngine [:game:engine.MainKt.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Load Gradle Dependencies.executor&quot;: &quot;Run&quot;,
-    &quot;Kotlin.MainKt.executor&quot;: &quot;Coverage&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.33678162&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.fileTypes&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Build KTEngine.executor": "Run",
+    "Gradle.KTEngine [:game:engine.MainKt.main()].executor": "Debug",
+    "Gradle.Load Gradle Dependencies.executor": "Run",
+    "Kotlin.MainKt.executor": "Coverage",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/projects/KTEngine/engine/src/main/resources/engine_assets/models",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.33678162",
+    "settings.editor.selected.configurable": "preferences.fileTypes"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\models" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\shaders\include" />
+      <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\models" />
+    </key>
+    <key name="K2MoveDeclarationsDialog.RECENT_PACKAGE_KEY">
+      <recent name="engine.components.behaviours" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="engine.MainKt" />

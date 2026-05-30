@@ -15,6 +15,7 @@ abstract class Behaviour : Component() {
     open fun start() {}
     open fun update() {}
     open fun fixedUpdate() {}
+    open fun onDraw() {}
     open fun onDestroy() {}
     open fun onEnable() {}
     open fun onDisable() {}
@@ -22,9 +23,17 @@ abstract class Behaviour : Component() {
     final override fun onAdded() {
         BehaviourSystem.register(this)
         start()
+
+        if (enabled) {
+            onEnable()
+        }
     }
 
     final override fun onRemoved() {
+        if (enabled) {
+            onDisable()
+        }
+
         onDestroy()
         BehaviourSystem.unregister(this)
     }

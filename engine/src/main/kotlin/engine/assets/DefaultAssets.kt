@@ -8,7 +8,7 @@ import engine.utils.Color
 
 object DefaultAssets {
     val shader: Shader by lazy {
-        EngineAssets.loadShader("shaders/shd_unlit.glsl")
+        EngineAssets.loadShader("shaders/shd_lit.glsl")
     }
 
     val texture: Texture by lazy {
@@ -25,8 +25,8 @@ object DefaultAssets {
 
     val material: Material by lazy {
         Material(shader).apply {
-            setTexture("_MainTex", texture)
-            setColor("_Color", Color.white)
+            setTexture("_DiffuseTexture", texture)
+            setColor4("_Color", Color.white)
         }
     }
 
@@ -34,7 +34,7 @@ object DefaultAssets {
         Material(
             EngineAssets.loadShader("shaders/shd_font.glsl")
         ).apply {
-            setColor("_Color", Color.white)
+            setColor4("_Color", Color.white)
         }
     }
 

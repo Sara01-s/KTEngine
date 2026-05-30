@@ -30,7 +30,9 @@ object BehaviourSystem {
         isIterating = true
 
         for (behaviour in behaviours) {
-            if (behaviour.enabled) behaviour.update()
+            if (behaviour.enabled) {
+                behaviour.update()
+            }
         }
 
         isIterating = false
@@ -42,7 +44,23 @@ object BehaviourSystem {
         isIterating = true
 
         for (behaviour in behaviours) {
-            if (behaviour.enabled) behaviour.fixedUpdate()
+            if (behaviour.enabled) {
+                behaviour.fixedUpdate()
+            }
+        }
+
+        isIterating = false
+        flushPending()
+    }
+
+    fun draw() {
+        flushPending()
+        isIterating = true
+
+        for (behaviour in behaviours) {
+            if (behaviour.enabled) {
+                behaviour.onDraw()
+            }
         }
 
         isIterating = false
