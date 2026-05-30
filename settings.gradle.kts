@@ -1,4 +1,6 @@
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
-rootProject.name = "eliuwu"
+rootProject.name = "KTEngine"
+include("engine")
+include("game")
