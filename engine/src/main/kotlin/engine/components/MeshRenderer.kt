@@ -11,8 +11,8 @@ class MeshRenderer : Renderer() {
     var material = DefaultAssets.material
 
     // TODO: Detected whether is an Lit or Unlit material to expose this fields.
-    var metallicIntensity = 0.3f
-    var roughnessIntensity = 0.3f
+    var metallicIntensity = 0f
+    var roughnessIntensity = 0.7f
 
     override fun onAdded() {
         RenderSystem.register(this)

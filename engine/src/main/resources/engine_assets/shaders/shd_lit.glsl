@@ -94,6 +94,11 @@ uniform float _RoughnessIntensity;
 #ifdef HAS_METALLIC
     uniform sampler2D _MetallicTexture;
 #endif
+#ifdef HAS_AO
+    uniform sampler2D _AmbientOcclusionTexture;
+#endif
+
+const vec3 AMBIENT_LIGHT = vec3(0.2, 0.2, 0.25);
 
 void main() {
     vec3 albedo = _Color.rgb;
@@ -143,12 +148,17 @@ void main() {
         F0 = specularSample;
     #endif
 
+    float ao = 1.0;
+    #ifdef HAS_AO
+        ao = texture(_AmbientOcclusionTexture, v_uv).r;
+    #endif
+
     vec3 V = normalize(_CameraPosition - v_worldPosition);
     vec3 L = normalize(-_LightDirection);
     vec3 H = normalize(V + L);
 
     vec3 lightColor = _LightColor * _LightIntensity;
-    vec3 color = PBR(F0, albedo, N, V, L, H, roughness, metallic, lightColor, emission);
+    vec3 color = PBR(F0, albedo, N, V, L, H, roughness, metallic, lightColor, emission, ao, AMBIENT_LIGHT);
 
     fragColor = vec4(color, alpha);
 }

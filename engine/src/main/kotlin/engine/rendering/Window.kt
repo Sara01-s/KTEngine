@@ -11,7 +11,7 @@ import org.lwjgl.system.MemoryUtil.NULL
 object Window : AutoCloseable {
     var width = 1280
     var height = 720
-    var title = "Default Window"
+    var title = "KTEngine uwu"
     val aspectRatio get() = width.toFloat() / height.toFloat()
 
     val handle: Long

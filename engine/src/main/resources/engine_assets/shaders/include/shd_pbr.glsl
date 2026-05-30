@@ -41,7 +41,9 @@ vec3 PBR(
     float roughness,
     float metallicIntensity,
     vec3 lightColor,
-    vec3 emission
+    vec3 emission,
+    float ao,
+    vec3 ambient
 ) {
     float alpha = roughness * roughness;
 
@@ -60,7 +62,9 @@ vec3 PBR(
 
     vec3 BRDF = (Kd * lambert) + cookTorrance;
     float incomingLight = max(dot(L, N), 0.0);
-    vec3 outgoingLight = emission + (BRDF * incomingLight * lightColor);
+    vec3 diffuseAndSpecular = (BRDF * incomingLight * lightColor);
+    vec3 ambientColor = albedo * ambient * ao;
+    vec3 outgoingLight = emission + ambientColor + diffuseAndSpecular;
 
     return outgoingLight;
 }

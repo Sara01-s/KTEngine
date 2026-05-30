@@ -33,8 +33,6 @@ class Material(val shader: Shader) : Bindable() {
     fun setMainColor4(color: Color)              { setColor4("_Color", color) }
     fun setMainTexture(texture: Texture)         { setTexture("_MainTex", texture, 0) }
 
-
-
     override fun bind() {
         shader.bind()
 

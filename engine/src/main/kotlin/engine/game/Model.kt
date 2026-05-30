@@ -26,6 +26,7 @@ class Model(path: String) : AutoCloseable {
         var hasEmissive: Boolean = false,
         var hasRoughness: Boolean = false,
         var hasMetallic: Boolean = false,
+        var hasAO: Boolean = false,
 
         var color: Color = Color.white,
 
@@ -218,6 +219,10 @@ class Model(path: String) : AutoCloseable {
             features.hasEmissive = hasTexture(material, aiTextureType_EMISSIVE, path)
             features.hasRoughness = hasTexture(material, aiTextureType_DIFFUSE_ROUGHNESS, path)
             features.hasMetallic = hasTexture(material, aiTextureType_METALNESS, path) || hasTexture(material, aiTextureType_UNKNOWN, path)
+            features.hasAO = hasTexture(material, aiTextureType_AMBIENT_OCCLUSION, path) ||
+                    hasTexture(material, aiTextureType_LIGHTMAP, path) ||
+                    hasTexture(material, aiTextureType_UNKNOWN, path) ||
+                    hasTexture(material, aiTextureType_SHININESS, path)
 
             val color = AIColor4D.create()
 
@@ -263,6 +268,7 @@ class Model(path: String) : AutoCloseable {
         if (features.hasEmissive) shader.enableDefine("HAS_EMISSIVE")
         if (features.hasRoughness) shader.enableDefine("HAS_ROUGHNESS")
         if (features.hasMetallic) shader.enableDefine("HAS_METALLIC")
+        if (features.hasAO) shader.enableDefine("HAS_AO")
 
         return shader
     }
@@ -315,6 +321,10 @@ class Model(path: String) : AutoCloseable {
 
             if (features.hasMetallic) {
                 tryBind("_MetallicTexture", 6, aiTextureType_METALNESS, aiTextureType_UNKNOWN)
+            }
+
+            if (features.hasAO) {
+                tryBind("_AmbientOcclusionTexture", 7, aiTextureType_AMBIENT_OCCLUSION, aiTextureType_LIGHTMAP, aiTextureType_UNKNOWN, aiTextureType_SHININESS)
             }
 
         } finally {

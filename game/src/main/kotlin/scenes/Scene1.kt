@@ -15,8 +15,8 @@ import org.sara01.behaviours.FirstPersonController
 class Scene1 : Scene() {
     override fun start() {
         entity("Sun") {
-            component<DirectionalLight>()
-            transform.localRotation = Quat.fromEulerAngles(-10f, 0f, 0f)
+            component<DirectionalLight>().intensity = 3f
+            transform.localRotation = Quat.fromEulerAngles(-10f, 10f, 0f)
         }
 
         entity("MainCamera") {
@@ -36,7 +36,7 @@ class Scene1 : Scene() {
 
         entity("Model") {
             EngineAssets.loadModel("models/model_mech_drone.glb").instantiate(this)
-            transform.localRotation = Quat.fromEulerAngles(-90f, 180f, 0f)
+            transform.localRotation = Quat.fromEulerAngles(-90f, 90f, 0f)
             transform.localScale = Vec3(0.1f)
             transform.localPosition = Vec3(0f, 1f, 0f)
         }
