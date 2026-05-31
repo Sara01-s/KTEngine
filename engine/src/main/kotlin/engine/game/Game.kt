@@ -6,6 +6,7 @@ import engine.systems.CollisionSystem
 import engine.systems.Input
 import engine.systems.RenderSystem
 import engine.systems.SceneSystem
+import engine.systems.ShaderSystem
 import org.lwjgl.glfw.GLFW.glfwGetTime
 
 class Game {
@@ -26,6 +27,7 @@ class Game {
             }
 
             BehaviourSystem.update()
+            ShaderSystem.update()
             SceneSystem.currentScene?.update()
 
             RenderSystem.render()

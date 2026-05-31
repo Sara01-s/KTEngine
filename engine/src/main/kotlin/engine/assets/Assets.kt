@@ -37,7 +37,7 @@ object Assets : AutoCloseable {
     fun loadShader(path: String): Shader {
         return shaders.get(path) {
             log("Loading shader: $path")
-            Shader(loadText(path))
+            Shader(loadText(path), path)
         }
     }
 

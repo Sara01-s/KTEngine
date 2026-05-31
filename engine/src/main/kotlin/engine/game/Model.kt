@@ -1,5 +1,6 @@
 package engine.game
 
+import engine.assets.Assets
 import engine.components.MeshRenderer
 import engine.rendering.bindables.*
 import engine.assets.EngineAssets
@@ -255,11 +256,11 @@ class Model(path: String) : AutoCloseable {
     private fun createShaderFromFeatures(features: MaterialFeatures): Shader {
         val shaderPath =
             if (features.hasNormals || features.hasDiffuse)
-                "engine_assets/shaders/shd_lit.glsl"
+                "shaders/shd_lit.glsl"
             else
-                "engine_assets/shaders/shd_unlit.glsl"
+                "shaders/shd_unlit.glsl"
 
-        val shader = Shader(EngineAssets.loadText(shaderPath))
+        val shader = Assets.loadShader(shaderPath)
 
         if (features.hasDiffuse) shader.enableDefine("HAS_DIFFUSE")
         if (features.hasNormals) shader.enableDefine("HAS_TANGENTS")

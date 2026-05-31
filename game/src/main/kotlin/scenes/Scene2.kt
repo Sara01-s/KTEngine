@@ -28,7 +28,7 @@ class Scene2 : Scene() {
         entity("GridFloor") {
             component<MeshRenderer> {
                 mesh     = PrimitiveMeshes.plane
-                material = Material(Assets.loadShader("engine_assets/shaders/shd_grid.glsl"))
+                material = Material(Assets.loadShader("shaders/shd_grid.glsl"))
             }
             transform.localScale = Vec3(1000f, 1f, 1000f)
         }

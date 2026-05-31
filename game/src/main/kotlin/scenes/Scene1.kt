@@ -1,5 +1,6 @@
 package engine.scenes
 
+import engine.assets.Assets
 import engine.behaviours.SceneChanger
 import engine.components.Camera
 import engine.components.MeshRenderer
@@ -29,7 +30,7 @@ class Scene1 : Scene() {
         entity("GridFloor") {
             component<MeshRenderer> {
                 mesh     = PrimitiveMeshes.plane
-                material = Material(EngineAssets.loadShader("shaders/shd_grid.glsl"))
+                material = Material(Assets.loadShader("shaders/shd_grid.glsl"))
             }
             transform.localScale = Vec3(1000f, 1f, 1000f)
         }

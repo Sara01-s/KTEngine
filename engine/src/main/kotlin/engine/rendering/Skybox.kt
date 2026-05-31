@@ -8,8 +8,7 @@ import org.lwjgl.opengl.ARBVertexArrayObject.glGenVertexArrays
 import org.lwjgl.opengl.GL43.*
 
 class Skybox : AutoCloseable {
-
-    private val skyboxShader = Assets.loadShader("engine_assets/shaders/shd_skybox.glsl")
+    private val skyboxShader = Assets.loadShader("shaders/shd_skybox.glsl")
     private val vao: Int
     private val vbo: Int
     private val ebo: Int

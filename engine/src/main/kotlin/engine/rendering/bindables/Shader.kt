@@ -2,7 +2,10 @@ package engine.rendering.bindables
 
 import engine.Application
 import engine.assets.AssetUtils
+import engine.systems.ShaderSystem
 import engine.utils.Color
+import engine.utils.log
+import engine.utils.logError
 import glm_.mat3x3.Mat3
 import glm_.mat4x4.Mat4
 import glm_.vec2.Vec2
@@ -13,7 +16,7 @@ import org.lwjgl.opengl.GL20.*
 import java.nio.file.Files
 import java.nio.file.Files.readString
 
-class Shader(private val source: String, private val shaderPath: String = "") : Bindable() {
+class Shader(private var source: String, private val shaderPath: String = "") : Bindable() {
 
     companion object {
         private const val VERTEX_SOURCE = "vertex"
@@ -24,42 +27,85 @@ class Shader(private val source: String, private val shaderPath: String = "") : 
     private val defines = linkedSetOf<String>()
 
     init {
-        recompile()
+        if (shaderPath.isNotEmpty()) {
+            ShaderSystem.register(this, shaderPath)
+        }
+
+        compile()
     }
 
     fun enableDefine(define: String) {
         if (defines.add(define)) {
-            recompile()
+            compile()
         }
     }
 
     fun disableDefine(define: String) {
         if (defines.remove(define)) {
-            recompile()
+            compile()
         }
     }
 
-    private fun recompile() {
-        val oldProgram = gpuID
-        val shaderSources = parseShader(source)
-        val baseDir = shaderPath.substringBeforeLast("/", "")
+    fun compile() {
+        try {
+            if (shaderPath.isNotEmpty()) {
+                source = loadSourceFromAnywhere(shaderPath)
+            }
 
-        val vertexSrc = injectDefines(resolveIncludes(shaderSources[VERTEX_SOURCE] ?: error("Missing vertex shader"), baseDir))
-        val fragmentSrc = injectDefines(resolveIncludes(shaderSources[FRAGMENT_SOURCE] ?: error("Missing fragment shader"), baseDir))
+            val shaderSources = parseShader(source)
+            val baseDir = shaderPath.substringBeforeLast("/", "")
 
-        val vs = compileShader(GL_VERTEX_SHADER, vertexSrc)
-        val fs = compileShader(GL_FRAGMENT_SHADER, fragmentSrc)
+            val vertexSrc = injectDefines(resolveIncludes(shaderSources[VERTEX_SOURCE] ?: error("Missing vertex shader"), baseDir))
+            val fragmentSrc = injectDefines(resolveIncludes(shaderSources[FRAGMENT_SOURCE] ?: error("Missing fragment shader"), baseDir))
 
-        uniformLocations.clear()
+            val vs = compileAndCheck(GL_VERTEX_SHADER, vertexSrc)
+            val fs = compileAndCheck(GL_FRAGMENT_SHADER, fragmentSrc)
 
-        gpuID = linkShaders(vs, fs)
+            val newProgram = linkAndCheck(vs, fs)
 
-        glDeleteShader(vs)
-        glDeleteShader(fs)
+            val oldProgram = gpuID
+            gpuID = newProgram
+            uniformLocations.clear()
 
-        if (oldProgram != 0) {
-            glDeleteProgram(oldProgram)
+            glDeleteShader(vs)
+            glDeleteShader(fs)
+
+            if (oldProgram != 0) {
+                glDeleteProgram(oldProgram)
+            }
+
+            log("[Shader] Successful compilation on: $shaderPath")
+
+        } catch (e: Exception) {
+            logError("[Shader] Error while compiling '$shaderPath':\n${e.message}")
         }
+    }
+
+    private fun compileAndCheck(type: Int, source: String): Int {
+        val id = glCreateShader(type)
+        glShaderSource(id, source)
+        glCompileShader(id)
+
+        if (glGetShaderi(id, GL_COMPILE_STATUS) == GL_FALSE) {
+            val infoLog = glGetShaderInfoLog(id)
+            glDeleteShader(id)
+            throw Exception("Compilation failed: $infoLog")
+        }
+        return id
+    }
+
+    private fun linkAndCheck(vs: Int, fs: Int): Int {
+        val program = glCreateProgram()
+        glAttachShader(program, vs)
+        glAttachShader(program, fs)
+        glLinkProgram(program)
+
+        if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE) {
+            val infoLog = glGetProgramInfoLog(program)
+            glDeleteProgram(program)
+            throw Exception("Linking failed: $infoLog")
+        }
+        return program
     }
 
     fun hasUniform(name: String): Boolean {
@@ -138,6 +184,27 @@ class Shader(private val source: String, private val shaderPath: String = "") : 
             }
         }
         return result.toString()
+    }
+
+    fun getDependencies(): List<String> {
+        val dependencies = mutableListOf<String>()
+
+        fun collectIncludes(source: String, currentDir: String) {
+            source.lines().forEach { line ->
+                if (line.trim().startsWith("#include")) {
+                    val includePath = line.trim().substringAfter("\"").substringBefore("\"")
+                    val fullPath = if (currentDir.isEmpty()) includePath else "$currentDir/$includePath"
+                    val normalized = AssetUtils.normalize(fullPath)
+
+                    dependencies.add(normalized)
+
+                    collectIncludes(loadSourceFromAnywhere(normalized), normalized.substringBeforeLast("/", ""))
+                }
+            }
+        }
+
+        collectIncludes(source, shaderPath.substringBeforeLast("/", ""))
+        return dependencies
     }
 
     private fun loadSourceFromAnywhere(path: String): String {
