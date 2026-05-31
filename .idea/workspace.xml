@@ -4,23 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="052189d8-bf91-4b4c-b691-740ee74d216a" name="Changes" comment="shader hot reload">
-      <change afterPath="$PROJECT_DIR$/assets/shaders/postprocess/include/shd_post_processing_effects.glsl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/shaders/postprocess/shd_post_process.glsl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/PostProcess.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/FrameBuffer.kt" afterDir="false" />
+    <list default="true" id="052189d8-bf91-4b4c-b691-740ee74d216a" name="Changes" comment="post processing">
+      <change afterPath="$PROJECT_DIR$/assets/shaders/postprocess/bloom/shd_bloom_blur.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/shaders/postprocess/bloom/shd_bloom_extract.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/postprocessing/BloomPass.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/postprocessing/PostProcess.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/shaders/shd_font.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_font.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/shaders/shd_grid.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_grid.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/MeshRenderer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/MeshRenderer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/shaders/postprocess/include/shd_post_processing_effects.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/postprocess/include/shd_post_processing_effects.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/shaders/postprocess/shd_post_process.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/postprocess/shd_post_process.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/PostProcess.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Window.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Window.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Material.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Material.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Shader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Shader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Texture.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Texture.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/LightingSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/LightingSystem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/FrameBuffer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/FrameBuffer.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/RenderSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/RenderSystem.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/PrimitiveMeshes.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/PrimitiveMeshes.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene1.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +82,7 @@
   }
 }</component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -127,11 +124,13 @@
       <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\models" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\projects\KTEngine\assets\shaders\postprocess\bloom" />
       <recent name="D:\projects\KTEngine\assets\shaders" />
       <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\shaders\include" />
       <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\models" />
     </key>
     <key name="K2MoveDeclarationsDialog.RECENT_PACKAGE_KEY">
+      <recent name="engine.rendering.postprocessing" />
       <recent name="engine.components.behaviours" />
     </key>
   </component>
@@ -189,7 +188,23 @@
       <option name="project" value="LOCAL" />
       <updated>1780186682669</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="post processing">
+      <option name="closed" value="true" />
+      <created>1780200472759</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1780200472759</updated>
+    </task>
+    <task id="LOCAL-00005" summary="post processing">
+      <option name="closed" value="true" />
+      <created>1780200520147</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1780200520147</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -200,7 +215,8 @@
     <MESSAGE value="pbr v1" />
     <MESSAGE value="pbr v2" />
     <MESSAGE value="shader hot reload" />
-    <option name="LAST_COMMIT_MESSAGE" value="shader hot reload" />
+    <MESSAGE value="post processing" />
+    <option name="LAST_COMMIT_MESSAGE" value="post processing" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

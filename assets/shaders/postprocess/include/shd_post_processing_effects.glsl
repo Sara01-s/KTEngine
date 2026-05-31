@@ -15,7 +15,7 @@ vec3 applyACES(vec3 color) {
     return clamp((color * (A * color + B)) / (color * (C * color + D) + E), 0.0, 1.0);
 }
 
-float getVignette(vec2 uv, float intensity) {
+float applyVignette(vec2 uv, float intensity) {
     vec2 dist = uv - 0.5;
     float vig = dot(dist, dist);
 
@@ -30,8 +30,7 @@ float random(vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
 }
 
-// Film grain
-vec3 applyGrain(vec3 color, vec2 uv, float strength) {
+vec3 applyFilmGrain(vec3 color, vec2 uv, float strength) {
     float grain = (random(uv) - 0.5) * strength;
     return color + grain;
 }

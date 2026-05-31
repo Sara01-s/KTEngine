@@ -1,12 +1,13 @@
 package engine.systems
 
-import engine.PostProcess
+import engine.rendering.postprocessing.PostProcess
 import engine.assets.Assets
 import engine.components.Renderer
 import engine.components.Transform
 import engine.rendering.Skybox
 import engine.rendering.Window
 import engine.rendering.bindables.FrameBuffer
+import engine.rendering.postprocessing.BloomPass
 import engine.utils.Color
 import engine.utils.PrimitiveMeshes
 import glm_.glm
@@ -23,6 +24,7 @@ object RenderSystem {
     )
 
     private val postProcess: PostProcess
+    val bloomPass: BloomPass
     val frameBuffer: FrameBuffer
 
     var skybox: Skybox? = null
@@ -30,14 +32,14 @@ object RenderSystem {
     init {
         PrimitiveMeshes.fullScreenQuad
 
-        frameBuffer = FrameBuffer(Window.width, Window.height)
+        frameBuffer = FrameBuffer(Window.width, Window.height, hdr = true)
+        bloomPass = BloomPass(Window.width, Window.height)
         postProcess = PostProcess(Assets.loadShader("shaders/postprocess/shd_post_process.glsl"))
 
         glViewport(0, 0, Window.width, Window.height)
 
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_MULTISAMPLE)
         glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE)
@@ -45,8 +47,19 @@ object RenderSystem {
         setClearColor(Color.gray20)
     }
 
+    private fun applySceneState() {
+        glEnable(GL_DEPTH_TEST)
+        glEnable(GL_BLEND)
+    }
+
+    private fun applyPostProcessState() {
+        glDisable(GL_DEPTH_TEST)
+        glDisable(GL_BLEND)
+    }
+
     fun render() {
         frameBuffer.bind()
+        applySceneState()
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         glViewport(0, 0, Window.width, Window.height)
 
@@ -66,9 +79,15 @@ object RenderSystem {
 
         frameBuffer.unbind()
 
-        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+        val bloomTextureID = bloomPass.process(frameBuffer.textureGpuID)
 
-        postProcess.draw(frameBuffer)
+        applyPostProcessState()
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0)
+        glViewport(0, 0, Window.width, Window.height)
+        glClear(GL_COLOR_BUFFER_BIT)
+
+        postProcess.draw(frameBuffer.textureGpuID, bloomTextureID)
     }
 
     fun register(renderer: Renderer) {
