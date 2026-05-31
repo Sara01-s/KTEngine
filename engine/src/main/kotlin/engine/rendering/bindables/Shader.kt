@@ -109,6 +109,7 @@ class Shader(private var source: String, private val shaderPath: String = "") : 
     }
 
     fun hasUniform(name: String): Boolean {
+        if (gpuID == 0) return false
         return getUniformLocation(name) != -1
     }
 

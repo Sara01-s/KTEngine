@@ -1,19 +1,20 @@
 package engine.systems
 
+import engine.PostProcess
+import engine.assets.Assets
 import engine.components.Renderer
 import engine.components.Transform
 import engine.rendering.Skybox
 import engine.rendering.Window
+import engine.rendering.bindables.FrameBuffer
 import engine.utils.Color
+import engine.utils.PrimitiveMeshes
 import glm_.glm
 import glm_.mat4x4.Mat4
-import org.lwjgl.opengl.GL11.*
-import org.lwjgl.opengl.GL13.GL_MULTISAMPLE
-import org.lwjgl.opengl.GL13.GL_SAMPLE_ALPHA_TO_COVERAGE
+import org.lwjgl.opengl.GL43.*
 
 object RenderSystem {
     private val renderers = mutableListOf<Renderer>()
-
     private val lhToRh = Mat4(
         1f,  0f,  0f,  0f,
         0f,  1f,  0f,  0f,
@@ -21,9 +22,17 @@ object RenderSystem {
         0f,  0f,  0f,  1f
     )
 
+    private val postProcess: PostProcess
+    val frameBuffer: FrameBuffer
+
     var skybox: Skybox? = null
 
     init {
+        PrimitiveMeshes.fullScreenQuad
+
+        frameBuffer = FrameBuffer(Window.width, Window.height)
+        postProcess = PostProcess(Assets.loadShader("shaders/postprocess/shd_post_process.glsl"))
+
         glViewport(0, 0, Window.width, Window.height)
 
         glEnable(GL_BLEND)
@@ -33,21 +42,33 @@ object RenderSystem {
         glEnable(GL_MULTISAMPLE)
         glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE)
 
-        setClearColor(Color.gray30)
+        setClearColor(Color.gray20)
     }
 
     fun render() {
-        clearScreen()
-        val camera = CameraSystem.main!!
-        skybox?.draw(calculateViewMatrix(camera.entity.transform), calculateProjectionMatrix(camera.fov, camera.near, camera.far))
+        frameBuffer.bind()
+        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+        glViewport(0, 0, Window.width, Window.height)
 
-        for (renderer in renderers) {
-            if (!renderer.isVisible) {
-                continue
+        val camera = CameraSystem.main
+        if (camera != null) {
+            skybox?.draw(
+                calculateViewMatrix(camera.entity.transform),
+                calculateProjectionMatrix(camera.fov, camera.near, camera.far)
+            )
+
+            for (renderer in renderers) {
+                if (renderer.isVisible) {
+                    renderer.draw()
+                }
             }
-
-            renderer.draw()
         }
+
+        frameBuffer.unbind()
+
+        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+
+        postProcess.draw(frameBuffer)
     }
 
     fun register(renderer: Renderer) {

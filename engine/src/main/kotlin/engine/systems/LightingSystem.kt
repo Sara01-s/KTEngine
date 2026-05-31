@@ -1,12 +1,13 @@
 package engine.systems
 
 import engine.components.behaviours.DirectionalLight
+import engine.utils.log
 
 object LightingSystem {
     var directionalLight: DirectionalLight? = null
 
     fun register(directionalLight: DirectionalLight) {
-        println("[LightingSystem] Luz registrada: ${directionalLight.entity.name}")
+        log("[LightingSystem] Light registered: ${directionalLight.entity.name}")
         this.directionalLight = directionalLight
     }
 

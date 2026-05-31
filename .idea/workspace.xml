@@ -4,24 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="052189d8-bf91-4b4c-b691-740ee74d216a" name="Changes" comment="pbr v2">
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/ShaderSystem.kt" afterDir="false" />
+    <list default="true" id="052189d8-bf91-4b4c-b691-740ee74d216a" name="Changes" comment="shader hot reload">
+      <change afterPath="$PROJECT_DIR$/assets/shaders/postprocess/include/shd_post_processing_effects.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/shaders/postprocess/shd_post_process.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/PostProcess.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/FrameBuffer.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/Assets.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/Assets.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/DefaultAssets.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/DefaultAssets.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Model.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Model.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Skybox.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Skybox.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/shaders/shd_font.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_font.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/shaders/shd_grid.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_grid.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/MeshRenderer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/MeshRenderer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Window.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Window.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Material.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Material.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Shader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Shader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/include/shd_pbr.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/include/shd_pbr.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_fallback.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_fallback.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_font.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_font.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_grid.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_grid.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_lit.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_lit.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_skybox.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_skybox.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/shaders/shd_unlit.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_unlit.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Texture.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Texture.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/LightingSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/LightingSystem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/RenderSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/RenderSystem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/PrimitiveMeshes.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/PrimitiveMeshes.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene1.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene2.kt" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene2.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,9 +62,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="GLSL Shader" />
-        <option value="Kotlin Class" />
         <option value="Kotlin Object" />
+        <option value="Class" />
+        <option value="Kotlin Class" />
+        <option value="GLSL Shader" />
       </list>
     </option>
   </component>
@@ -181,7 +181,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780184210987</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="shader hot reload">
+      <option name="closed" value="true" />
+      <created>1780186682669</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1780186682669</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -191,7 +199,8 @@
     <MESSAGE value="Assets and EngineAssets" />
     <MESSAGE value="pbr v1" />
     <MESSAGE value="pbr v2" />
-    <option name="LAST_COMMIT_MESSAGE" value="pbr v2" />
+    <MESSAGE value="shader hot reload" />
+    <option name="LAST_COMMIT_MESSAGE" value="shader hot reload" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -1,5 +1,6 @@
 package engine.rendering
 
+import engine.systems.RenderSystem
 import engine.utils.log
 import engine.utils.logError
 import org.lwjgl.glfw.GLFW.*
@@ -44,16 +45,31 @@ object Window : AutoCloseable {
             logError("Failed to create GLFW window")
         }
 
+        val monitor = glfwGetPrimaryMonitor()
+        val videoMode = glfwGetVideoMode(monitor)
+
+        if (videoMode != null) {
+            val centerX = (videoMode.width() - width) / 2
+            val centerY = (videoMode.height() - height) / 2
+
+            glfwSetWindowPos(handle, centerX, centerY)
+        }
+
         glfwMakeContextCurrent(handle)
         GL.createCapabilities()
 
         setupGLState()
         setupDebugCallback()
 
-        glfwSetFramebufferSizeCallback(handle) { _, w, h ->
-            width = w
-            height = h
-            glViewport(0, 0, w, h)
+        glfwSetFramebufferSizeCallback(handle) { _, newWidth, newHeight ->
+            if (newWidth > 0 && newHeight > 0) {
+                glViewport(0, 0, newWidth, newHeight)
+
+                RenderSystem.frameBuffer.resize(newWidth, newHeight)
+
+                width = newWidth
+                height = newHeight
+            }
         }
 
         glfwSetKeyCallback(handle) { _, key, _, action, _ ->

@@ -7,6 +7,7 @@ import engine.components.MeshRenderer
 import engine.rendering.bindables.Material
 import engine.assets.EngineAssets
 import engine.components.behaviours.DirectionalLight
+import engine.utils.Color
 import engine.utils.PrimitiveMeshes
 import engine.utils.fromEulerAngles
 import glm_.quat.Quat
@@ -16,7 +17,9 @@ import org.sara01.behaviours.FirstPersonController
 class Scene1 : Scene() {
     override fun start() {
         entity("Sun") {
-            component<DirectionalLight>().intensity = 3f
+            component<DirectionalLight>().apply {
+                intensity = 3f
+            }
             transform.localRotation = Quat.fromEulerAngles(-10f, 10f, 0f)
         }
 

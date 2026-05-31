@@ -19,6 +19,22 @@ object PrimitiveMeshes : AutoCloseable {
         Mesh(layout, vertices, indices, material)
     }
 
+    val fullScreenQuad: Mesh by lazy {
+        val vertices = listOf(
+            Vec3(-1f, -1f, 0f), Vec2(0f, 0f),
+            Vec3( 1f, -1f, 0f), Vec2(1f, 0f),
+            Vec3( 1f,  1f, 0f), Vec2(1f, 1f),
+            Vec3(-1f,  1f, 0f), Vec2(0f, 1f)
+        )
+
+        val indices = intArrayOf(
+            0, 1, 2,
+            2, 3, 0
+        )
+
+        Mesh(layout, vertices, indices, material)
+    }
+
     val quad: Mesh by lazy {
         val vertices = listOf(
             Vec3(-0.5f, -0.5f, 0f), Vec2(0f, 0f),

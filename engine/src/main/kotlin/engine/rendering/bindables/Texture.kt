@@ -16,7 +16,6 @@ import java.nio.ByteBuffer
 import kotlin.error
 
 class Texture private constructor() : Bindable() {
-
     var width: Int = 1
         private set
 
@@ -25,6 +24,12 @@ class Texture private constructor() : Bindable() {
 
     var channels: Int = 4
         private set
+
+    constructor(existingGpuID: Int, width: Int, height: Int) : this() {
+        this.gpuID = existingGpuID
+        this.width = width
+        this.height = height
+    }
 
     companion object {
         operator fun invoke(path: String): Texture {

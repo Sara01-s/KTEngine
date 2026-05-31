@@ -1,10 +1,16 @@
 package engine.components
 
+import engine.assets.Assets
 import engine.assets.DefaultAssets
 import engine.systems.CameraSystem
 import engine.systems.LightingSystem
 import engine.systems.RenderSystem
 import engine.utils.PrimitiveMeshes
+import org.lwjgl.opengl.ARBFramebufferObject.GL_FRAMEBUFFER_BINDING
+import org.lwjgl.opengl.ARBVertexArrayObject.GL_VERTEX_ARRAY_BINDING
+import org.lwjgl.opengl.GL11.glGetError
+import org.lwjgl.opengl.GL11.glGetInteger
+import org.lwjgl.opengl.GL20.GL_CURRENT_PROGRAM
 
 class MeshRenderer : Renderer() {
     var mesh = PrimitiveMeshes.quad
@@ -23,7 +29,9 @@ class MeshRenderer : Renderer() {
     }
 
     override fun draw() {
-        val cameraTransform = CameraSystem.main!!.entity.transform  // TODO: Check for null camera.
+        val cameraTransform = CameraSystem.main!!.entity.transform
+        val modelMatrix = RenderSystem.calculateModelMatrix(entity.transform)
+        val normalMatrix = modelMatrix.inverse().transpose().toMat3()
 
         material.bind()
 
@@ -31,6 +39,7 @@ class MeshRenderer : Renderer() {
         material.setMat4("_ModelMatrix", RenderSystem.calculateModelMatrix(entity.transform))
         material.setMat4("_ViewMatrix", RenderSystem.calculateViewMatrix(cameraTransform))
         material.setVec3("_CameraPosition", cameraTransform.worldPosition)
+        material.setMat3("_NormalMatrix", normalMatrix)
 
         if (LightingSystem.isEnabled()) {
             val sun = LightingSystem.directionalLight!!

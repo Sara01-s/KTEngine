@@ -2,7 +2,7 @@
 #version 450 core
 
 layout(location = 0) in vec3 a_position;
-layout(location = 1) in vec2 a_uv;
+layout(location = 2) in vec2 a_uv;
 
 uniform mat4 _MVP;
 uniform mat4 _ModelMatrix;
@@ -24,17 +24,17 @@ in vec2 worldXZ;
 
 const float GRID_SIZE     = 1.0;
 const float LINE_WIDTH    = 0.03;
-const float AXIS_WIDTH    = 0.06;
+const float AXIS_WIDTH    = 0.05;
 
-const float GRID_OPACITY  = 0.15;
-const float MAJOR_OPACITY = 0.35;
+const float GRID_OPACITY  = 0.25;
+const float MAJOR_OPACITY = 0.4;
 
 const vec3  GRID_COLOR    = vec3(0.6, 0.6, 0.6);
 const vec3  X_AXIS_COLOR  = vec3(0.8, 0.15, 0.15);
 const vec3  Z_AXIS_COLOR  = vec3(0.15, 0.45, 0.8);
 
-const float FOG_START = 25.0;
-const float FOG_END   = 60.0;
+const float FOG_START = 10.0;
+const float FOG_END   = 240.0;
 
 float gridLine(float value, float period, float halfWidth) {
     float v = mod(value, period);
