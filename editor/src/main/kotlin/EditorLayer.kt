@@ -14,7 +14,6 @@ class EditorLayer : UILayer {
     override fun init(windowHandle: Long) {
         ImGui.createContext()
         val io = ImGui.getIO()
-        io.addConfigFlags(ImGuiConfigFlags.DockingEnable)
 
         val fontPath = Application.assetsPath.resolve("fonts/Inter-VariableFont_opsz,wght.ttf").toString()
         io.fonts.addFontFromFileTTF(fontPath, 32f)

@@ -7,6 +7,9 @@ import engine.systems.RenderSystem
 import engine.systems.SceneSystem
 import engine.editor.EditorLayer
 import imgui.ImGui
+import imgui.flag.ImGuiDockNodeFlags
+import imgui.flag.ImGuiStyleVar
+import imgui.flag.ImGuiWindowFlags
 
 fun main() {
     Game().use { game ->

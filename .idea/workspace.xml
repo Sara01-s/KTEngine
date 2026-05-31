@@ -4,22 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="052189d8-bf91-4b4c-b691-740ee74d216a" name="Changes" comment="broken bloom, tired for now">
-      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter-Italic-VariableFont_opsz,wght.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter-VariableFont_opsz,wght.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/editor/src/main/kotlin/EditorLayer.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/editor/src/main/kotlin/ImGuiTheme.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/ui/UILayer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/shaders/shd_grid.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_grid.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/BehaviourSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/BehaviourSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/CameraSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/CameraSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/RenderSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/RenderSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/game/build.gradle.kts" afterDir="false" />
+    <list default="true" id="052189d8-bf91-4b4c-b691-740ee74d216a" name="Changes" comment="ui v1">
       <change beforePath="$PROJECT_DIR$/game/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,7 +204,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780207795337</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="ui v1">
+      <option name="closed" value="true" />
+      <created>1780242069426</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1780242069427</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -231,7 +225,8 @@
     <MESSAGE value="shader hot reload" />
     <MESSAGE value="post processing" />
     <MESSAGE value="broken bloom, tired for now" />
-    <option name="LAST_COMMIT_MESSAGE" value="broken bloom, tired for now" />
+    <MESSAGE value="ui v1" />
+    <option name="LAST_COMMIT_MESSAGE" value="ui v1" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
