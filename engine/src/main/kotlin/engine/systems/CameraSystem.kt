@@ -2,7 +2,7 @@ package engine.systems
 
 import engine.components.Camera
 
-object CameraSystem {
+object CameraSystem : AutoCloseable {
     private val cameras = mutableListOf<Camera>()
 
     var main: Camera? = null
@@ -35,5 +35,9 @@ object CameraSystem {
     fun clear() {
         cameras.clear()
         main = null
+    }
+
+    override fun close() {
+        clear()
     }
 }

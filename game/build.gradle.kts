@@ -3,10 +3,7 @@ plugins {
     application
 }
 
-application {
-    mainClass.set("game.MainKt")
-}
-
 dependencies {
     implementation(project(":engine"))
+    implementation(project(":editor"))
 }

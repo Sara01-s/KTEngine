@@ -2,16 +2,15 @@
 #version 450 core
 
 layout(location = 0) in vec3 a_position;
-layout(location = 2) in vec2 a_uv;
 
 uniform mat4 _MVP;
 uniform mat4 _ModelMatrix;
 
-out vec2 worldXZ;
+out vec3 v_worldPos;
 
 void main() {
     vec4 worldPos = _ModelMatrix * vec4(a_position, 1.0);
-    worldXZ = worldPos.xz;
+    v_worldPos = worldPos.xyz;
     gl_Position = _MVP * vec4(a_position, 1.0);
 }
 
@@ -20,64 +19,53 @@ void main() {
 
 layout(location = 0) out vec4 fragColor;
 
-in vec2 worldXZ;
+in vec3 v_worldPos;
 
-const float GRID_SIZE     = 1.0;
-const float LINE_WIDTH    = 0.03;
-const float AXIS_WIDTH    = 0.05;
+// Parámetros de configuración
+const float GRID_SIZE      = 1.0;
+const float LINE_WIDTH     = 0.012;
+const float GRID_OPACITY   = 0.19;
+const float MAJOR_OPACITY  = 0.1;
 
-const float GRID_OPACITY  = 0.25;
-const float MAJOR_OPACITY = 0.4;
+const vec3  GRID_COLOR     = vec3(0.6, 0.6, 0.6);
+const vec3  X_AXIS_COLOR   = vec3(0.8, 0.15, 0.15);
+const vec3  Z_AXIS_COLOR   = vec3(0.15, 0.45, 0.8);
 
-const vec3  GRID_COLOR    = vec3(0.6, 0.6, 0.6);
-const vec3  X_AXIS_COLOR  = vec3(0.8, 0.15, 0.15);
-const vec3  Z_AXIS_COLOR  = vec3(0.15, 0.45, 0.8);
-
-const float FOG_START = 10.0;
-const float FOG_END   = 240.0;
-
-float gridLine(float value, float period, float halfWidth) {
-    float v = mod(value, period);
-
-    if (v > period * 0.5) {
-        v = period - v;
-    }
-
-    return 1.0 - smoothstep(halfWidth * 0.8, halfWidth, v);
+float getGridLine(float value, float width) {
+    float fw = fwidth(value);
+    float dist = abs(fract(value - 0.5) - 0.5);
+    return 1.0 - smoothstep(width - fw, width + fw, dist);
 }
 
 void main() {
-    float x = worldXZ.x;
-    float z = worldXZ.y;
+    float x = v_worldPos.x;
+    float z = v_worldPos.z;
 
-    float thin = max(
-        gridLine(x, GRID_SIZE, LINE_WIDTH),
-        gridLine(z, GRID_SIZE, LINE_WIDTH)
-    );
+    float thinX = getGridLine(x / GRID_SIZE, LINE_WIDTH);
+    float thinZ = getGridLine(z / GRID_SIZE, LINE_WIDTH);
+    float thinGrid = max(thinX, thinZ);
 
-    float major = max(
-        gridLine(x, GRID_SIZE * 10.0, LINE_WIDTH * 1.5),
-        gridLine(z, GRID_SIZE * 10.0, LINE_WIDTH * 1.5)
-    );
+    float majorX = getGridLine(x / (GRID_SIZE * 10.0), LINE_WIDTH * 1.5);
+    float majorZ = getGridLine(z / (GRID_SIZE * 10.0), LINE_WIDTH * 1.5);
+    float majorGrid = max(majorX, majorZ);
 
-    float axisX = 1.0 - smoothstep(AXIS_WIDTH * 0.8, AXIS_WIDTH, abs(z));
-    float axisZ = 1.0 - smoothstep(AXIS_WIDTH * 0.8, AXIS_WIDTH, abs(x));
+    float axisX = 1.0 - smoothstep(0.02, 0.04, abs(z));
+    float axisZ = 1.0 - smoothstep(0.02, 0.04, abs(x));
 
-    vec4 color = vec4(0.0);
+    vec4 finalColor = vec4(0.0);
+    finalColor = mix(finalColor, vec4(GRID_COLOR, GRID_OPACITY), thinGrid);
+    finalColor = mix(finalColor, vec4(GRID_COLOR, MAJOR_OPACITY), majorGrid);
 
-    color = mix(color, vec4(GRID_COLOR, GRID_OPACITY), thin);
-    color = mix(color, vec4(GRID_COLOR, MAJOR_OPACITY), major);
-    color = mix(color, vec4(X_AXIS_COLOR, 1.0), axisX);
-    color = mix(color, vec4(Z_AXIS_COLOR, 1.0), axisZ);
+    finalColor = mix(finalColor, vec4(X_AXIS_COLOR, 1.0), axisX * 0.7);
+    finalColor = mix(finalColor, vec4(Z_AXIS_COLOR, 1.0), axisZ * 0.7);
 
-    float dist = length(worldXZ);
-    float fog = 1.0 - smoothstep(FOG_START, FOG_END, dist);
+    float dist = length(v_worldPos.xz);
+    float fog = 1.0 - smoothstep(50.0, 200.0, dist);
+    finalColor.a *= fog;
 
-    color.a *= fog;
-
-    if (color.a < 0.01) {
+    if (finalColor.a <= 0.01) {
         discard;
     }
 
-    fragColor = color;
+    fragColor = finalColor;
 }

@@ -1,8 +1,9 @@
 package engine.systems
 
 import engine.components.Behaviour
+import java.lang.AutoCloseable
 
-object BehaviourSystem {
+object BehaviourSystem : AutoCloseable {
 
     private val behaviours      = mutableListOf<Behaviour>()
     private val pendingAdd      = mutableListOf<Behaviour>()
@@ -82,5 +83,9 @@ object BehaviourSystem {
             behaviours.removeAll(pendingRemove.toSet())
             pendingRemove.clear()
         }
+    }
+
+    override fun close() {
+        clear()
     }
 }

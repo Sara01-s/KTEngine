@@ -1,28 +1,39 @@
-package engine
+package game
 
 import engine.game.Game
 import engine.rendering.Window
 import engine.scenes.Scene1
-import engine.assets.Assets
-import engine.systems.AudioSystem
+import engine.systems.RenderSystem
 import engine.systems.SceneSystem
-import engine.utils.PrimitiveMeshes
-import engine.utils.log
+import engine.editor.EditorLayer
+import imgui.ImGui
 
 fun main() {
-    log("Creating Game.")
-    val game = Game()
+    Game().use { game ->
+        SceneSystem.loadScene(Scene1())
+        val editor = EditorLayer()
+        editor.init(Window.handle)
 
-    log("Initializing Audio System.")
-    AudioSystem.init()
+        RenderSystem.addOverlay {
+            editor.startFrame()
 
-    SceneSystem.loadScene(Scene1())
+            ImGui.begin("Inspector")
 
-    game.loop()
+            ImGui.text("KTEngine")
+            ImGui.separator()
+            ImGui.text("FPS: %.1f".format(ImGui.getIO().framerate))
+            ImGui.text("Frame Time: %.3f ms".format(1000f / ImGui.getIO().framerate))
 
-    val systems = listOf(SceneSystem, PrimitiveMeshes, Assets, AudioSystem)
-    systems.reversed().forEach { it.close() }
-    Window.close()
+            val runtime = Runtime.getRuntime()
+            val usedMem = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024
+            ImGui.text("Memoria usage: $usedMem MB")
 
-    log("Bye Bye.")
+            ImGui.showDemoWindow()
+
+            ImGui.end()
+
+            editor.endFrame()
+        }
+        game.loop()
+    }
 }

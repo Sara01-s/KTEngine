@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL43.*
 
 object RenderSystem {
     private val renderers = mutableListOf<Renderer>()
+    private val overlayCallbacks = mutableListOf<() -> Unit>()
     private val lhToRh = Mat4(
         1f,  0f,  0f,  0f,
         0f,  1f,  0f,  0f,
@@ -45,6 +46,10 @@ object RenderSystem {
         glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE)
 
         setClearColor(Color.gray20)
+    }
+
+    fun addOverlay(callback: () -> Unit) {
+        overlayCallbacks.add(callback)
     }
 
     private fun applySceneState() {
@@ -88,6 +93,8 @@ object RenderSystem {
         glClear(GL_COLOR_BUFFER_BIT)
 
         postProcess.draw(frameBuffer.textureGpuID, bloomTextureID)
+
+        overlayCallbacks.forEach { it.invoke() }
     }
 
     fun register(renderer: Renderer) {

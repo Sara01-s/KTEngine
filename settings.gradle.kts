@@ -3,4 +3,5 @@ plugins {
 }
 rootProject.name = "KTEngine"
 include("engine")
+include("editor")
 include("game")
