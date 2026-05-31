@@ -25,12 +25,6 @@ class Texture private constructor() : Bindable() {
     var channels: Int = 4
         private set
 
-    constructor(existingGpuID: Int, width: Int, height: Int) : this() {
-        this.gpuID = existingGpuID
-        this.width = width
-        this.height = height
-    }
-
     companion object {
         operator fun invoke(path: String): Texture {
             val tex = Texture()

@@ -7,7 +7,6 @@ import engine.components.MeshRenderer
 import engine.rendering.bindables.Material
 import engine.assets.EngineAssets
 import engine.components.behaviours.DirectionalLight
-import engine.utils.Color
 import engine.utils.PrimitiveMeshes
 import engine.utils.fromEulerAngles
 import glm_.quat.Quat

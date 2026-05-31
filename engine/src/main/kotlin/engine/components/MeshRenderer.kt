@@ -1,16 +1,10 @@
 package engine.components
 
-import engine.assets.Assets
 import engine.assets.DefaultAssets
 import engine.systems.CameraSystem
 import engine.systems.LightingSystem
 import engine.systems.RenderSystem
 import engine.utils.PrimitiveMeshes
-import org.lwjgl.opengl.ARBFramebufferObject.GL_FRAMEBUFFER_BINDING
-import org.lwjgl.opengl.ARBVertexArrayObject.GL_VERTEX_ARRAY_BINDING
-import org.lwjgl.opengl.GL11.glGetError
-import org.lwjgl.opengl.GL11.glGetInteger
-import org.lwjgl.opengl.GL20.GL_CURRENT_PROGRAM
 
 class MeshRenderer : Renderer() {
     var mesh = PrimitiveMeshes.quad
