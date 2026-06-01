@@ -65,7 +65,7 @@ object Window : AutoCloseable {
             if (newWidth > 0 && newHeight > 0) {
                 glViewport(0, 0, newWidth, newHeight)
 
-                RenderSystem.frameBuffer.resize(newWidth, newHeight)
+                RenderSystem.renderTarget.resize(newWidth, newHeight)
                 RenderSystem.bloomPass.resize(newWidth, newHeight)
 
                 width = newWidth

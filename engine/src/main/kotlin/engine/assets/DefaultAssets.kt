@@ -7,7 +7,11 @@ import engine.rendering.text.Font
 import engine.utils.Color
 
 object DefaultAssets {
-    val shader: Shader by lazy {
+    val unlitShader: Shader by lazy {
+        Assets.loadShader("shaders/shd_unlit.glsl")
+    }
+
+    val litShader: Shader by lazy {
         Assets.loadShader("shaders/shd_lit.glsl")
     }
 
@@ -23,10 +27,16 @@ object DefaultAssets {
         EngineAssets.loadModel("models/model_watercolor_bird.glb")
     }
 
-    val material: Material by lazy {
-        Material(shader).apply {
+    val unlitMaterial: Material by lazy {
+        Material(unlitShader).apply {
             setTexture("_DiffuseTexture", texture)
             setColor4("_Color", Color.white)
+        }
+    }
+
+    val litMaterial: Material by lazy {
+        Material(litShader).apply {
+            setTexture("_DiffuseTexture", texture)
         }
     }
 

@@ -16,7 +16,7 @@ class EditorLayer : UILayer {
         val io = ImGui.getIO()
 
         val fontPath = Application.assetsPath.resolve("fonts/Inter-VariableFont_opsz,wght.ttf").toString()
-        io.fonts.addFontFromFileTTF(fontPath, 32f)
+        io.fonts.addFontFromFileTTF(fontPath, 24f)
 
         applyTheme()
 

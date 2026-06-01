@@ -1,7 +1,9 @@
 package engine.assets
 
 import engine.utils.logError
+import org.lwjgl.BufferUtils
 import java.io.InputStream
+import java.nio.ByteBuffer
 import java.nio.file.Files
 import java.nio.file.Files.copy
 import java.nio.file.Path
@@ -75,5 +77,46 @@ object AssetUtils {
 
         tempFile.toFile().deleteOnExit()
         return tempFile.toAbsolutePath().toString()
+    }
+
+    fun loadByteBuffer(path: String, context: Any? = null): ByteBuffer {
+        val bytes = try {
+            val file = Path.of(path)
+
+            if (Files.exists(file)) {
+                Files.readAllBytes(file)
+            }
+            else {
+                val resourcePath = if (path.startsWith("/")) {
+                    path
+                }
+                else {
+                    "/engine_assets/${normalize(path)}"
+                }
+
+                val stream = (context ?: AssetUtils).javaClass.getResourceAsStream(resourcePath)
+                    ?: error("Asset not found: $path")
+
+                stream.use { it.readBytes() }
+            }
+        }
+        catch (_: Exception) {
+            val resourcePath = if (path.startsWith("/")) {
+                path
+            }
+            else {
+                "/engine_assets/${normalize(path)}"
+            }
+
+            val stream = (context ?: AssetUtils).javaClass.getResourceAsStream(resourcePath)
+                ?: error("Asset not found: $path")
+
+            stream.use { it.readBytes() }
+        }
+
+        return BufferUtils.createByteBuffer(bytes.size).apply {
+            put(bytes)
+            flip()
+        }
     }
 }

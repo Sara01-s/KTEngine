@@ -2,8 +2,8 @@ package engine.behaviours
 
 import engine.components.Behaviour
 import engine.scenes.Scene
-import engine.scenes.Scene1
-import engine.scenes.Scene2
+import game.scenes.Scene1
+import game.scenes.Scene2
 import engine.systems.Input
 import engine.systems.Key
 import engine.systems.SceneSystem

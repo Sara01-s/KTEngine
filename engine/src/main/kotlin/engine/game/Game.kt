@@ -32,16 +32,13 @@ class Game : AutoCloseable{
             while (Time.shouldRunFixedUpdate()) {
                 CollisionSystem.update()
                 BehaviourSystem.fixedUpdate()
-                SceneSystem.currentScene?.fixedUpdate()
                 Time.consumeFixedUpdate()
             }
 
             BehaviourSystem.update()
             ShaderSystem.update()
-            SceneSystem.currentScene?.update()
 
             BehaviourSystem.draw()
-            SceneSystem.currentScene?.draw()
             RenderSystem.render()
 
             Window.swapBuffers()

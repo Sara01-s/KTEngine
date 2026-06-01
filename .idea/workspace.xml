@@ -4,8 +4,48 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="052189d8-bf91-4b4c-b691-740ee74d216a" name="Changes" comment="ui v1">
+    <list default="true" id="052189d8-bf91-4b4c-b691-740ee74d216a" name="Changes" comment="eli">
+      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/behaviours/FirstPersonController.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/scenes/EmptyScene.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/skybox/sky/tex_pmrem_negx.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/skybox/sky/tex_pmrem_negy.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/skybox/sky/tex_pmrem_negz.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/skybox/sky/tex_pmrem_posx.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/skybox/sky/tex_pmrem_posy.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/skybox/sky/tex_pmrem_posz.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/editor/src/main/kotlin/EditorLayer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/editor/src/main/kotlin/EditorLayer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/AssetUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/AssetUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/DefaultAssets.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/DefaultAssets.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Camera.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Camera.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/MeshRenderer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/MeshRenderer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Transform.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Transform.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/behaviours/DirectionalLight.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/behaviours/DirectionalLight.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Model.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Model.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Skybox.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Skybox.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Window.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Window.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/CubeMap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/CubeMap.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/FrameBuffer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/RenderTarget.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Mesh.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Mesh.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/postprocessing/BloomPass.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/postprocessing/BloomPass.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/postprocessing/PostProcess.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/postprocessing/PostProcess.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/scenes/Scene.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/scenes/Scene.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/LightingSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/LightingSystem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/RenderSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/RenderSystem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/SceneSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/SceneSystem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/Math.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/Math.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/PrimitiveMeshes.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/PrimitiveMeshes.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_skybox_negx.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/skybox/field/tex_skybox_negx.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_skybox_negy.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/skybox/field/tex_skybox_negy.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_skybox_negz.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/skybox/field/tex_skybox_negz.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_skybox_posx.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/skybox/field/tex_skybox_posx.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_skybox_posy.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/skybox/field/tex_skybox_posy.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/tex_skybox_posz.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/resources/engine_assets/textures/skybox/field/tex_skybox_posz.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/src/main/kotlin/behaviours/FirstPersonController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/main/kotlin/behaviours/FirstPersonController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/src/main/kotlin/behaviours/SceneChanger.kt" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/main/kotlin/behaviours/SceneChanger.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene1.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene2.kt" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene2.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,8 +91,8 @@
         <option value="Class" />
         <option value="GLSL Shader" />
         <option value="Kotlin Interface" />
-        <option value="Kotlin Class" />
         <option value="Kotlin File" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -102,24 +142,29 @@
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/projects/KTEngine/assets/fonts",
+    "last_opened_file_path": "D:/projects/KTEngine/engine/src/main/resources/engine_assets/textures/skybox/sky",
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.33678162",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\textures\skybox\sky" />
       <recent name="D:\projects\KTEngine\assets\fonts" />
       <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\models" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\textures\skybox\field" />
       <recent name="D:\projects\KTEngine\assets\shaders\postprocess\bloom" />
       <recent name="D:\projects\KTEngine\assets\shaders" />
       <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\shaders\include" />
       <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\models" />
+    </key>
+    <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="engine.components.behaviours" />
     </key>
     <key name="K2MoveDeclarationsDialog.RECENT_PACKAGE_KEY">
       <recent name="engine.rendering.postprocessing" />
@@ -212,11 +257,30 @@
       <option name="project" value="LOCAL" />
       <updated>1780242069427</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="eli">
+      <option name="closed" value="true" />
+      <created>1780269268427</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1780269268427</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Assets and EngineAssets" />
@@ -226,7 +290,8 @@
     <MESSAGE value="post processing" />
     <MESSAGE value="broken bloom, tired for now" />
     <MESSAGE value="ui v1" />
-    <option name="LAST_COMMIT_MESSAGE" value="ui v1" />
+    <MESSAGE value="eli" />
+    <option name="LAST_COMMIT_MESSAGE" value="eli" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

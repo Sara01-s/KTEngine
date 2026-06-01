@@ -1,11 +1,11 @@
 package engine.rendering.bindables
 
+import engine.assets.AssetUtils
 import org.lwjgl.opengl.GL43.*
 import org.lwjgl.stb.STBImage.*
 import org.lwjgl.system.MemoryStack
 
 class CubeMap(paths: Array<String>) : Bindable(), AutoCloseable {
-
     init {
         if (paths.size != 6) {
             error("A skybox must have 6 faces")
@@ -22,8 +22,17 @@ class CubeMap(paths: Array<String>) : Bindable(), AutoCloseable {
                 val height = stack.mallocInt(1)
                 val channel = stack.mallocInt(1)
 
-                val data = stbi_load(paths[i], width, height, channel, 4)
-                    ?: error("Error while loading face: ${paths[i]} - ${stbi_failure_reason()}")
+                val imageBuffer = AssetUtils.loadByteBuffer(paths[i], this)
+
+                val data = stbi_load_from_memory(
+                    imageBuffer,
+                    width,
+                    height,
+                    channel,
+                    4
+                ) ?: error(
+                    "Error while loading face: ${paths[i]} - ${stbi_failure_reason()}"
+                )
 
                 val currentSide = GL_TEXTURE_CUBE_MAP_POSITIVE_X + i
                 glTexImage2D(

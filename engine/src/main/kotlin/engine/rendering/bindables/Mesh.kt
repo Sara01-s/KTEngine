@@ -1,5 +1,6 @@
 package engine.rendering.bindables
 
+import engine.assets.DefaultAssets
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL20.glEnableVertexAttribArray
@@ -12,7 +13,7 @@ class Mesh(
     val layout: VertexLayout,
     vertexBuffer: ByteBuffer,
     indices: IntArray,
-    var material: Material,
+    var material: Material = DefaultAssets.unlitMaterial,
     val topology: Int = GL_TRIANGLES,
     val usage: Int = GL_DYNAMIC_DRAW
 ) : Bindable() {

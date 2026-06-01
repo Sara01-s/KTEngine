@@ -1,7 +1,9 @@
 package engine.components
 
 import engine.utils.one
+import engine.utils.up
 import engine.utils.zero
+import glm_.Java.Companion.glm
 import glm_.mat4x4.Mat4
 import glm_.quat.Quat
 import glm_.vec3.Vec3
@@ -190,5 +192,14 @@ class Transform(
         worldPosition = pos
         worldRotation = rot
         worldScale    = scl
+    }
+
+    fun lookAt(target: Transform, worldUp: Vec3 = Vec3.up) {
+        lookAt(target.worldPosition, worldUp)
+    }
+
+    fun lookAt(targetPosition: Vec3, worldUp: Vec3 = Vec3.up) {
+        val forward = (targetPosition - worldPosition).normalize()
+        localRotation = glm.quatLookAtLH(forward, worldUp)
     }
 }

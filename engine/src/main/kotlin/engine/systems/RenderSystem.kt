@@ -6,8 +6,9 @@ import engine.components.Renderer
 import engine.components.Transform
 import engine.rendering.Skybox
 import engine.rendering.Window
-import engine.rendering.bindables.FrameBuffer
+import engine.rendering.bindables.RenderTarget
 import engine.rendering.postprocessing.BloomPass
+import engine.scenes.Scene
 import engine.utils.Color
 import engine.utils.PrimitiveMeshes
 import glm_.glm
@@ -26,14 +27,14 @@ object RenderSystem {
 
     private val postProcess: PostProcess
     val bloomPass: BloomPass
-    val frameBuffer: FrameBuffer
+    val renderTarget: RenderTarget
 
     var skybox: Skybox? = null
 
     init {
-        PrimitiveMeshes.fullScreenQuad
+        PrimitiveMeshes.quad
 
-        frameBuffer = FrameBuffer(Window.width, Window.height, hdr = true)
+        renderTarget = RenderTarget(Window.width, Window.height, hdr = true)
         bloomPass = BloomPass(Window.width, Window.height)
         postProcess = PostProcess(Assets.loadShader("shaders/postprocess/shd_post_process.glsl"))
 
@@ -62,8 +63,12 @@ object RenderSystem {
         glDisable(GL_BLEND)
     }
 
+    fun render(scene: Scene) {
+
+    }
+
     fun render() {
-        frameBuffer.bind()
+        renderTarget.bind()
         applySceneState()
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         glViewport(0, 0, Window.width, Window.height)
@@ -82,9 +87,9 @@ object RenderSystem {
             }
         }
 
-        frameBuffer.unbind()
+        renderTarget.unbind()
 
-        val bloomTextureID = bloomPass.process(frameBuffer.textureGpuID)
+        val bloomTextureID = bloomPass.process(renderTarget.textureGpuID)
 
         applyPostProcessState()
 
@@ -92,7 +97,7 @@ object RenderSystem {
         glViewport(0, 0, Window.width, Window.height)
         glClear(GL_COLOR_BUFFER_BIT)
 
-        postProcess.draw(frameBuffer.textureGpuID, bloomTextureID)
+        postProcess.draw(renderTarget.textureGpuID, bloomTextureID)
 
         overlayCallbacks.forEach { it.invoke() }
     }

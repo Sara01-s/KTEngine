@@ -1,6 +1,6 @@
 package engine.components
 
-import engine.assets.DefaultAssets
+import engine.rendering.bindables.Material
 import engine.systems.CameraSystem
 import engine.systems.LightingSystem
 import engine.systems.RenderSystem
@@ -8,7 +8,11 @@ import engine.utils.PrimitiveMeshes
 
 class MeshRenderer : Renderer() {
     var mesh = PrimitiveMeshes.quad
-    var material = DefaultAssets.material
+    var material: Material
+        get() = mesh.material
+        set(value) {
+            mesh.material = value
+        }
 
     // TODO: Detected whether is an Lit or Unlit material to expose this fields.
     var metallicIntensity = 0f

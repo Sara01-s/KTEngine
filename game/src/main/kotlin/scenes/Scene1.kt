@@ -1,4 +1,4 @@
-package engine.scenes
+package game.scenes
 
 import engine.assets.Assets
 import engine.behaviours.SceneChanger
@@ -7,19 +7,20 @@ import engine.components.MeshRenderer
 import engine.rendering.bindables.Material
 import engine.assets.EngineAssets
 import engine.components.behaviours.DirectionalLight
+import engine.scenes.Scene
 import engine.utils.PrimitiveMeshes
-import engine.utils.fromEulerAngles
 import glm_.quat.Quat
 import glm_.vec3.Vec3
-import org.sara01.behaviours.FirstPersonController
+import engine.components.behaviours.FirstPersonController
+import engine.utils.eulerAnglesDeg
 
 class Scene1 : Scene() {
-    override fun start() {
+    override fun create() {
         entity("Sun") {
             component<DirectionalLight>().apply {
                 intensity = 3f
             }
-            transform.localRotation = Quat.fromEulerAngles(-10f, 10f, 0f)
+            transform.localRotation = Quat.eulerAnglesDeg(-10f, 10f, 0f)
         }
 
         entity("MainCamera") {
@@ -39,7 +40,7 @@ class Scene1 : Scene() {
 
         entity("Model") {
             EngineAssets.loadModel("models/model_mech_drone.glb").instantiate(this)
-            transform.localRotation = Quat.fromEulerAngles(-90f, 90f, 0f)
+            transform.localRotation = Quat.eulerAnglesDeg(-90f, 90f, 0f)
             transform.localScale = Vec3(0.1f)
             transform.localPosition = Vec3(0f, 1f, 0f)
         }

@@ -8,7 +8,7 @@ import engine.systems.Key
 import engine.systems.Player
 import engine.utils.clamp
 import engine.utils.down
-import engine.utils.fromEulerAngles
+import engine.utils.eulerAnglesDeg
 import engine.utils.up
 import engine.utils.zero
 import glm_.quat.Quat
@@ -35,7 +35,7 @@ class FirstPersonController : Behaviour() {
             pitch += mouseDelta.y * lookSensitivity
             pitch  = clamp(pitch, -89f, 89f)
 
-            transform.localRotation = Quat.fromEulerAngles(pitch, yaw, 0f)
+            transform.localRotation = Quat.eulerAnglesDeg(pitch, yaw, 0f)
         }
 
         val moveDirection = Vec3.zero

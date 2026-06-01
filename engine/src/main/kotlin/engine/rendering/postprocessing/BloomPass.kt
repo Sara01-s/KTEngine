@@ -1,7 +1,7 @@
 package engine.rendering.postprocessing
 
 import engine.assets.Assets
-import engine.rendering.bindables.FrameBuffer
+import engine.rendering.bindables.RenderTarget
 import engine.utils.PrimitiveMeshes
 import org.lwjgl.opengl.GL43.*
 
@@ -9,13 +9,13 @@ class BloomPass(width: Int, height: Int) {
     private val resW = width
     private val resH = height
 
-    val bloomFBO = FrameBuffer(resW, resH, hdr = true)
-    private val pingPongFBO = Array(2) { FrameBuffer(resW, resH, hdr = true) }
+    val bloomFBO = RenderTarget(resW, resH, hdr = true)
+    private val pingPongFBO = Array(2) { RenderTarget(resW, resH, hdr = true) }
 
     private val extractShader = Assets.loadShader("shaders/postprocess/bloom/shd_bloom_extract.glsl")
     private val blurShader = Assets.loadShader("shaders/postprocess/bloom/shd_bloom_blur.glsl")
 
-    private val quad = PrimitiveMeshes.fullScreenQuad
+    private val quad = PrimitiveMeshes.quad
 
     fun process(sceneTextureID: Int): Int {
         glDisable(GL_DEPTH_TEST)

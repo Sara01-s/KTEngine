@@ -7,7 +7,7 @@ import engine.utils.PrimitiveMeshes
 import org.lwjgl.opengl.GL43.*
 
 class PostProcess(shader: Shader) {
-    private val mesh = PrimitiveMeshes.fullScreenQuad
+    private val mesh = PrimitiveMeshes.quad
     private val material = Material(shader)
 
     fun draw(sceneTextureID: Int, bloomTextureID: Int) {

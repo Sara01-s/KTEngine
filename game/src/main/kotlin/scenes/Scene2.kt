@@ -1,4 +1,4 @@
-package engine.scenes
+package game.scenes
 
 import engine.behaviours.SceneChanger
 import engine.components.Camera
@@ -6,15 +6,16 @@ import engine.components.Camera.BackgroundMode
 import engine.components.MeshRenderer
 import engine.rendering.bindables.Material
 import engine.assets.Assets
+import engine.scenes.Scene
 import engine.utils.Color
 import engine.utils.PrimitiveMeshes
-import engine.utils.fromEulerAngles
 import glm_.quat.Quat
 import glm_.vec3.Vec3
-import org.sara01.behaviours.FirstPersonController
+import engine.components.behaviours.FirstPersonController
+import engine.utils.eulerAnglesDeg
 
 class Scene2 : Scene() {
-    override fun start() {
+    override fun create() {
         entity("MainCamera") {
             component<Camera> {
                 backgroundMode = BackgroundMode.SolidColor
@@ -35,7 +36,7 @@ class Scene2 : Scene() {
 
         entity("Model") {
             Assets.loadModel("models/model_watercolor_bird.glb").instantiate(this)
-            transform.localRotation = Quat.fromEulerAngles(-90f, 0f, 0f)
+            transform.localRotation = Quat.eulerAnglesDeg(-90f, 0f, 0f)
             transform.localPosition = Vec3(0f, 1f, 0f)
         }
     }

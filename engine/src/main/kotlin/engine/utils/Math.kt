@@ -5,6 +5,7 @@ import glm_.mat4x4.Mat4
 import glm_.quat.Quat
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
+import glm_.vec3.Vec3.*
 import kotlin.math.PI
 import kotlin.math.acos
 import kotlin.math.cos
@@ -220,40 +221,57 @@ val vecUp      = Vec3(0f, 1f, 0f)
 val vecRight   = Vec3(1f, 0f, 0f)
 val vecForward = Vec3(0f, 0f, 1f)
 
-val Vec3.Companion.up: Vec3 get() = vecUp
-val Vec3.Companion.down: Vec3 get() = -vecUp
+val Companion.up: Vec3 get() = vecUp
+val Companion.down: Vec3 get() = -vecUp
 
-val Vec3.Companion.right: Vec3 get() = vecRight
-val Vec3.Companion.left: Vec3 get() = -vecRight
+val Companion.right: Vec3 get() = vecRight
+val Companion.left: Vec3 get() = -vecRight
 
-val Vec3.Companion.forward: Vec3 get() = vecForward
-val Vec3.Companion.back: Vec3 get() = -vecForward
+val Companion.forward: Vec3 get() = vecForward
+val Companion.back: Vec3 get() = -vecForward
 
-val Vec3.Companion.zero: Vec3 get() = Vec3(0f, 0f, 0f)
-val Vec3.Companion.one: Vec3 get() = Vec3(1f, 1f, 1f)
+val Companion.zero: Vec3 get() = Vec3(0f, 0f, 0f)
+val Companion.one: Vec3 get() = Vec3(1f, 1f, 1f)
 
-fun Quat.Companion.fromEulerAngles(xDegrees: Float, yDegrees: Float, zDegrees: Float): Quat {
-    val factor = 0.017453292f * 0.5f
-
-    val pitchRad = xDegrees * factor
-    val yawRad   = yDegrees * factor
-    val rollRad  = zDegrees * factor
-
-    val cx = cos(pitchRad)
-    val sx = sin(pitchRad)
-    val cy = cos(yawRad)
-    val sy = sin(yawRad)
-    val cz = cos(rollRad)
-    val sz = sin(rollRad)
-
-    val qw = cx * cy * cz + sx * sy * sz
-    val qx = sx * cy * cz + cx * sy * sz
-    val qy = cx * sy * cz - sx * cy * sz
-    val qz = cx * cy * sz - sx * sy * cz
-
-    return Quat(qw, qx, qy, qz)
+fun Quat.Companion.eulerAnglesDeg(xDegrees: Float, yDegrees: Float, zDegrees: Float): Quat {
+    val factor = 0.008726646f // (Math.PI / 180f) * 0.5f
+    return eulerAnglesRad(xDegrees * factor, yDegrees * factor, zDegrees * factor)
 }
 
-fun Quat.Companion.fromEulerAngles(euler: Vec3): Quat {
-    return fromEulerAngles(euler.x, euler.y, euler.z)
+fun Quat.Companion.eulerAnglesRad(xRad: Float, yRad: Float, zRad: Float): Quat {
+    val halfX = xRad * 0.5f
+    val halfY = yRad * 0.5f
+    val halfZ = zRad * 0.5f
+
+    val cx = cos(halfX)
+    val sx = sin(halfX)
+    val cy = cos(halfY)
+    val sy = sin(halfY)
+    val cz = cos(halfZ)
+    val sz = sin(halfZ)
+
+    return Quat(
+        w = cx * cy * cz + sx * sy * sz,
+        x = sx * cy * cz - cx * sy * sz,
+        y = cx * sy * cz + sx * cz * sz,
+        z = cx * cy * sz - sx * sy * cz
+    )
 }
+
+fun Quat.Companion.eulerAnglesDeg(euler: Vec3): Quat {
+    return eulerAnglesDeg(euler.x, euler.y, euler.z)
+}
+
+fun Quat.Companion.eulerAnglesRad(euler: Vec3): Quat {
+    return eulerAnglesRad(euler.x, euler.y, euler.z)
+}
+
+
+const val radToDeg = 180.0f / PI.toFloat()
+const val degToRad = PI.toFloat() / 180.0f
+
+fun Float.toDegrees(): Float = this * radToDeg
+fun Float.toRadians(): Float = this * degToRad
+
+fun degrees(radians: Float): Float = radians * radToDeg
+fun radians(degrees: Float): Float = degrees * degToRad

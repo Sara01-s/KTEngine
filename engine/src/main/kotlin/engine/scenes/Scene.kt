@@ -1,13 +1,9 @@
 package engine.scenes
 
 import engine.game.Entity
-import engine.systems.Input
-import engine.systems.Key
-import engine.systems.SceneSystem
 import java.util.concurrent.atomic.AtomicInteger
 
 abstract class Scene : AutoCloseable {
-
     companion object {
         @PublishedApi
         internal val idSequence = AtomicInteger(0)
@@ -30,10 +26,7 @@ abstract class Scene : AutoCloseable {
         entityMap[rootEntity.id] = rootEntity
     }
 
-    open fun start() {}
-    open fun fixedUpdate() {}
-    open fun update() {}
-    open fun draw() {}
+    abstract fun create()
 
     protected fun createEntity(name: String = Entity.DEFAULT_NAME): Entity {
         val nextId = generateNextId()

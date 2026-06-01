@@ -11,15 +11,15 @@ class Skybox : AutoCloseable {
     private val skyboxShader = Assets.loadShader("shaders/shd_skybox.glsl")
     private val vao: Int
     private val vbo: Int
-    private val ebo: Int
+    private val ibo: Int
 
     private val cubeMap = EngineAssets.loadCubeMap(arrayOf(
-        "textures/tex_skybox_posx.jpg",
-        "textures/tex_skybox_negx.jpg",
-        "textures/tex_skybox_posy.jpg",
-        "textures/tex_skybox_negy.jpg",
-        "textures/tex_skybox_posz.jpg",
-        "textures/tex_skybox_negz.jpg",
+        "textures/skybox/sky/tex_pmrem_posx.jpg",
+        "textures/skybox/sky/tex_pmrem_negx.jpg",
+        "textures/skybox/sky/tex_pmrem_posy.jpg",
+        "textures/skybox/sky/tex_pmrem_negy.jpg",
+        "textures/skybox/sky/tex_pmrem_posz.jpg",
+        "textures/skybox/sky/tex_pmrem_negz.jpg",
     ))
 
     init {
@@ -51,14 +51,14 @@ class Skybox : AutoCloseable {
 
         vao = glGenVertexArrays()
         vbo = glGenBuffers()
-        ebo = glGenBuffers()
+        ibo = glGenBuffers()
 
         glBindVertexArray(vao)
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo)
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo)
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
 
         glEnableVertexAttribArray(0)
@@ -86,7 +86,7 @@ class Skybox : AutoCloseable {
 
     override fun close() {
         glDeleteBuffers(vbo)
-        glDeleteBuffers(ebo)
+        glDeleteBuffers(ibo)
         glDeleteVertexArrays(vao)
     }
 }

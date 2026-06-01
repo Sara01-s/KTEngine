@@ -2,25 +2,19 @@ package game
 
 import engine.game.Game
 import engine.rendering.Window
-import engine.scenes.Scene1
 import engine.systems.RenderSystem
-import engine.systems.SceneSystem
 import engine.editor.EditorLayer
 import imgui.ImGui
-import imgui.flag.ImGuiDockNodeFlags
-import imgui.flag.ImGuiStyleVar
-import imgui.flag.ImGuiWindowFlags
 
 fun main() {
     Game().use { game ->
-        SceneSystem.loadScene(Scene1())
         val editor = EditorLayer()
         editor.init(Window.handle)
 
         RenderSystem.addOverlay {
             editor.startFrame()
 
-            ImGui.begin("Inspector")
+            ImGui.begin("Status")
 
             ImGui.text("KTEngine")
             ImGui.separator()
@@ -29,9 +23,7 @@ fun main() {
 
             val runtime = Runtime.getRuntime()
             val usedMem = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024
-            ImGui.text("Memoria usage: $usedMem MB")
-
-            ImGui.showDemoWindow()
+            ImGui.text("Memory usage: $usedMem MB")
 
             ImGui.end()
 

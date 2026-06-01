@@ -12,7 +12,6 @@ class Camera : Component() {
     }
 
     var backgroundMode = BackgroundMode.SolidColor
-    var skybox: Skybox? = null
 
     var fov: Float = 45f
     var near: Float = 0.01f

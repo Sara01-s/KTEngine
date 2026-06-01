@@ -3,7 +3,6 @@ package engine.game
 import engine.assets.Assets
 import engine.components.MeshRenderer
 import engine.rendering.bindables.*
-import engine.assets.EngineAssets
 import engine.utils.Color
 import engine.utils.TextureResolver
 import engine.utils.decomposeMatrix
@@ -129,8 +128,9 @@ class Model(path: String) : AutoCloseable {
         material.setFloat("_SpecularIntensity", features.specularIntensity)
         material.setFloat("_SpecularPower", features.specularPower)
 
-        if (aiMaterials != null)
+        if (aiMaterials != null) {
             bindTextures(material, aiMesh, aiMaterials, features)
+        }
 
         return Mesh(layout, vertices, indices, material)
     }
@@ -220,10 +220,10 @@ class Model(path: String) : AutoCloseable {
             features.hasEmissive = hasTexture(material, aiTextureType_EMISSIVE, path)
             features.hasRoughness = hasTexture(material, aiTextureType_DIFFUSE_ROUGHNESS, path)
             features.hasMetallic = hasTexture(material, aiTextureType_METALNESS, path) || hasTexture(material, aiTextureType_UNKNOWN, path)
-            features.hasAO = hasTexture(material, aiTextureType_AMBIENT_OCCLUSION, path) ||
-                    hasTexture(material, aiTextureType_LIGHTMAP, path) ||
-                    hasTexture(material, aiTextureType_UNKNOWN, path) ||
-                    hasTexture(material, aiTextureType_SHININESS, path)
+            features.hasAO = hasTexture(material, aiTextureType_AMBIENT_OCCLUSION, path)
+                    || hasTexture(material, aiTextureType_LIGHTMAP, path)
+                    || hasTexture(material, aiTextureType_UNKNOWN, path)
+                    || hasTexture(material, aiTextureType_SHININESS, path)
 
             val color = AIColor4D.create()
 
@@ -255,7 +255,7 @@ class Model(path: String) : AutoCloseable {
 
     private fun createShaderFromFeatures(features: MaterialFeatures): Shader {
         val shaderPath =
-            if (features.hasNormals || features.hasDiffuse)
+            if (features.hasDiffuse)
                 "shaders/shd_lit.glsl"
             else
                 "shaders/shd_unlit.glsl"
