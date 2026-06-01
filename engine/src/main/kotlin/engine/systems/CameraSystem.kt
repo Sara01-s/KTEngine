@@ -1,40 +1,40 @@
 package engine.systems
 
 import engine.components.Camera
+import engine.utils.Tags
 
-object CameraSystem : AutoCloseable {
-    private val cameras = mutableListOf<Camera>()
+data object CameraSystem : AutoCloseable {
+    private var _main: Camera? = null
+    private var _sceneCamera: Camera? = null
 
-    var main: Camera? = null
-        private set
+    val main: Camera?
+        get() {
+            if (_main == null) {
+                val scene = SceneSystem.currentScene
 
-    fun register(camera: Camera) {
-        cameras.add(camera)
-        
-        if (main == null) {
-            main = camera
+                _main = scene.entities
+                    .firstOrNull { it.compareTag(Tags.MAIN_CAMERA) }
+                    ?.getComponent<Camera>()
+            }
+
+            return _main
         }
-    }
 
-    fun unregister(camera: Camera) {
-        cameras.remove(camera)
-        if (main === camera) {
-            main = cameras.firstOrNull()
+    val sceneCamera: Camera?
+        get() {
+            if (_sceneCamera == null) {
+                val scene = SceneSystem.currentScene
+
+                _sceneCamera = scene.entities
+                    .firstOrNull { it.compareTag(Tags.SCENE_CAMERA) }
+                    ?.getComponent<Camera>()
+            }
+
+            return _sceneCamera
         }
-    }
-
-    fun setMain(camera: Camera) {
-        require(cameras.contains(camera)) { "Camera must be registered before setting as main" }
-        main = camera
-    }
-
-    fun getAllCameras(): List<Camera> {
-        return cameras.toList()
-    }
 
     fun clear() {
-        cameras.clear()
-        main = null
+        _main = null
     }
 
     override fun close() {

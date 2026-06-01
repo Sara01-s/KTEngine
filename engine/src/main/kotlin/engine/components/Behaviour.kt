@@ -15,7 +15,6 @@ abstract class Behaviour : Component() {
     open fun start() {}
     open fun update() {}
     open fun fixedUpdate() {}
-    open fun onDraw() {}
     open fun onDestroy() {}
     open fun onEnable() {}
     open fun onDisable() {}

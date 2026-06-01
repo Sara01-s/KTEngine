@@ -2,17 +2,16 @@ package engine.systems
 
 import engine.rendering.postprocessing.PostProcess
 import engine.assets.Assets
+import engine.components.Camera
 import engine.components.Renderer
 import engine.components.Transform
-import engine.rendering.Skybox
 import engine.rendering.Window
 import engine.rendering.bindables.RenderTarget
-import engine.rendering.postprocessing.BloomPass
 import engine.scenes.Scene
 import engine.utils.Color
-import engine.utils.PrimitiveMeshes
 import glm_.glm
 import glm_.mat4x4.Mat4
+import glm_.vec3.Vec3
 import org.lwjgl.opengl.GL43.*
 
 object RenderSystem {
@@ -25,19 +24,11 @@ object RenderSystem {
         0f,  0f,  0f,  1f
     )
 
-    private val postProcess: PostProcess
-    val bloomPass: BloomPass
-    val renderTarget: RenderTarget
+    private val postProcess by lazy { PostProcess(Assets.loadShader("shaders/postprocess/shd_post_process.glsl")) }
 
-    var skybox: Skybox? = null
+    private var uboCamera: Int = 0
 
-    init {
-        PrimitiveMeshes.quad
-
-        renderTarget = RenderTarget(Window.width, Window.height, hdr = true)
-        bloomPass = BloomPass(Window.width, Window.height)
-        postProcess = PostProcess(Assets.loadShader("shaders/postprocess/shd_post_process.glsl"))
-
+    fun init() {
         glViewport(0, 0, Window.width, Window.height)
 
         glEnable(GL_BLEND)
@@ -47,6 +38,95 @@ object RenderSystem {
         glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE)
 
         setClearColor(Color.gray20)
+
+        SceneSystem.onSceneLoaded.subscribe(::findSceneRenderers)
+
+        val vaoGlobal = glGenVertexArrays()
+        glBindVertexArray(vaoGlobal)
+        initUbo()
+    }
+
+    fun findSceneRenderers(scene: Scene) {
+        renderers.clear()
+
+        for (entity in scene.entityMap.values) {
+            if (entity.hasComponentOf<Renderer>()) {
+                renderers.add(entity.getComponent<Renderer>())
+            }
+        }
+    }
+
+    fun render(camera: Camera, renderTarget: RenderTarget) {
+        renderTarget.bind()
+
+        val bg = camera.backgroundColor
+        glClearColor(bg.r, bg.g, bg.b, bg.a)
+        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+
+        applySceneState()
+        glViewport(0, 0, renderTarget.width, renderTarget.height)
+
+        val aspect = renderTarget.width.toFloat() / renderTarget.height.toFloat()
+        val viewMatrix = calculateViewMatrix(camera.entity.transform)
+        val projectionMatrix = calculateProjectionMatrix(camera.fov, camera.near, camera.far, aspect)
+
+        updateCameraUBO(viewMatrix, projectionMatrix, camera.entity.transform.worldPosition)
+
+        if (camera.backgroundMode == Camera.BackgroundMode.SkyBox) {
+            camera.skybox?.draw(viewMatrix, projectionMatrix)
+        }
+
+        for (renderer in renderers) {
+            if (renderer.isVisible && camera.shouldRender(renderer.entity)) {
+                renderer.draw(camera, aspect)
+            }
+        }
+
+        renderTarget.unbind()
+
+        glViewport(0, 0, Window.width, Window.height)
+    }
+
+    private fun initUbo() {
+        uboCamera = glGenBuffers()
+        glBindBuffer(GL_UNIFORM_BUFFER, uboCamera)
+        glBufferData(GL_UNIFORM_BUFFER, 160, GL_DYNAMIC_DRAW)
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboCamera) // 0: binding = 0
+        glBindBuffer(GL_UNIFORM_BUFFER, 0)
+    }
+
+    fun updateCameraUBO(view: Mat4, projection: Mat4, cameraPosition: Vec3) {
+        if (uboCamera == 0) return
+
+        glBindBuffer(GL_UNIFORM_BUFFER, uboCamera)
+
+        val viewArray = view.toFloatArray()
+        val projArray = projection.toFloatArray()
+
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, viewArray)
+        glBufferSubData(GL_UNIFORM_BUFFER, 64, projArray)
+
+        val posArray = floatArrayOf(cameraPosition.x, cameraPosition.y, cameraPosition.z, 0f)
+        glBufferSubData(GL_UNIFORM_BUFFER, 128, posArray)
+
+        glBindBuffer(GL_UNIFORM_BUFFER, 0)
+    }
+
+    fun drawPostProcess(renderTarget: RenderTarget) {
+        applyPostProcessState()
+
+        renderTarget.unbind()
+
+        glViewport(0, 0, Window.width, Window.height)
+        glClear(GL_COLOR_BUFFER_BIT)
+
+        postProcess.draw(renderTarget.textureGpuID)
+
+        overlayCallbacks.forEach { it.invoke() }
+    }
+
+    fun drawUI() {
+        overlayCallbacks.forEach { it.invoke() }
     }
 
     fun addOverlay(callback: () -> Unit) {
@@ -63,53 +143,6 @@ object RenderSystem {
         glDisable(GL_BLEND)
     }
 
-    fun render(scene: Scene) {
-
-    }
-
-    fun render() {
-        renderTarget.bind()
-        applySceneState()
-        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
-        glViewport(0, 0, Window.width, Window.height)
-
-        val camera = CameraSystem.main
-        if (camera != null) {
-            skybox?.draw(
-                calculateViewMatrix(camera.entity.transform),
-                calculateProjectionMatrix(camera.fov, camera.near, camera.far)
-            )
-
-            for (renderer in renderers) {
-                if (renderer.isVisible) {
-                    renderer.draw()
-                }
-            }
-        }
-
-        renderTarget.unbind()
-
-        val bloomTextureID = bloomPass.process(renderTarget.textureGpuID)
-
-        applyPostProcessState()
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0)
-        glViewport(0, 0, Window.width, Window.height)
-        glClear(GL_COLOR_BUFFER_BIT)
-
-        postProcess.draw(renderTarget.textureGpuID, bloomTextureID)
-
-        overlayCallbacks.forEach { it.invoke() }
-    }
-
-    fun register(renderer: Renderer) {
-        renderers.add(renderer)
-    }
-
-    fun unregister(renderer: Renderer) {
-        renderers.remove(renderer)
-    }
-
     fun calculateModelMatrix(transform: Transform): Mat4 {
         return lhToRh * transform.worldMatrix
     }
@@ -118,29 +151,22 @@ object RenderSystem {
         return lhToRh * cameraTransform.worldMatrix.inverse()
     }
 
-    fun calculateProjectionMatrix(fovY: Float, near: Float, far: Float): Mat4 {
-        return glm.perspective(
-            fovY = fovY,
-            aspect = Window.aspectRatio,
-            near = near,
-            far = far
-        )
+    fun calculateProjectionMatrix(fovY: Float, near: Float, far: Float, aspect: Float): Mat4 {
+        return glm.perspective(fovY, aspect, near, far)
     }
 
-    fun calculateMvpMatrix(transform: Transform): Mat4 {
+    fun getMvpMatrices(transform: Transform, camera: Camera, aspect: Float) : Triple<Mat4, Mat4, Mat4> {
         val model = calculateModelMatrix(transform)
-        return calculateMvpMatrix(model)
+        val view = calculateViewMatrix(camera.entity.transform)
+        val projection = calculateProjectionMatrix(camera.fov, camera.near, camera.far, aspect)
+
+        return Triple(model, view, projection)
     }
 
-    fun calculateMvpMatrix(modelMatrix: Mat4): Mat4 {
-        val camera = CameraSystem.main ?: error("No main camera found.")
-
+    fun calculateMvpMatrix(modelMatrix: Mat4, camera: Camera, aspect: Float): Mat4 {
         val view = calculateViewMatrix(camera.entity.transform)
-        val projection = calculateProjectionMatrix(camera.fov, camera.near, camera.far)
-
-        val mvp = projection * view * modelMatrix
-
-        return mvp
+        val projection = calculateProjectionMatrix(camera.fov, camera.near, camera.far, aspect)
+        return projection * view * modelMatrix
     }
 
     fun setClearColor(color: Color) {
@@ -164,5 +190,6 @@ object RenderSystem {
         }
 
         renderers.clear()
+        SceneSystem.onSceneLoaded.unsubscribeAllFrom(this)
     }
 }

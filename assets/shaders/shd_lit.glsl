@@ -6,29 +6,33 @@ layout(location = 1) in vec3 a_normal;
 layout(location = 2) in vec2 a_uv;
 
 #ifdef HAS_TANGENTS
-    layout(location = 3) in vec3 a_tangent;
-    layout(location = 4) in vec3 a_bitangent;
+layout(location = 3) in vec3 a_tangent;
+layout(location = 4) in vec3 a_bitangent;
 #endif
 
-uniform mat4 _MVP;
 uniform mat4 _ModelMatrix;
-uniform mat4 _ViewMatrix;
+
+layout (std140, binding = 0) uniform CameraData {
+    mat4 _ViewMatrix;
+    mat4 _ProjectionMatrix;
+    vec4 _CameraPosition;
+    vec4 _Padding;
+};
 
 out vec3 v_worldPosition;
 out vec3 v_viewPosition;
-
 out vec3 v_worldNormal;
 out vec3 v_viewNormal;
-
 out vec2 v_uv;
+out vec3 v_cameraPosition;
 
 #ifdef HAS_TANGENTS
-    out mat3 v_tbn;
+out mat3 v_tbn;
 #endif
 
 void main() {
-    vec4 worldPosCalculated = _ModelMatrix * vec4(a_position, 1.0);
-    v_worldPosition = worldPosCalculated.xyz;
+    vec4 worldPos = _ModelMatrix * vec4(a_position, 1.0);
+    v_worldPosition = worldPos.xyz;
     v_uv = a_uv;
 
     mat3 normalMatrix = transpose(inverse(mat3(_ModelMatrix)));
@@ -41,12 +45,13 @@ void main() {
         v_tbn = mat3(T, B, N);
     #endif
 
-    v_viewPosition = (_ViewMatrix * worldPosCalculated).xyz;
+    v_viewPosition = (_ViewMatrix * worldPos).xyz;
+    v_cameraPosition = _CameraPosition.xyz;
 
     mat3 viewNormalMatrix = transpose(inverse(mat3(_ViewMatrix * _ModelMatrix)));
     v_viewNormal = normalize(viewNormalMatrix * a_normal);
 
-    gl_Position = _MVP * vec4(a_position, 1.0);
+    gl_Position = _ProjectionMatrix * _ViewMatrix * worldPos;
 }
 
 #type fragment
@@ -60,6 +65,7 @@ in vec3 v_viewPosition;
 in vec3 v_worldNormal;
 in vec3 v_viewNormal;
 in vec2 v_uv;
+in vec3 v_cameraPosition;
 
 #ifdef HAS_TANGENTS
     in mat3 v_tbn;
@@ -68,7 +74,6 @@ in vec2 v_uv;
 uniform vec3 _LightDirection;
 uniform float _LightIntensity;
 uniform vec3 _LightColor;
-uniform vec3 _CameraPosition;
 uniform vec4 _Color;
 uniform float _MetallicIntensity;
 uniform float _RoughnessIntensity;
@@ -153,7 +158,7 @@ void main() {
         ao = texture(_AmbientOcclusionTexture, v_uv).r;
     #endif
 
-    vec3 V = normalize(_CameraPosition - v_worldPosition);
+    vec3 V = normalize(v_cameraPosition - v_worldPosition);
     vec3 L = normalize(-_LightDirection);
     vec3 H = normalize(V + L);
 

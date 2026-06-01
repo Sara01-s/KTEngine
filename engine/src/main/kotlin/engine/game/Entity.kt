@@ -3,6 +3,8 @@ package engine.game
 import engine.components.Component
 import engine.components.Transform
 import engine.scenes.Scene
+import engine.utils.Layers
+import engine.utils.Tags
 import kotlin.reflect.KClass
 
 class Entity(val id: Int, val name: String = DEFAULT_NAME) : AutoCloseable {
@@ -11,16 +13,34 @@ class Entity(val id: Int, val name: String = DEFAULT_NAME) : AutoCloseable {
     }
 
     lateinit var scene: Scene
+    var tag = Tags.DEFAULT
+    var layerMask = Layers.DEFAULT
 
-    val components = mutableMapOf<KClass<out Component>, Component>()
+    // TODO: Try to make it not accessible.
+    val componentsAndItsParents = mutableMapOf<KClass<out Component>, Component>()
     val transform: Transform = addComponent()
 
     inline fun <reified T : Component> addComponent(): T {
-        val component = T::class.java.getDeclaredConstructor().newInstance()
+        if (hasComponentOf<T>()) {
+            error("Duplicate component ${T::class.simpleName}")
+        }
+
+        val component = T::class.java.getDeclaredConstructor().newInstance() as T
         component.entity = this
         component.onAdded()
 
-        components[T::class] = component
+        val clazz = component::class
+        componentsAndItsParents[clazz] = component
+
+        @Suppress("UNCHECKED_CAST")
+        var parent = clazz.supertypes.firstOrNull()?.classifier as? KClass<out Component>
+
+        while (parent != null && parent != Component::class) {
+            componentsAndItsParents[parent] = component
+            @Suppress("UNCHECKED_CAST")
+            parent = parent.supertypes.firstOrNull()?.classifier as? KClass<out Component>
+        }
+
         return component
     }
 
@@ -29,17 +49,34 @@ class Entity(val id: Int, val name: String = DEFAULT_NAME) : AutoCloseable {
     }
 
     inline fun <reified T : Component> removeComponent() {
-        getComponent<T>().close()
-        components.remove(T::class)
+        if (!hasComponent<T>()) {
+            error("Trying to remove non-existent component ${T::class.simpleName}")
+        }
+
+        componentsAndItsParents.remove(T::class)?.close()
     }
 
     inline fun <reified T : Component> getComponent(): T {
-        return components[T::class] as? T
-            ?: error("Component not found: ${T::class}")
+        val component = componentsAndItsParents[T::class] ?: componentsAndItsParents[T::class]
+
+        return component as? T
+            ?: error("Component of type ${T::class.simpleName} not found")
     }
 
     inline fun <reified T : Component> hasComponent(): Boolean {
-        return components.containsKey(T::class)
+        return componentsAndItsParents.containsKey(T::class)
+    }
+
+    inline fun <reified T : Component> hasComponentOf(): Boolean {
+        return componentsAndItsParents.containsKey(T::class)
+    }
+
+    fun findEntityByTag(tag: String) : Entity? {
+        return scene.entities.find { it.compareTag(tag) }
+    }
+
+    fun compareTag(tag: String) : Boolean {
+        return this.tag == tag
     }
 
     fun entity(
@@ -66,7 +103,7 @@ class Entity(val id: Int, val name: String = DEFAULT_NAME) : AutoCloseable {
     }
 
     override fun close() {
-        components.values.forEach { it.close() }
-        components.clear()
+        componentsAndItsParents.values.forEach { it.close() }
+        componentsAndItsParents.clear()
     }
 }

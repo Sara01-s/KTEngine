@@ -7,7 +7,6 @@ import engine.components.MeshRenderer
 import engine.rendering.bindables.Material
 import engine.assets.Assets
 import engine.scenes.Scene
-import engine.utils.Color
 import engine.utils.PrimitiveMeshes
 import glm_.quat.Quat
 import glm_.vec3.Vec3
@@ -19,7 +18,6 @@ class Scene2 : Scene() {
         entity("MainCamera") {
             component<Camera> {
                 backgroundMode = BackgroundMode.SolidColor
-                setBackgroundColor(Color.gray30)
             }
             component<FirstPersonController>()
             component<SceneChanger>()

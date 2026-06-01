@@ -6,11 +6,15 @@ import engine.systems.ShaderSystem
 import engine.utils.Color
 import engine.utils.log
 import engine.utils.logError
+import engine.utils.logWarn
 import glm_.mat3x3.Mat3
 import glm_.mat4x4.Mat4
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
+import org.lwjgl.opengl.ARBUniformBufferObject.GL_INVALID_INDEX
+import org.lwjgl.opengl.ARBUniformBufferObject.glGetUniformBlockIndex
+import org.lwjgl.opengl.ARBUniformBufferObject.glUniformBlockBinding
 import org.lwjgl.opengl.GL11.GL_FALSE
 import org.lwjgl.opengl.GL20.*
 import java.nio.file.Files
@@ -46,6 +50,19 @@ class Shader(private var source: String, private val shaderPath: String = "") : 
         }
     }
 
+    fun setUniformBlock(blockName: String, bindingPoint: Int) {
+        if (gpuID == 0) {
+            return
+        }
+
+        val blockIndex = glGetUniformBlockIndex(gpuID, blockName)
+        if (blockIndex != GL_INVALID_INDEX) {
+            glUniformBlockBinding(gpuID, blockIndex, bindingPoint)
+        } else {
+            logWarn("[Shader] Block $blockName not found in shader $shaderPath")
+        }
+    }
+
     fun compile() {
         try {
             if (shaderPath.isNotEmpty()) {
@@ -65,6 +82,15 @@ class Shader(private var source: String, private val shaderPath: String = "") : 
 
             val oldProgram = gpuID
             gpuID = newProgram
+
+            val blockIndex = glGetUniformBlockIndex(gpuID, "CameraData")
+            if (blockIndex != GL_INVALID_INDEX) {
+                glUniformBlockBinding(gpuID, blockIndex, 0)
+            }
+            else {
+                error("Camera Data UBO not found.")
+            }
+
             uniformLocations.clear()
 
             glDeleteShader(vs)

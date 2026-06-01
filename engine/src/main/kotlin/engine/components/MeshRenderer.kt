@@ -1,7 +1,6 @@
 package engine.components
 
 import engine.rendering.bindables.Material
-import engine.systems.CameraSystem
 import engine.systems.LightingSystem
 import engine.systems.RenderSystem
 import engine.utils.PrimitiveMeshes
@@ -18,25 +17,15 @@ class MeshRenderer : Renderer() {
     var metallicIntensity = 0f
     var roughnessIntensity = 0.7f
 
-    override fun onAdded() {
-        RenderSystem.register(this)
-    }
-
-    override fun onRemoved() {
-        RenderSystem.unregister(this)
-    }
-
-    override fun draw() {
-        val cameraTransform = CameraSystem.main!!.entity.transform
+    override fun draw(camera: Camera, aspect: Float) {
         val modelMatrix = RenderSystem.calculateModelMatrix(entity.transform)
         val normalMatrix = modelMatrix.inverse().transpose().toMat3()
 
         material.bind()
 
-        material.setMat4("_MVP", RenderSystem.calculateMvpMatrix(entity.transform))
-        material.setMat4("_ModelMatrix", RenderSystem.calculateModelMatrix(entity.transform))
-        material.setMat4("_ViewMatrix", RenderSystem.calculateViewMatrix(cameraTransform))
-        material.setVec3("_CameraPosition", cameraTransform.worldPosition)
+        val model = RenderSystem.calculateModelMatrix(entity.transform)
+
+        material.setMat4("_ModelMatrix", model)
         material.setMat3("_NormalMatrix", normalMatrix)
 
         if (LightingSystem.isEnabled()) {

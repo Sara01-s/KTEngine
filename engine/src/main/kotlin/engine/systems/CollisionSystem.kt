@@ -14,7 +14,7 @@ object CollisionSystem {
         colliders.remove(collider)
     }
 
-    fun update() {
+    fun fixedUpdate() {
         for (collider in colliders) {
             collider.updateCollisions(colliders)
         }

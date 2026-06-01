@@ -10,14 +10,13 @@ class PostProcess(shader: Shader) {
     private val mesh = PrimitiveMeshes.quad
     private val material = Material(shader)
 
-    fun draw(sceneTextureID: Int, bloomTextureID: Int) {
+    fun draw(sceneTextureID: Int) {
         glViewport(0, 0, Window.width, Window.height)
         glDisable(GL_DEPTH_TEST)
         glDisable(GL_BLEND)
 
         material.setTexture("_ScreenTexture", sceneTextureID, 0)
         material.bind()
-        material.setTexture("_BloomTexture", bloomTextureID, 1)
 
         material.bind()
         mesh.bind()

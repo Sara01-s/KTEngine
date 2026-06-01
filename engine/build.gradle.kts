@@ -5,6 +5,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://jitpack.io") }
 }
 
 val lwjglVersion = "3.3.3"
@@ -30,6 +31,8 @@ dependencies {
 
     api("io.github.kotlin-graphics:glm:0.9.9.1-12")
     api("com.google.code.gson:gson:2.13.1")
+
+    implementation(kotlin("reflect"))
 }
 
 kotlin {

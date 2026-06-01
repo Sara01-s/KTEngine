@@ -3,15 +3,22 @@
 
 layout(location = 0) in vec3 a_position;
 
-uniform mat4 _MVP;
 uniform mat4 _ModelMatrix;
+
+layout (std140, binding = 0) uniform CameraData {
+    mat4 _ViewMatrix;
+    mat4 _ProjectionMatrix;
+    vec4 _CameraPosition;
+    vec4 _Padding;
+};
+
 
 out vec3 v_worldPos;
 
 void main() {
     vec4 worldPos = _ModelMatrix * vec4(a_position, 1.0);
     v_worldPos = worldPos.xyz;
-    gl_Position = _MVP * vec4(a_position, 1.0);
+    gl_Position = _ProjectionMatrix * _ViewMatrix * worldPos;
 }
 
 #type fragment

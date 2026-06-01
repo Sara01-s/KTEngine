@@ -2,6 +2,7 @@ package engine.game
 
 import engine.assets.Assets
 import engine.rendering.Window
+import engine.rendering.bindables.RenderTarget
 import engine.systems.AudioSystem
 import engine.systems.BehaviourSystem
 import engine.systems.CameraSystem
@@ -14,23 +15,30 @@ import engine.utils.PrimitiveMeshes
 import engine.utils.log
 import org.lwjgl.glfw.GLFW.glfwGetTime
 
-class Game : AutoCloseable{
+class Game : AutoCloseable {
+    companion object {
+        val gameRenderTarget by lazy { RenderTarget(Window.width, Window.height, hdr = true) }
+        val sceneRenderTarget by lazy { RenderTarget(Window.width, Window.height, hdr = true) }
+    }
+
     init {
         log("Initializing Audio System.")
         AudioSystem.init()
+        RenderSystem.init()
+        SceneSystem.loadEmptyScene()
     }
 
     fun loop() {
         while (Window.isOpen()) {
             Window.pollEvents()
 
-            SceneSystem.applyPendingScene()
+            SceneSystem.loadPendingScene()
 
             Time.update(glfwGetTime())
             Input.update(Time.deltaTime)
 
             while (Time.shouldRunFixedUpdate()) {
-                CollisionSystem.update()
+                CollisionSystem.fixedUpdate()
                 BehaviourSystem.fixedUpdate()
                 Time.consumeFixedUpdate()
             }
@@ -38,8 +46,10 @@ class Game : AutoCloseable{
             BehaviourSystem.update()
             ShaderSystem.update()
 
-            BehaviourSystem.draw()
-            RenderSystem.render()
+            RenderSystem.render(CameraSystem.main!!, gameRenderTarget)
+            RenderSystem.render(CameraSystem.sceneCamera!!, sceneRenderTarget)
+
+            RenderSystem.drawUI()
 
             Window.swapBuffers()
         }

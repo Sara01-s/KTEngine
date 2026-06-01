@@ -31,13 +31,13 @@ object DefaultAssets {
         Material(unlitShader).apply {
             setTexture("_DiffuseTexture", texture)
             setColor4("_Color", Color.white)
-        }
+        }.clone()
     }
 
     val litMaterial: Material by lazy {
         Material(litShader).apply {
             setTexture("_DiffuseTexture", texture)
-        }
+        }.clone()
     }
 
     val textMaterial: Material by lazy {
@@ -45,7 +45,7 @@ object DefaultAssets {
             Assets.loadShader("shaders/shd_font.glsl")
         ).apply {
             setColor4("_Color", Color.white)
-        }
+        }.clone()
     }
 
     val font: Font by lazy {

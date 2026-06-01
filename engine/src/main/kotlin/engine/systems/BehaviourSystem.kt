@@ -54,20 +54,6 @@ object BehaviourSystem : AutoCloseable {
         flushPending()
     }
 
-    fun draw() {
-        flushPending()
-        isIterating = true
-
-        for (behaviour in behaviours) {
-            if (behaviour.enabled) {
-                behaviour.onDraw()
-            }
-        }
-
-        isIterating = false
-        flushPending()
-    }
-
     fun clear() {
         behaviours.clear()
         pendingAdd.clear()

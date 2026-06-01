@@ -5,6 +5,7 @@ import engine.rendering.bindables.Material
 import engine.rendering.bindables.Mesh
 import engine.rendering.bindables.VertexLayout
 import engine.assets.DefaultAssets
+import engine.components.Camera
 import engine.systems.RenderSystem
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
@@ -35,7 +36,7 @@ class TextRenderer : Renderer() {
     private var mesh: Mesh = Mesh(layout, emptyList(), intArrayOf(), material)
     private var dirty = true
 
-    override fun draw() {
+    override fun draw(camera: Camera, aspect: Float) {
         if (!isVisible) {
             return
         }
@@ -44,9 +45,14 @@ class TextRenderer : Renderer() {
             rebuildMesh()
         }
 
+        val (model, view, projection) = RenderSystem.getMvpMatrices(entity.transform, camera, aspect)
+
         material.bind()
+        material.setMat4("_ModelMatrix", model)
+        material.setMat4("_ViewMatrix", view)
+        material.setMat4("_ProjectionMatrix", projection)
+
         material.setTexture("_MainTex", font.texture)
-        material.setMat4("_MVP", RenderSystem.calculateMvpMatrix(entity.transform))
 
         mesh.draw()
     }
@@ -100,9 +106,6 @@ class TextRenderer : Renderer() {
         mesh.setData(vertices, indices.toIntArray())
         dirty = false
     }
-
-    override fun onAdded() = RenderSystem.register(this)
-    override fun onRemoved() = RenderSystem.unregister(this)
 
     override fun close() {
         mesh.close()

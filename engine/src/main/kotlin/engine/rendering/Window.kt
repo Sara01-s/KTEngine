@@ -1,6 +1,6 @@
 package engine.rendering
 
-import engine.systems.RenderSystem
+import engine.game.Game
 import engine.utils.log
 import engine.utils.logError
 import org.lwjgl.glfw.GLFW.*
@@ -65,8 +65,8 @@ object Window : AutoCloseable {
             if (newWidth > 0 && newHeight > 0) {
                 glViewport(0, 0, newWidth, newHeight)
 
-                RenderSystem.renderTarget.resize(newWidth, newHeight)
-                RenderSystem.bloomPass.resize(newWidth, newHeight)
+                Game.gameRenderTarget.resize(newWidth, newHeight)
+                Game.sceneRenderTarget.resize(newWidth, newHeight)
 
                 width = newWidth
                 height = newHeight

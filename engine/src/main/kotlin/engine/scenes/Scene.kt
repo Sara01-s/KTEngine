@@ -14,7 +14,8 @@ abstract class Scene : AutoCloseable {
         private fun resetSequence() { idSequence.set(0) }
     }
 
-    val rootEntity: Entity = Entity(generateNextId(), "Root")
+    val rootEntity = Entity(generateNextId(), "Root")
+    val entities get() = entityMap.values
 
     @PublishedApi
     internal val entityMap = HashMap<Int, Entity>()

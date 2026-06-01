@@ -4,12 +4,11 @@ import org.lwjgl.opengl.GL43.*
 import java.nio.ByteBuffer
 
 class RenderTarget(var width: Int, var height: Int, val hdr: Boolean = false) : Bindable() {
-    var textureGpuID: Int = -1
+    var textureGpuID: Int = 0
         private set
 
     init {
         setup()
-        println("FBO created: ${width}x${height}")
     }
 
     fun setup() {

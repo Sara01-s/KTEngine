@@ -9,6 +9,7 @@ import engine.systems.Player
 import engine.utils.clamp
 import engine.utils.degrees
 import engine.utils.down
+import engine.utils.normalized
 import engine.utils.up
 import engine.utils.zero
 import glm_.quat.Quat
@@ -57,17 +58,17 @@ class FirstPersonController : Behaviour() {
 
         val fwdFlat = transform.forward
         val forwardFlat = Vec3(fwdFlat.x, 0f, fwdFlat.z).normalize()
-        val rightFlat   = Vec3(fwdFlat.z, 0f, -fwdFlat.x).normalize()
+        val rightFlat = Vec3.up.cross(forwardFlat).normalize()
 
-        if (horizontalAxis != 0f) moveDirection += rightFlat   * horizontalAxis
+        if (horizontalAxis != 0f) moveDirection += rightFlat * horizontalAxis
         if (verticalAxis   != 0f) moveDirection += forwardFlat * verticalAxis
 
         if (Input.Keyboard.isPressed(Key.Space))     moveDirection += Vec3.up
         if (Input.Keyboard.isPressed(Key.LeftShift)) moveDirection += Vec3.down
 
-        if (moveDirection.length2() > 0f) {
-            moveDirection.normalizeAssign()
-            transform.localPosition = transform.localPosition.plus(moveDirection * moveSpeed * Time.deltaTime)
+        if (moveDirection.length2() > 0.0001f) {
+            val velocity = moveDirection.normalized() * moveSpeed * Time.deltaTime
+            transform.worldPosition = transform.worldPosition.plus(velocity)
         }
     }
 }

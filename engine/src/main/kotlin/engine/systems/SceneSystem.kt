@@ -2,39 +2,39 @@ package engine.systems
 
 import engine.scenes.EmptyScene
 import engine.scenes.Scene
+import engine.utils.ReactiveCommand
 
 object SceneSystem : AutoCloseable {
-    val onSceneLoaded: ((scene: Scene) -> Unit) = {}
+    val onSceneLoaded = ReactiveCommand<Scene>()
 
     var currentScene: Scene = EmptyScene()
         private set
 
-    private var nextScene: Scene? = null
+    private var pendingScene: Scene? = null
 
-    init {
+    fun loadEmptyScene() {
         loadScene(currentScene)
     }
 
     fun loadScene(scene: Scene) {
-        nextScene = scene
+        pendingScene = scene
     }
 
-    fun applyPendingScene() {
-        val pending = nextScene ?: return
+    fun loadPendingScene() {
+        val pending = pendingScene ?: return
 
         currentScene.close()
         RenderSystem.clear()
-        CameraSystem.clear()
         CollisionSystem.clear()
+        CameraSystem.clear()
         BehaviourSystem.clear()
         Input.clear()
 
-
         currentScene = pending
-        nextScene = null
+        pendingScene = null
 
-        onSceneLoaded.invoke(currentScene)
         currentScene.create()
+        onSceneLoaded.execute(currentScene)
     }
 
     override fun close() {

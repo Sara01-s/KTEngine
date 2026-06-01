@@ -86,6 +86,20 @@ class Material(val shader: Shader) : Bindable() {
         }
     }
 
+    fun clone(): Material {
+        val newMat = Material(this.shader)
+
+        newMat.ints.putAll(this.ints)
+        newMat.floats.putAll(this.floats)
+        newMat.vec3s.putAll(this.vec3s)
+        newMat.vec4s.putAll(this.vec4s)
+        newMat.mat3s.putAll(this.mat3s)
+        newMat.mat4s.putAll(this.mat4s)
+        newMat.textures.putAll(this.textures)
+
+        return newMat
+    }
+
     override fun unbind() {
         shader.unbind()
     }

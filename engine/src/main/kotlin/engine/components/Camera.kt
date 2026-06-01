@@ -1,41 +1,24 @@
 package engine.components
 
+import engine.game.Entity
 import engine.rendering.Skybox
-import engine.systems.CameraSystem
-import engine.systems.RenderSystem
 import engine.utils.Color
+import engine.utils.Layers
 
 class Camera : Component() {
-    enum class BackgroundMode {
-        SolidColor,
-        SkyBox,
-    }
+    enum class BackgroundMode { SolidColor, SkyBox }
 
+    var cullingMask = Layers.EVERYTHING
     var backgroundMode = BackgroundMode.SolidColor
+
+    var backgroundColor: Color = Color.gray20
+    var skybox: Skybox? = null
 
     var fov: Float = 45f
     var near: Float = 0.01f
     var far: Float = 1000f
 
-    fun setBackgroundColor(color: Color) {
-        if (backgroundMode == BackgroundMode.SolidColor) {
-            RenderSystem.setClearColor(color)
-        }
-        else error("Cannot set background color, background mode is set to skybox.")
-    }
-
-    fun setSkyBox(skybox: Skybox) {
-        if (backgroundMode == BackgroundMode.SkyBox) {
-            RenderSystem.skybox = skybox
-        }
-        else error("Cannot set skybox, background mode is set to solid color.")
-    }
-
-    override fun onAdded() {
-        CameraSystem.register(this)
-    }
-
-    override fun onRemoved() {
-        CameraSystem.unregister(this)
+    fun shouldRender(entity: Entity): Boolean {
+        return (entity.layerMask and cullingMask) != 0
     }
 }

@@ -5,8 +5,12 @@ layout(location = 0) in vec3 a_position;
 
 out vec3 v_texCoords;
 
-uniform mat4 _ViewMatrix;
-uniform mat4 _ProjectionMatrix;
+layout (std140, binding = 0) uniform CameraData {
+    mat4 _ViewMatrix;
+    mat4 _ProjectionMatrix;
+    vec4 _CameraPosition;
+    vec4 _Padding;
+};
 
 void main() {
     v_texCoords = a_position;
