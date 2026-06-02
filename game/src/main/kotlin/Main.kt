@@ -1,11 +1,14 @@
 package game
 
+import engine.Application
 import engine.game.Game
 import engine.rendering.Window
 import engine.systems.RenderSystem
 import engine.editor.EditorLayer
 import engine.game.Game.Companion.gameRenderTarget
 import engine.game.Game.Companion.sceneRenderTarget
+import engine.rendering.Window.handle
+import engine.rendering.Window.setWindowIcon
 import imgui.ImGui
 
 fun showGame() {
@@ -69,6 +72,7 @@ fun main() {
     Game().use { game ->
         val editor = EditorLayer()
         editor.init(Window.handle)
+        setWindowIcon(handle, Application.assetsPath.resolve("textures/tex_icon.png").toString())
 
         RenderSystem.addOverlay {
             editor.startFrame()

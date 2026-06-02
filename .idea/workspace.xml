@@ -4,46 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="052189d8-bf91-4b4c-b691-740ee74d216a" name="Changes" comment="empty scene">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/editor/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/Layers.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/ReactiveCommand.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/utils/Tags.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/imgui.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="052189d8-bf91-4b4c-b691-740ee74d216a" name="Changes" comment="camera background">
+      <change afterPath="$PROJECT_DIR$/assets/textures/tex_icon.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/shaders/shd_fallback.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_fallback.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/shaders/shd_font.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_font.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/shaders/shd_grid.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_grid.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/shaders/shd_lit.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_lit.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/shaders/shd_skybox.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_skybox.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/shaders/shd_unlit.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/assets/shaders/shd_unlit.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/editor/src/main/kotlin/EditorLayer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/editor/src/main/kotlin/EditorLayer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/engine/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/DefaultAssets.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/assets/DefaultAssets.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Behaviour.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Behaviour.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Camera.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Camera.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/MeshRenderer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/MeshRenderer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Renderer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/Renderer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/behaviours/FirstPersonController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/components/behaviours/FirstPersonController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Entity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Entity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/game/Game.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Window.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/Window.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Material.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Material.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/RenderTarget.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/RenderTarget.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Shader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/bindables/Shader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/postprocessing/PostProcess.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/postprocessing/PostProcess.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/text/TextRenderer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/rendering/text/TextRenderer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/scenes/EmptyScene.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/scenes/EmptyScene.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/scenes/Scene.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/scenes/Scene.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/BehaviourSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/BehaviourSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/CameraSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/CameraSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/CollisionSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/CollisionSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/RenderSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/RenderSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/SceneSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/main/kotlin/engine/systems/SceneSystem.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene2.kt" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/main/kotlin/scenes/Scene2.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imgui.ini" beforeDir="false" afterPath="$PROJECT_DIR$/imgui.ini" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,6 +75,9 @@
     &quot;accountId&quot;: &quot;187ac04a-d7e5-4ae4-95b3-c99d578d65ba&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.20/e256996a0a912468cf892d7e4039e27050624f98/kotlin-stdlib-2.3.20-sources.jar!/jvmMain/kotlin/AutoCloseableJVM.kt" root0="SKIP_INSPECTION" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -131,7 +100,7 @@
     "Gradle.KTEngine [:game:engine.MainKt.main()].executor": "Run",
     "Gradle.KTEngine [:game:game.MainKt.main()].executor": "Run",
     "Gradle.Load Gradle Dependencies.executor": "Run",
-    "Kotlin.MainKt.executor": "Java Profile Executor",
+    "Kotlin.MainKt.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -141,16 +110,17 @@
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/projects/KTEngine/engine/src/main/resources/engine_assets/textures/skybox/sky",
+    "last_opened_file_path": "D:/projects/KTEngine/assets/textures",
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.33678162",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.org.jetbrains.kotlin.idea.highlighter.KotlinColorSettingsPage"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\projects\KTEngine\assets\textures" />
       <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\textures\skybox\sky" />
       <recent name="D:\projects\KTEngine\assets\fonts" />
       <recent name="D:\projects\KTEngine\engine\src\main\resources\engine_assets\models" />
@@ -272,7 +242,23 @@
       <option name="project" value="LOCAL" />
       <updated>1780326112050</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="scene / game">
+      <option name="closed" value="true" />
+      <created>1780353267879</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1780353267879</updated>
+    </task>
+    <task id="LOCAL-00011" summary="camera background">
+      <option name="closed" value="true" />
+      <created>1780363100146</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1780363100146</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -299,7 +285,9 @@
     <MESSAGE value="ui v1" />
     <MESSAGE value="eli" />
     <MESSAGE value="empty scene" />
-    <option name="LAST_COMMIT_MESSAGE" value="empty scene" />
+    <MESSAGE value="scene / game" />
+    <MESSAGE value="camera background" />
+    <option name="LAST_COMMIT_MESSAGE" value="camera background" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

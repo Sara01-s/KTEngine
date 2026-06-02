@@ -1,13 +1,20 @@
 package engine.rendering
 
+import engine.Application
 import engine.game.Game
 import engine.utils.log
 import engine.utils.logError
 import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFWImage
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL43.*
 import org.lwjgl.opengl.GLDebugMessageCallback
+import org.lwjgl.stb.STBImage.stbi_image_free
+import org.lwjgl.stb.STBImage.stbi_load
+import org.lwjgl.system.MemoryStack
+import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.NULL
+import java.nio.ByteBuffer
 
 object Window : AutoCloseable {
     var width = 1280
@@ -81,6 +88,8 @@ object Window : AutoCloseable {
 
         setVSync(true)
         glfwShowWindow(handle)
+
+        setWindowIcon(handle, Application.assetsPath.resolve("textures/tex_icon.png").toString())
     }
 
     fun toggleFullscreen() {
@@ -122,6 +131,7 @@ object Window : AutoCloseable {
         }
 
         setVSync(true)
+        setWindowIcon(handle, Application.assetsPath.resolve("textures/tex_icon.png").toString())
     }
 
     private fun setupGLState() {
@@ -192,6 +202,32 @@ object Window : AutoCloseable {
             }
 
         }, NULL)
+    }
+
+    fun setWindowIcon(window: Long, vararg paths: String) {
+        val icons = GLFWImage.create(paths.size)
+        val buffers = mutableListOf<ByteBuffer>()
+
+        paths.forEachIndexed { index, path ->
+            val w = MemoryUtil.memAllocInt(1)
+            val h = MemoryUtil.memAllocInt(1)
+            val comp = MemoryUtil.memAllocInt(1)
+
+            val pixels = stbi_load(path, w, h, comp, 4)
+                ?: throw RuntimeException("No se pudo cargar el ícono: $path")
+
+            buffers.add(pixels)
+
+            val icon = GLFWImage.create()
+            icon.set(w.get(0), h.get(0), pixels)
+            icons.put(index, icon)
+
+            MemoryUtil.memFree(w)
+            MemoryUtil.memFree(h)
+            MemoryUtil.memFree(comp)
+        }
+
+        glfwSetWindowIcon(window, icons)
     }
 
     fun isOpen(): Boolean {
