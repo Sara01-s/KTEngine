@@ -53,8 +53,7 @@ class EmptyScene : Scene() {
 
             component<FirstPersonController>()
             component<Camera> {
-                backgroundMode = Camera.BackgroundMode.SkyBox
-                skybox = Skybox()
+                background = Camera.Background.SkyBox(Skybox())
             }
         }
 

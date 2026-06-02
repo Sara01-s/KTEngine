@@ -6,13 +6,13 @@ import engine.utils.Color
 import engine.utils.Layers
 
 class Camera : Component() {
-    enum class BackgroundMode { SolidColor, SkyBox }
+    sealed interface Background {
+        data class SolidColor(val color: Color) : Background
+        data class SkyBox(val skybox: Skybox) : Background
+    }
 
     var cullingMask = Layers.EVERYTHING
-    var backgroundMode = BackgroundMode.SolidColor
-
-    var backgroundColor: Color = Color.gray20
-    var skybox: Skybox? = null
+    var background: Background = Background.SolidColor(Color.gray20)
 
     var fov: Float = 45f
     var near: Float = 0.01f

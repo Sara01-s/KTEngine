@@ -2,7 +2,6 @@ package game.scenes
 
 import engine.behaviours.SceneChanger
 import engine.components.Camera
-import engine.components.Camera.BackgroundMode
 import engine.components.MeshRenderer
 import engine.rendering.bindables.Material
 import engine.assets.Assets
@@ -16,9 +15,7 @@ import engine.utils.eulerAnglesDeg
 class Scene2 : Scene() {
     override fun create() {
         entity("MainCamera") {
-            component<Camera> {
-                backgroundMode = BackgroundMode.SolidColor
-            }
+            component<Camera>()
             component<FirstPersonController>()
             component<SceneChanger>()
             transform.localPosition = Vec3(0f, 25f, -40f)

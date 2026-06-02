@@ -59,21 +59,24 @@ object RenderSystem {
     fun render(camera: Camera, renderTarget: RenderTarget) {
         renderTarget.bind()
 
-        val bg = camera.backgroundColor
-        glClearColor(bg.r, bg.g, bg.b, bg.a)
-        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
-
-        applySceneState()
-        glViewport(0, 0, renderTarget.width, renderTarget.height)
-
         val aspect = renderTarget.width.toFloat() / renderTarget.height.toFloat()
         val viewMatrix = calculateViewMatrix(camera.entity.transform)
         val projectionMatrix = calculateProjectionMatrix(camera.fov, camera.near, camera.far, aspect)
 
+        applySceneState()
+        glViewport(0, 0, renderTarget.width, renderTarget.height)
+
         updateCameraUBO(viewMatrix, projectionMatrix, camera.entity.transform.worldPosition)
 
-        if (camera.backgroundMode == Camera.BackgroundMode.SkyBox) {
-            camera.skybox?.draw(viewMatrix, projectionMatrix)
+        when (val background = camera.background) {
+            is Camera.Background.SkyBox -> {
+                background.skybox.draw(viewMatrix, projectionMatrix)
+            }
+            is Camera.Background.SolidColor -> {
+                val bg = background.color
+                glClearColor(bg.r, bg.g, bg.b, bg.a)
+                glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+            }
         }
 
         for (renderer in renderers) {

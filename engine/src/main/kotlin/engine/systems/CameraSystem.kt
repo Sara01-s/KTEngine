@@ -3,7 +3,7 @@ package engine.systems
 import engine.components.Camera
 import engine.utils.Tags
 
-data object CameraSystem : AutoCloseable {
+object CameraSystem : AutoCloseable {
     private var _main: Camera? = null
     private var _sceneCamera: Camera? = null
 
